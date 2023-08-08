@@ -12,6 +12,18 @@
         android:theme="@style/Theme.DatingCourse"
         tools:targetApi="31">
         <activity
+            android:name=".FragMyPage"
+            android:exported="false" />
+        <activity
+            android:name=".FragLocation"
+            android:exported="false" />
+        <activity
+            android:name=".FragCommunity"
+            android:exported="false" />
+        <activity
+            android:name=".FragHome"
+            android:exported="false" />
+        <activity
             android:name=".Beer"
             android:exported="false" />
         <activity

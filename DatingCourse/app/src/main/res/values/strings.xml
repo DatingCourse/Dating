@@ -19,17 +19,8 @@
     <string name="second_button_30">info</string>
     <string name="third_button_30">info</string>
     <string name="first_button_1">info</string>
-
-    <string-array name="place_array">
-        <item>1번 구역</item>
-        <item>2번 구역</item>
-        <item>3번 구역</item>
-        <item>4번 구역</item>
-        <item>5번 구역</item>
-        <item>6번 구역</item>
-        <item>7번 구역</item>
-        <item>8번 구역</item>
-    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
 

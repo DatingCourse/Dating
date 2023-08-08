@@ -26,4 +26,19 @@
         android:fontStyle="normal"
         android:fontWeight="400"/>
 
+    <font
+        android:font="@font/nasqua"
+        android:fontStyle="normal"
+        android:fontWeight="400"/>
+
+    <font
+        android:font="@font/nam"
+        android:fontStyle="normal"
+        android:fontWeight="400"/>
+
+    <font
+        android:font="@font/nas"
+        android:fontStyle="normal"
+        android:fontWeight="400"/>
+
 </font-family>
