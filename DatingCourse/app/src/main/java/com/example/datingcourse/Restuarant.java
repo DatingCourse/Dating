@@ -1,18 +1,16 @@
-// 추천 코스 클래스
 package com.example.datingcourse;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RecommendActivity extends AppCompatActivity {
+public class Restuarant extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommend);
+        setContentView(R.layout.activity_restuarant);
 
-        getSupportActionBar().setTitle("추천 코스");
-
+        getSupportActionBar().setTitle("식당");
     }
 }
