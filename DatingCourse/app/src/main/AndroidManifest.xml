@@ -12,6 +12,24 @@
         android:theme="@style/Theme.DatingCourse"
         tools:targetApi="31">
         <activity
+            android:name=".Beer"
+            android:exported="false" />
+        <activity
+            android:name=".Restuarant"
+            android:exported="false" />
+        <activity
+            android:name=".Random"
+            android:exported="false" />
+        <activity
+            android:name=".info"
+            android:exported="false" />
+        <activity
+            android:name=".MyPage"
+            android:exported="false" />
+        <activity
+            android:name=".Cafe"
+            android:exported="false" />
+        <activity
             android:name=".PostsActivity"
             android:exported="false" />
         <activity

@@ -11,5 +11,7 @@ public class MapChoiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_choice);
+
+        getSupportActionBar().setTitle("장소 검색");
     }
 }

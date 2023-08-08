@@ -1,3 +1,35 @@
 <resources>
+
     <string name="app_name">자기야</string>
+    <string name="info">TODO</string>
+    <string name="second_button_10">Info</string>
+    <string name="first_button_10">info</string>
+    <string name="user">Info</string>
+    <string name="imageButton1">Info</string>
+    <string name="imageButton2">Info</string>
+    <string name="imageButton3">Info</string>
+    <string name="imageButton4">Info</string>
+    <string name="imageButton5">Info</string>
+    <string name="imageButton6">Info</string>
+    <string name="third_button_10">info</string>
+    <string name="first_button_20">info</string>
+    <string name="second_button_20">info</string>
+    <string name="third_button_20">info</string>
+    <string name="first_button_30">info</string>
+    <string name="second_button_30">info</string>
+    <string name="third_button_30">info</string>
+    <string name="first_button_1">info</string>
+
+    <string-array name="place_array">
+        <item>1번 구역</item>
+        <item>2번 구역</item>
+        <item>3번 구역</item>
+        <item>4번 구역</item>
+        <item>5번 구역</item>
+        <item>6번 구역</item>
+        <item>7번 구역</item>
+        <item>8번 구역</item>
+    </string-array>
+
 </resources>
+
