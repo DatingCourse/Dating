@@ -14,6 +14,18 @@ import java.util.ArrayList;
 public class BoardActivity extends AppCompatActivity {
     private ArrayList<ArrayList<Points>> allBoardList = new ArrayList();
 
+    private String img; // 이미지
+
+    private String categories;  // 카테고리
+
+    private String room_name;   // 가게 이름
+
+    public BoardActivity(String img, String categories, String room_name){
+        this.img = img;
+        this.categories = categories;
+        this.room_name = room_name;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,26 +55,26 @@ public class BoardActivity extends AppCompatActivity {
     {
         ArrayList<Points> boardList1 = new ArrayList();
 
-        boardList1.add(new Points(R.drawable.pig1, "어벤져스", "영화"));
-        boardList1.add(new Points(R.drawable.pig2, "미션임파서블", "영화"));
-        boardList1.add(new Points(R.drawable.pig3, "아저씨", "영화"));
+        boardList1.add(new Points(null, "어벤져스", "영화", 1.0, 1.0));
+        boardList1.add(new Points(null, "미션임파서블", "영화", 1.0, 1.0));
+        boardList1.add(new Points(null, "아저씨", "영화", 1.0, 1.0));
 
         allBoardList.add(boardList1);
-
-        ArrayList<Points> boardList2 = new ArrayList();
-
-        boardList2.add(new Points(R.drawable.pig1, "범죄도시", "영화"));
-        boardList2.add(new Points(R.drawable.pig2, "공공의적", "영화"));
-
-        allBoardList.add(boardList2);
-
-        ArrayList<Points> boardList3 = new ArrayList();
-
-        boardList3.add(new Points(R.drawable.pig1, "고질라", "영화"));
-        boardList3.add(new Points(R.drawable.pig2, "캡틴마블", "영화"));
-        boardList3.add(new Points(R.drawable.pig3, "아이언맨", "영화"));
-        boardList3.add(new Points(R.drawable.pig1, "액션가면", "영화"));
-
-        allBoardList.add(boardList3);
+//
+//        ArrayList<Points> boardList2 = new ArrayList();
+//
+//        boardList2.add(new Points("R.drawable.pig1", "범죄도시", "영화", 1.0, 1.0));
+//        boardList2.add(new Points("R.drawable.pig2", "공공의적", "영화", 1.0, 1.0));
+//
+//        allBoardList.add(boardList2);
+//
+//        ArrayList<Points> boardList3 = new ArrayList();
+//
+//        boardList3.add(new Points("R.drawable.pig1", "고질라", "영화", 1.0, 1.0));
+//        boardList3.add(new Points("R.drawable.pig2", "캡틴마블", "영화", 1.0, 1.0));
+//        boardList3.add(new Points("R.drawable.pig3", "아이언맨", "영화", 1.0, 1.0));
+//        boardList3.add(new Points("R.drawable.pig1", "액션가면", "영화", 1.0, 1.0));
+//
+//        allBoardList.add(boardList3);
     }
 }

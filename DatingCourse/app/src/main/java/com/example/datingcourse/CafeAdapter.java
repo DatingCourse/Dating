@@ -14,12 +14,12 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalViewHolder> {
-    private ArrayList<Points> dataList;
-    private PointAdapter.OnItemClickListener itemClickListener;
+public class CafeAdapter extends RecyclerView.Adapter<CafeAdapter.HorizontalViewHolder> {
+    private ArrayList<Cafe> dataList;
+    private CafeAdapter.OnItemClickListener itemClickListener;
     public Context context;
 
-    public PointAdapter(Context context, ArrayList<Points> dataList) {
+    public CafeAdapter(Context context, ArrayList<Cafe> dataList) {
         this.context = context;
         this.dataList = dataList;
     }
@@ -33,9 +33,9 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalVi
         public HorizontalViewHolder(View itemView) {
             super(itemView);
 
-            imgView_item = itemView.findViewById(R.id.imgView_item);
-            txt_main = itemView.findViewById(R.id.txt_main);
-            txt_sub = itemView.findViewById(R.id.txt_sub);
+            imgView_item = itemView.findViewById(R.id.place_image);
+            txt_main = itemView.findViewById(R.id.place_content);
+            txt_sub = itemView.findViewById(R.id.place_title);
         }
     }
 
@@ -45,15 +45,15 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalVi
     public HorizontalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.item_point, null);
+                .inflate(R.layout.activity_cafe, null);
 
-        return new PointAdapter.HorizontalViewHolder(v);
+        return new CafeAdapter.HorizontalViewHolder(v);
     }
 
     // position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
-        Points item = dataList.get(position);
+        Cafe item = dataList.get(position);
 
         if(item != null && item.getImgName() != null){
             Glide.with(context).load(item.getImgName()).into(holder.imgView_item);
@@ -83,7 +83,7 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalVi
         return dataList.size();
     }
 
-    public void setItemClickListener(PointAdapter.OnItemClickListener onItemClickListener) {
+    public void setItemClickListener(OnItemClickListener onItemClickListener) {
         this.itemClickListener = onItemClickListener;
     }
 }

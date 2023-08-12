@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -36,7 +37,7 @@
             android:name=".Cafe"
             android:exported="false" />
         <activity
-            android:name=".Bear"
+            android:name=".Beer"
             android:exported="false" />
         <activity
             android:name=".Comments"
@@ -62,6 +63,8 @@
         <activity
             android:name=".PostsActivity"
             android:exported="false" />
+        <activity android:name=".PlaceList"
+            android:label="PlaceList" />
         <activity
             android:name=".AllPostsActivity"
             android:exported="false" />

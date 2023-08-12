@@ -32,9 +32,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RecycleActivity extends AppCompatActivity {
-    private String nickName;    // 유저 이름
     private Button btn_write; //쓰기 버튼
     private RecyclerView mRecyclerView; //RecyclerView
+    private RecyclerView imgRecyclerView;   // imgRecyclerView
     private CommentsAdapter mRecyclerAdapter; //어댑터 클래스
     private ArrayList<Comments> mCommentsItems;
     private FirebaseFirestore db;
@@ -66,6 +66,10 @@ public class RecycleActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Fetching Data... ");
         progressDialog.show();
+
+        imgRecyclerView = findViewById(R.id.recyclerViewImg);
+        imgRecyclerView.setHasFixedSize(true);
+        imgRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mRecyclerView = findViewById(R.id.rv_RecycleView);
         mRecyclerView.setHasFixedSize(true);

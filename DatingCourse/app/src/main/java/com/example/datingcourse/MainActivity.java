@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BoardActivity.class);    // Cafe
+                Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
                 startActivity(intent);
             }
         });
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         imageButton4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MapChoiceActivity.class);
                 startActivity(intent);
             }
         });
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         imageButton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BoardActivity.class);  // Random
+                Intent intent = new Intent(getApplicationContext(), MapChoiceActivity.class);  // Random
                 startActivity(intent);
             }
         });

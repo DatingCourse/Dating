@@ -46,7 +46,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
 
     @Override
     public void onBindViewHolder(@NonNull BoardViewHolder holder, int position) {
-        PointAdapter adapter = new PointAdapter(AllBoardList.get(position));
+        PointAdapter adapter = new PointAdapter(context.getApplicationContext(), AllBoardList.get(position));
 
         holder.recyclerView.setHasFixedSize(true);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context

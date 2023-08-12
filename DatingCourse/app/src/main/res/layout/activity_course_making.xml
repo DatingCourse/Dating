@@ -36,6 +36,12 @@
             />
     </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/search_frame"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

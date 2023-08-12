@@ -1,6 +1,7 @@
 // 지도 선택 클래스
 package com.example.datingcourse;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapView;
 
 import java.io.IOException;
@@ -33,6 +35,8 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
     private static final String API_KEY = "KakaoAK 4b857970dbbfec9a77078e89f8b363cc"; // REST API 키
 
     private MapView mapView;
+
+    private MapPolyline polyline;
 
     private ViewGroup mapViewContainer;
 
@@ -57,12 +61,30 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
         RecyclerView rvList = findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvList.setAdapter(listAdapter);
+
+        // 지도에 polyline 추가
+        polyline = new MapPolyline();
+        polyline.setTag(1000);
+        polyline.setLineColor(Color.argb(128, 255, 51, 0));
+
         // 리스트 아이템 클릭 시 해당 위치로 이동
         listAdapter.setItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onClick(View v, int position) {
                 MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(listItems.get(position).getY(), listItems.get(position).getX());
                 mapView.setMapCenterPointAndZoomLevel(mapPoint, 1, true);
+
+                // 지도에 마커 추가
+                MapPOIItem point = new MapPOIItem();
+                point.setItemName(listItems.get(position).getName());
+                point.setMapPoint(MapPoint.mapPointWithGeoCoord(listItems.get(position).getY(), listItems.get(position).getX()));
+                point.setMarkerType(MapPOIItem.MarkerType.BluePin);
+                point.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+                mapView.addPOIItem(point);
+
+                // Polyline에 좌표 추가
+                polyline.addPoint(mapPoint);
+                mapView.addPolyline(polyline);  // Polyline 지도에 올리기.
             }
         });
 
@@ -146,22 +168,18 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
     private void addItemsAndMarkers(ResultSearchKeyword searchResult) {
         if (searchResult != null && searchResult.getDocuments() != null && !searchResult.getDocuments().isEmpty()) {
             // 검색 결과 있음
-            listItems.clear(); // 리스트 초기화
             mapView.removeAllPOIItems(); // 지도의 마커 모두 제거
+            listItems.clear(); // 리스트 초기화
+
             for (Place document : searchResult.getDocuments()) {
                 // 결과를 리사이클러 뷰에 추가
                 List_Layout item = new List_Layout(document.getPlaceName(), document.getRoadAddressName(),
                         document.getAddressName(), Double.parseDouble(document.getX()), Double.parseDouble(document.getY()));
                 listItems.add(item);
 
-                // 지도에 마커 추가
-                MapPOIItem point = new MapPOIItem();
-                point.setItemName(document.getPlaceName());
-                point.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.parseDouble(document.getY()), Double.parseDouble(document.getX())));
-                point.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                point.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-                mapView.addPOIItem(point);
+//                onScrapePlaceDetails(document.getPlaceUrl()); // place_url 정보 주기
             }
+
             listAdapter.notifyDataSetChanged();
 
             Button btnNextPage = findViewById(R.id.btn_nextPage);
