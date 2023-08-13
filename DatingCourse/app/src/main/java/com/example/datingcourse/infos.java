@@ -104,6 +104,38 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
             }
         });
 
+        Button btnCourse = findViewById(R.id.course_btns);
+        btnCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 데이터 받아오기
+                Intent intent = getIntent();
+                String imgUrl = intent.getStringExtra("imgUrl");
+                String titleName = intent.getStringExtra("titleName");
+                String addressName = intent.getStringExtra("addressName");
+                Double x = intent.getDoubleExtra("x", 0.0); // 기본값 0.0
+                Double y = intent.getDoubleExtra("y", 0.0); // 기본값 0.0
+                String tel = intent.getStringExtra("tel");
+
+                // 값이 null이거나 빈 문자열인 경우 "정보 없음"으로 설정
+                imgUrl = (imgUrl == null || imgUrl.isEmpty()) ? "정보 없음" : imgUrl;
+                titleName = (titleName == null || titleName.isEmpty()) ? "정보 없음" : titleName;
+                addressName = (addressName == null || addressName.isEmpty()) ? "정보 없음" : addressName;
+                x = (x == null || x == 0.0) ? 0.0 : x;
+                y = (y == null || y == 0.0) ? 0.0 : y;
+                tel = (tel == null || tel.isEmpty()) ? "정보 없음" : tel;
+
+                // CourseMakingActivity로 데이터 전송
+                Intent courseIntent = new Intent(infos.this, CourseMakingActivity.class);
+                courseIntent.putExtra("imgUrl", imgUrl);
+                courseIntent.putExtra("titleName", titleName);
+                courseIntent.putExtra("addressName", addressName);
+                courseIntent.putExtra("x", x);
+                courseIntent.putExtra("y", y);
+                courseIntent.putExtra("tel", tel);
+                startActivity(courseIntent);
+            }
+        });
     }
 
     @Override

@@ -103,7 +103,7 @@
 
         </RelativeLayout>
         <Button
-            android:id="@+id/couse_btns"
+            android:id="@+id/course_btns"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@drawable/white_button_background"

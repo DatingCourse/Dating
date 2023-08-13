@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,7 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DatingCourse"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".GuChoose"
+            android:exported="false" />
         <activity
             android:name=".BoardActivity"
             android:exported="false" />
@@ -63,7 +66,8 @@
         <activity
             android:name=".PostsActivity"
             android:exported="false" />
-        <activity android:name=".PlaceList"
+        <activity
+            android:name=".PlaceList"
             android:label="PlaceList" />
         <activity
             android:name=".AllPostsActivity"
@@ -89,6 +93,9 @@
         <activity
             android:name=".ModeActivity"
             android:exported="false" />
+        <activity
+            android:name=".MyApp"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">

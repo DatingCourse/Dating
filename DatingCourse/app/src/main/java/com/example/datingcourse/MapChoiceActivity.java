@@ -1,6 +1,7 @@
 // 지도 선택 클래스
 package com.example.datingcourse;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import net.daum.mf.map.api.MapView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MapChoiceActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
+public class MapChoiceActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener, InformationsAPI.DataListener {
 
     private static final String BASE_URL = "https://dapi.kakao.com/";
     private static final String API_KEY = "KakaoAK 4b857970dbbfec9a77078e89f8b363cc"; // REST API 키
@@ -45,10 +47,19 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
     private int pageNumber = 1; // 검색 페이지 번호
     private String keyword = ""; // 검색 키워드
 
+    private ArrayList<Cafe> cafes = new ArrayList<>(); // 리사이클러 뷰 아이템
+    private CafeAdapter cafeAdapter = new CafeAdapter(this, cafes); // 리사이클러 뷰 어댑터
+    public static InformationsAPI.DataListener datasListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_choice);
+
+        datasListener = this;
+        InformationsAPI apis = new InformationsAPI();
+        apis.new NetworkTask().execute();
+
         getSupportActionBar().setTitle("장소 검색");
 
         mapView = new MapView(this);
@@ -71,6 +82,7 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
         listAdapter.setItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onClick(View v, int position) {
+
                 MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(listItems.get(position).getY(), listItems.get(position).getX());
                 mapView.setMapCenterPointAndZoomLevel(mapPoint, 1, true);
 
@@ -85,6 +97,29 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
                 // Polyline에 좌표 추가
                 polyline.addPoint(mapPoint);
                 mapView.addPolyline(polyline);  // Polyline 지도에 올리기.
+
+                boolean isMatchFound = false;  // 일치하는 항목이 있는지 확인하는 플래그 변수를 추가합니다.
+
+                // 장소 이름 비교
+                for (Cafe cafe : cafes) {
+                    if (cafe.getMainText().equals(listItems.get(position).getName())) {
+                        // 일치하는 경우 Infos에 데이터 전송
+                        Intent intent = new Intent(MapChoiceActivity.this, infos.class);
+                        intent.putExtra("imgUrl", cafes.get(position).getImgName());
+                        intent.putExtra("titleName", cafes.get(position).getMainText());
+                        intent.putExtra("addressName", cafes.get(position).getSubText());
+                        intent.putExtra("x", Double.parseDouble(cafes.get(position).getX()));
+                        intent.putExtra("y", Double.parseDouble(cafes.get(position).getY()));
+                        intent.putExtra("tel", cafes.get(position).getTel());
+                        startActivity(intent);
+                        isMatchFound = true;  // 일치하는 항목을 찾았으므로 플래그를 true로 설정합니다.
+                        break;
+                    }
+                }
+
+                if (!isMatchFound) {  // 일치하는 항목이 없는 경우
+                    Toast.makeText(MapChoiceActivity.this, "선택한 장소의 정보가 없습니다. 다시 선택해주세요.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -192,6 +227,22 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
             // 검색 결과 없음
             Toast.makeText(this, "검색 결과가 없습니다", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDataReceived(List<String> titles, List<String> images, List<String> address, List<String> x, List<String> y, List<String> tel) {
+        for (int i = 0; i < titles.size(); i++) {
+            String imageUrl = images.get(i);
+            String title = titles.get(i);
+            String setAddress = address.get(i);
+            String setX = x.get(i);
+            String setY = y.get(i);
+            String setTel = tel.get(i);
+
+            Cafe cafe = new Cafe(imageUrl, title, setAddress, setX, setY, setTel);
+            cafes.add(cafe);
+        }
+        cafeAdapter.notifyDataSetChanged();
     }
 
     @Override

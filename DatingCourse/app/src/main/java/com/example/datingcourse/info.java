@@ -50,6 +50,7 @@
             String tel = intent.getStringExtra("tel");
 
             // 값이 null이거나 빈 문자열인 경우 "정보 없음"으로 설정
+            imgUrl = (imgUrl == null || imgUrl.isEmpty()) ? "정보 없음" : imgUrl;
             titleName = (titleName == null || titleName.isEmpty()) ? "정보 없음" : titleName;
             addressName = (addressName == null || addressName.isEmpty()) ? "정보 없음" : addressName;
             tel = (tel == null || tel.isEmpty()) ? "정보 없음" : tel;
