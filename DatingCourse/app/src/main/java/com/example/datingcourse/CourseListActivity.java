@@ -1,338 +1,96 @@
-// 코스 목록 클래스
 package com.example.datingcourse;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Outline;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewOutlineProvider;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import net.daum.mf.map.api.MapPOIItem;
+import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapPolyline;
+import net.daum.mf.map.api.MapView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class CourseListActivity extends AppCompatActivity {
 
-    private Spinner spinner;
-
-    // Android Java 코드
-    public class CircleOutlineProvider extends ViewOutlineProvider {
-        @Override
-        public void getOutline(View view, Outline outline) {
-            int diameter = Math.min(view.getWidth(), view.getHeight());
-            outline.setOval(0, 0, diameter, diameter);
-        }
-    }
-
-    // 다음 코드를 사용해 뷰에 원형 아웃라인을 설정합니다.
-//    View yourView = findViewById(R.id.write);
-//    yourView.setOutlineProvider(new void CircleOutlineProvider());
-//    yourView.setClipToOutline(true);
-//    yourView.setElevation(4);
+    private RecyclerView recyclerView;
+    private CourseAdapter courseAdapter;
+    private ArrayList<Photo> photos;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_list);
+        setContentView(R.layout.activity_course_list); // 여기서는 여러분의 레이아웃 XML 이름으로 교체해주세요.
 
-        getSupportActionBar().setTitle("코스 목록");
+        // 카카오 맵 초기화
+        MapView mapView = new MapView(this);
+        RelativeLayout mapViewContainer = findViewById(R.id.course_mapView);
+        mapViewContainer.addView(mapView);
 
-        //검색창 테두리 커스텀
-        FrameLayout list_search_edit_frame = findViewById(R.id.list_search_edit_frame);
-        GradientDrawable borderDrawable = new GradientDrawable();
-        borderDrawable.setShape(GradientDrawable.RECTANGLE);  //테두리 모형
-        borderDrawable.setColor(Color.WHITE); //borderDrawable의 내부 배경 색상
-        int myColor = Color.parseColor("#FF0063"); //원하는 색상 설정 코드
-        borderDrawable.setStroke(10, myColor); //color.xml파일에서 설정한 색상 가져옴, 숫자는 테두리 굵기
+        Intent intent = getIntent();
+//        ArrayList<HashMap<String, Object>> course = intent.getStringArrayListExtra("course");
+        String imgUrl = intent.getStringExtra("imgUrl");
+        String titleName = intent.getStringExtra("titleName");
+        String addressName = intent.getStringExtra("addressName");
+        Double x = intent.getDoubleExtra("x", 0.0); // 기본값 0.0
+        Double y = intent.getDoubleExtra("y", 0.0); // 기본값 0.0
+        String tel = intent.getStringExtra("tel");
 
-        //검색창 테두리의 모서리 둥글게 하기
-        float cornerRadiusInDp = 8;
-        float cornerRadiusInPx = cornerRadiusInDp * getResources().getDisplayMetrics().density;
-        borderDrawable.setCornerRadius(cornerRadiusInPx);
+        // 값이 null이거나 빈 문자열인 경우 "정보 없음"으로 설정
+        imgUrl = (imgUrl == null || imgUrl.isEmpty()) ? null : imgUrl;
+        titleName = (titleName == null || titleName.isEmpty()) ? "정보 없음" : titleName;
+        addressName = (addressName == null || addressName.isEmpty()) ? "정보 없음" : addressName;
+        tel = (tel == null || tel.isEmpty()) ? "정보 없음" : tel;
 
-        // 코스 만들기 페이지로 이동
-        ImageButton write = (ImageButton) findViewById(R.id.write);
-        write.setOnClickListener(new View.OnClickListener() {
+        Photo photo = new Photo(imgUrl, titleName, addressName, x, y, tel);
+
+        // RecyclerView 설정
+        recyclerView = findViewById(R.id.course_list);
+        courseAdapter = new CourseAdapter(this, photos);
+        recyclerView.setAdapter(courseAdapter);
+        courseAdapter.notifyDataSetChanged();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // TODO: 여기서 photos 데이터를 로드하거나 업데이트 할 수 있습니다.
+        // 예: photos.add(new Photo(...));
+        // courseAdapter.notifyDataSetChanged();
+
+        courseAdapter.setItemClickListener(new CourseAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CourseMakingActivity.class);
-                startActivity(intent);
+            public void onClick(View v, int position) {
+                // 아이템을 클릭했을 때의 동작을 여기에 작성하세요.
+                Toast.makeText(CourseListActivity.this, "Item " + position + " clicked", Toast.LENGTH_SHORT).show();
             }
         });
-
-        //여기부터는 사용자가 만든 코스들의 정보 페이지로 이동
-        ImageButton first_button_1 = (ImageButton) findViewById(R.id.first_button_1);
-        first_button_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_2 = (ImageButton) findViewById(R.id.first_button_2);
-        first_button_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_3 = (ImageButton) findViewById(R.id.first_button_3);
-        first_button_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_4 = (ImageButton) findViewById(R.id.first_button_4);
-        first_button_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_5 = (ImageButton) findViewById(R.id.first_button_5);
-        first_button_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_6 = (ImageButton) findViewById(R.id.first_button_6);
-        first_button_6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_7 = (ImageButton) findViewById(R.id.first_button_7);
-        first_button_7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_8 = (ImageButton) findViewById(R.id.first_button_8);
-        first_button_8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_9 = (ImageButton) findViewById(R.id.first_button_9);
-        first_button_9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton first_button_10 = (ImageButton) findViewById(R.id.first_button_10);
-        first_button_10.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_1 = (ImageButton) findViewById(R.id.second_button_1);
-        second_button_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_2 = (ImageButton) findViewById(R.id.second_button_2);
-        second_button_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_3 = (ImageButton) findViewById(R.id.second_button_3);
-        second_button_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_4 = (ImageButton) findViewById(R.id.second_button_4);
-        second_button_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_5 = (ImageButton) findViewById(R.id.second_button_5);
-        second_button_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_6 = (ImageButton) findViewById(R.id.second_button_6);
-        second_button_6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_7 = (ImageButton) findViewById(R.id.second_button_7);
-        second_button_7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_8 = (ImageButton) findViewById(R.id.second_button_8);
-        second_button_8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_9 = (ImageButton) findViewById(R.id.second_button_9);
-        second_button_9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton second_button_10 = (ImageButton) findViewById(R.id.second_button_10);
-        second_button_10.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_1 = (ImageButton) findViewById(R.id.third_button_1);
-        third_button_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_2 = (ImageButton) findViewById(R.id.third_button_2);
-        third_button_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_3 = (ImageButton) findViewById(R.id.third_button_3);
-        third_button_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_4 = (ImageButton) findViewById(R.id.third_button_4);
-        third_button_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_5 = (ImageButton) findViewById(R.id.third_button_5);
-        third_button_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_6 = (ImageButton) findViewById(R.id.third_button_6);
-        third_button_6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_7 = (ImageButton) findViewById(R.id.third_button_7);
-        third_button_7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_8 = (ImageButton) findViewById(R.id.third_button_8);
-        third_button_8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_9 = (ImageButton) findViewById(R.id.third_button_9);
-        third_button_9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageButton third_button_10 = (ImageButton) findViewById(R.id.third_button_10);
-        third_button_10.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), info.class);
-                startActivity(intent);
-            }
-        });
-
     }
+
+    private void addMarkerToMap(MapView mapView, double x, double y, String name) {
+        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
+        net.daum.mf.map.api.MapPOIItem marker = new net.daum.mf.map.api.MapPOIItem();
+        marker.setItemName(name);
+        marker.setTag(0);
+        marker.setMapPoint(mapPoint);
+        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+        mapView.addPOIItem(marker);
+    }
+
+    private void addPolylineToMap(MapView mapView, List<Photo> photos) {
+        MapPolyline polyline = new MapPolyline();
+        polyline.setTag(1000);
+        for (Photo photo : photos) {
+            polyline.addPoint(MapPoint.mapPointWithGeoCoord(photo.getX(), photo.getY()));
+        }
+        mapView.addPolyline(polyline);
+    }
+
 }

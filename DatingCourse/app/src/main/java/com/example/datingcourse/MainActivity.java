@@ -8,7 +8,6 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +20,18 @@ public class MainActivity extends AppCompatActivity {
         imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int sigunguCode = 1;
+                int contentTypeId = 39;
+                String cat1 = "A05";
+                String cat2 = "A0502";
+                String cat3 = "A05020900";
                 Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
+                intent.putExtra("contentTypeId", contentTypeId);
+                intent.putExtra("sigunguCode", sigunguCode);
+                intent.putExtra("cat1", cat1);
+                intent.putExtra("cat2", cat2);
+                intent.putExtra("cat3", cat3);
+                intent.putExtra("selectedRegion", "서울특별시 강남구");
                 startActivity(intent);
             }
         });
@@ -31,17 +41,39 @@ public class MainActivity extends AppCompatActivity {
         imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BoardActivity.class);  // Restuarant
+                int sigunguCode = 1;
+                int contentTypeId = 39;
+                String cat1 = "";
+                String cat2 = "";
+                String cat3 = "";
+                Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
+                intent.putExtra("contentTypeId", contentTypeId);
+                intent.putExtra("sigunguCode", sigunguCode);
+                intent.putExtra("cat1", cat1);
+                intent.putExtra("cat2", cat2);
+                intent.putExtra("cat3", cat3);
+                intent.putExtra("selectedRegion", "서울특별시 강남구");
                 startActivity(intent);
             }
         });
 
-        // 술 페이지로 이동
+        // 숙박 페이지로 이동
         ImageButton imageButton3 = (ImageButton) findViewById(R.id.imageButton3);
         imageButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BoardActivity.class);    // Beer
+                int sigunguCode = 1;
+                int contentTypeId = 32;
+                String cat1 = "";
+                String cat2 = "";
+                String cat3 = "";
+                Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
+                intent.putExtra("contentTypeId", contentTypeId);
+                intent.putExtra("sigunguCode", sigunguCode);
+                intent.putExtra("cat1", cat1);
+                intent.putExtra("cat2", cat2);
+                intent.putExtra("cat3", cat3);
+                intent.putExtra("selectedRegion", "서울특별시 강남구");
                 startActivity(intent);
             }
         });
@@ -51,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         imageButton4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MapChoiceActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CourseMakingActivity.class);
+//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
                 startActivity(intent);
             }
         });
@@ -62,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BoardActivity.class);   // RecommendActivity
+//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
                 startActivity(intent);
             }
         });
@@ -72,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MapChoiceActivity.class);  // Random
+//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
                 startActivity(intent);
             }
         });
@@ -82,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MyPage.class);  // MyPage
+//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
                 startActivity(intent);
             }
         });

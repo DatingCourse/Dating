@@ -16,6 +16,21 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class InformationAPI extends AppCompatActivity {
+
+    int contentTypeId;
+    int sigunguCode;
+    String cat1;
+    String cat2;
+    String cat3;
+
+    public InformationAPI(int contentTypeId, int sigunguCode, String cat1, String cat2, String cat3){
+        this.contentTypeId = contentTypeId;
+        this.sigunguCode = sigunguCode;
+        this.cat1 = cat1;
+        this.cat2 = cat2;
+        this.cat3 = cat3;
+    }
+
     public interface DataListener {
         void onDataReceived(List<String> titles, List<String> images, List<String> address, List<String> x, List<String> y, List<String> tel);
     }
@@ -31,8 +46,14 @@ public class InformationAPI extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
-            String url = "http://apis.data.go.kr/B551011/KorService1/areaBasedList1?numOfRows=400&pageNo=1&MobileOS=AND&MobileApp=AppTest&contentTypeId=39&areaCode=1&sigunguCode=1&cat1=&cat2=&cat3=" +
-                    "&ServiceKey=rCuGpcOUXRWuiw%2BNFCufONVDvLJehhabXPhAOB2uihD01gPnNfqqdwr2wDEznka6MMa1%2Bs7im%2FMidLje1z4U5Q%3D%3D";
+            String url = "http://apis.data.go.kr/B551011/KorService1/areaBasedList1?numOfRows=400&pageNo=1&MobileOS=AND&MobileApp=AppTest"
+                    + "&contentTypeId=" + contentTypeId
+                    + "&areaCode=1"
+                    + "&sigunguCode=" + sigunguCode
+                    + "&cat1=" + cat1
+                    + "&cat2=" + cat2
+                    + "&cat3=" + cat3
+                    + "&ServiceKey=rCuGpcOUXRWuiw%2BNFCufONVDvLJehhabXPhAOB2uihD01gPnNfqqdwr2wDEznka6MMa1%2Bs7im%2FMidLje1z4U5Q%3D%3D";
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()

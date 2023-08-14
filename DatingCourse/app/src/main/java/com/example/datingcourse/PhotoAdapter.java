@@ -1,6 +1,7 @@
 package com.example.datingcourse;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,11 +53,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.HorizontalVi
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
         Photo item = dataList.get(position);
 
-        if(item != null && item.getImgUrl() != null){
-            Glide.with(context).load(item.getImgUrl()).into(holder.photo_item);
-        } else{
-            holder.photo_item.setImageResource(R.drawable.pig1);
+        if(item != null){
+            if(item.getImgUrl().equals("정보 없음")){
+                holder.photo_item.setImageResource(R.drawable.pig1);
+            } else if(item.getImgUrl() != null){
+                Glide.with(context).load(item.getImgUrl()).into(holder.photo_item);
+            }
         }
+
         holder.delete_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

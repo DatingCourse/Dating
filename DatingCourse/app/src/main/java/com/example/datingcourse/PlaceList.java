@@ -3,6 +3,7 @@ package com.example.datingcourse;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,13 +24,36 @@ public class PlaceList extends AppCompatActivity implements InformationAPI.DataL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        int contentTypeId = intent.getIntExtra("contentTypeId", 0);
+        int sigunguCode = intent.getIntExtra("sigunguCode", 0);
+        String cat1 = intent.getStringExtra("cat1");
+        String cat2 = intent.getStringExtra("cat2");
+        String cat3 = intent.getStringExtra("cat3");
+        String selectedRegion = intent.getStringExtra("selectedRegion");
+
         dataListener = this;
-        InformationAPI api = new InformationAPI();
+        InformationAPI api = new InformationAPI(contentTypeId, sigunguCode, cat1, cat2, cat3);
         api.new NetworkTask().execute();
 
         setContentView(R.layout.activity_place_list);
 
         getSupportActionBar().setTitle("정보");
+
+        TextView guChoose = findViewById(R.id.place_gu_choose);
+        guChoose.setText(selectedRegion);  // TextView의 텍스트를 업데이트
+        guChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaceList.this, GuChoose.class);
+                intent.putExtra("contentTypeId", contentTypeId);
+                intent.putExtra("sigunguCode", sigunguCode);
+                intent.putExtra("cat1", cat1);
+                intent.putExtra("cat2", cat2);
+                intent.putExtra("cat3", cat3);
+                startActivity(intent); // 결과를 기대하는 인텐트 시작
+            }
+        });
 
         RecyclerView rvList = findViewById(R.id.place_rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -49,6 +73,14 @@ public class PlaceList extends AppCompatActivity implements InformationAPI.DataL
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // MainActivity로 이동
+        Intent intent = new Intent(PlaceList.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);  // 현재 액티비티 위에 있는 모든 액티비티를 종료
+        startActivity(intent);
     }
 
     @Override

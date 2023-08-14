@@ -36,12 +36,6 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
     private static final String BASE_URL = "https://dapi.kakao.com/";
     private static final String API_KEY = "KakaoAK 4b857970dbbfec9a77078e89f8b363cc"; // REST API 키
 
-    private MapView mapView;
-
-    private MapPolyline polyline;
-
-    private ViewGroup mapViewContainer;
-
     private ArrayList<List_Layout> listItems = new ArrayList<>(); // 리사이클러 뷰 아이템
     private ListAdapter listAdapter = new ListAdapter(listItems); // 리사이클러 뷰 어댑터
     private int pageNumber = 1; // 검색 페이지 번호
@@ -62,55 +56,27 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
 
         getSupportActionBar().setTitle("장소 검색");
 
-        mapView = new MapView(this);
-        mapViewContainer = (ViewGroup) findViewById(R.id.mapView);
-        mapViewContainer.addView(mapView);
-        mapView.setMapViewEventListener(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-
         // 리사이클러 뷰
         RecyclerView rvList = findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvList.setAdapter(listAdapter);
 
-        // 지도에 polyline 추가
-        polyline = new MapPolyline();
-        polyline.setTag(1000);
-        polyline.setLineColor(Color.argb(128, 255, 51, 0));
-
         // 리스트 아이템 클릭 시 해당 위치로 이동
         listAdapter.setItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onClick(View v, int position) {
-
-                MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(listItems.get(position).getY(), listItems.get(position).getX());
-                mapView.setMapCenterPointAndZoomLevel(mapPoint, 1, true);
-
-                // 지도에 마커 추가
-                MapPOIItem point = new MapPOIItem();
-                point.setItemName(listItems.get(position).getName());
-                point.setMapPoint(MapPoint.mapPointWithGeoCoord(listItems.get(position).getY(), listItems.get(position).getX()));
-                point.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                point.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-                mapView.addPOIItem(point);
-
-                // Polyline에 좌표 추가
-                polyline.addPoint(mapPoint);
-                mapView.addPolyline(polyline);  // Polyline 지도에 올리기.
-
                 boolean isMatchFound = false;  // 일치하는 항목이 있는지 확인하는 플래그 변수를 추가합니다.
-
                 // 장소 이름 비교
                 for (Cafe cafe : cafes) {
                     if (cafe.getMainText().equals(listItems.get(position).getName())) {
                         // 일치하는 경우 Infos에 데이터 전송
                         Intent intent = new Intent(MapChoiceActivity.this, infos.class);
-                        intent.putExtra("imgUrl", cafes.get(position).getImgName());
-                        intent.putExtra("titleName", cafes.get(position).getMainText());
-                        intent.putExtra("addressName", cafes.get(position).getSubText());
-                        intent.putExtra("x", Double.parseDouble(cafes.get(position).getX()));
-                        intent.putExtra("y", Double.parseDouble(cafes.get(position).getY()));
-                        intent.putExtra("tel", cafes.get(position).getTel());
+                        intent.putExtra("imgUrl", cafe.getImgName());
+                        intent.putExtra("titleName", cafe.getMainText());
+                        intent.putExtra("addressName", cafe.getSubText());
+                        intent.putExtra("x", Double.parseDouble(cafe.getX()));
+                        intent.putExtra("y", Double.parseDouble(cafe.getY()));
+                        intent.putExtra("tel", cafe.getTel());
                         startActivity(intent);
                         isMatchFound = true;  // 일치하는 항목을 찾았으므로 플래그를 true로 설정합니다.
                         break;
@@ -203,7 +169,6 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
     private void addItemsAndMarkers(ResultSearchKeyword searchResult) {
         if (searchResult != null && searchResult.getDocuments() != null && !searchResult.getDocuments().isEmpty()) {
             // 검색 결과 있음
-            mapView.removeAllPOIItems(); // 지도의 마커 모두 제거
             listItems.clear(); // 리스트 초기화
 
             for (Place document : searchResult.getDocuments()) {
@@ -211,8 +176,6 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
                 List_Layout item = new List_Layout(document.getPlaceName(), document.getRoadAddressName(),
                         document.getAddressName(), Double.parseDouble(document.getX()), Double.parseDouble(document.getY()));
                 listItems.add(item);
-
-//                onScrapePlaceDetails(document.getPlaceUrl()); // place_url 정보 주기
             }
 
             listAdapter.notifyDataSetChanged();

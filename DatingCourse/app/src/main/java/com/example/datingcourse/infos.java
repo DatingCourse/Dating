@@ -22,18 +22,11 @@ import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapView;
 
 public class infos extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener  {
-    private static final String BASE_URL = "https://dapi.kakao.com/";
-    private static final String API_KEY = "KakaoAK 4b857970dbbfec9a77078e89f8b363cc"; // REST API 키
-
     private MapView mapView;
 
     private MapPolyline polyline;
 
     private ViewGroup mapViewContainer;
-
-    public static InformationAPI.DataListener dataListener;
-
-    private String keyword = ""; // 검색 키워드
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +42,7 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
         String tel = intent.getStringExtra("tel");
 
         // 값이 null이거나 빈 문자열인 경우 "정보 없음"으로 설정
+        imgUrl = (imgUrl == null || imgUrl.isEmpty()) ? null : imgUrl;
         titleName = (titleName == null || titleName.isEmpty()) ? "정보 없음" : titleName;
         addressName = (addressName == null || addressName.isEmpty()) ? "정보 없음" : addressName;
         tel = (tel == null || tel.isEmpty()) ? "정보 없음" : tel;
@@ -67,6 +61,7 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
         ImageView representImage = findViewById(R.id.represents_image);
         Glide.with(this)
                 .load(imgUrl)
+                .error(R.drawable.pig1)
                 .into(representImage);
 
         mapView = new MapView(this);

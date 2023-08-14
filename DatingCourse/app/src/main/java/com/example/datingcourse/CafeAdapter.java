@@ -34,8 +34,9 @@ public class CafeAdapter extends RecyclerView.Adapter<CafeAdapter.HorizontalView
             super(itemView);
 
             imgView_item = itemView.findViewById(R.id.place_image);
-            txt_main = itemView.findViewById(R.id.place_content);
-            txt_sub = itemView.findViewById(R.id.place_title);
+            txt_main = itemView.findViewById(R.id.place_title);
+            txt_sub = itemView.findViewById(R.id.place_content);
+
         }
     }
 
