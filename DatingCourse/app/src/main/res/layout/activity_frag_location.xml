@@ -11,13 +11,13 @@
         android:layout_height="670dp"
         tools:ignore="MissingConstraints" >
 
-        <TextView
-            android:layout_marginTop="150dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="위치"
-            android:textSize="20dp"
-            android:textColor="#000000"
-            tools:ignore="MissingConstraints" />
+        <RelativeLayout
+            android:id="@+id/location_mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

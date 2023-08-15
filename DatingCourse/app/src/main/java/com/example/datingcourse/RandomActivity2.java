@@ -107,213 +107,222 @@ public class RandomActivity2 extends AppCompatActivity implements MapView.Curren
 
 
         // Excel 파일 읽어오기
-            AssetManager assetManager = getAssets();
+        AssetManager assetManager = getAssets();
 
 
-            Intent intent = getIntent();
-            String list = intent.getStringExtra("list");
-            String textView1Value = intent.getStringExtra("textView1");
-            String textView2Value = intent.getStringExtra("textView2");
-            String textView3Value = intent.getStringExtra("textView3");
+        Intent intent = getIntent();
+        String list = intent.getStringExtra("list");
+        String textView1Value = intent.getStringExtra("textView1");
+        String textView2Value = intent.getStringExtra("textView2");
+        String textView3Value = intent.getStringExtra("textView3");
 
-            if(list.equals("강남구")) {
-                sigunguCode=1;
-                if (textView1Value.equals("먹기")) contentTypeId1 = 39;
-                else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
-                else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
-                else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
-                else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
-                else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
-                if (textView2Value.equals("먹기")) contentTypeId2 = 39;
-                else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
-                else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
-                else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
-                else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
-                else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
-                if (textView3Value.equals("먹기")) contentTypeId3 = 39;
-                else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
-                else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
-                else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
-                else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
-                else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
-            }
-            else if (list.equals("강동구")){
-                sigunguCode=2;
-                if (textView1Value.equals("먹기")) contentTypeId1 = 39;
-                else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
-                else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
-                else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
-                else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
-                else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
-                if (textView2Value.equals("먹기")) contentTypeId2 = 39;
-                else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
-                else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
-                else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
-                else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
-                else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
-                if (textView3Value.equals("먹기")) contentTypeId3 = 39;
-                else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
-                else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
-                else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
-                else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
-                else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
-            }
-            else if (list.equals("강북구")){
-                sigunguCode=3;
-                if (textView1Value.equals("먹기")) contentTypeId1 = 39;
-                else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
-                else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
-                else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
-                else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
-                else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
-                if (textView2Value.equals("먹기")) contentTypeId2 = 39;
-                else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
-                else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
-                else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
-                else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
-                else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
-                if (textView3Value.equals("먹기")) contentTypeId3 = 39;
-                else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
-                else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
-                else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
-                else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
-                else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
-            }
-            else if (list.equals("강서구")){
-                sigunguCode=4;
-                if (textView1Value.equals("먹기")) contentTypeId1 = 39;
-                else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
-                else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
-                else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
-                else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
-                else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
-                if (textView2Value.equals("먹기")) contentTypeId2 = 39;
-                else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
-                else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
-                else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
-                else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
-                else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
-                if (textView3Value.equals("먹기")) contentTypeId3 = 39;
-                else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
-                else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
-                else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
-                else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
-                else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
-            }
+        if(list.equals("강남구")) {
+            sigunguCode=1;
+            if (textView1Value.equals("먹기")) contentTypeId1 = 39;
+            else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
+            else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
+            else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
+            else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
+            else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
+            if (textView2Value.equals("먹기")) contentTypeId2 = 39;
+            else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
+            else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
+            else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
+            else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
+            else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
+            if (textView3Value.equals("먹기")) contentTypeId3 = 39;
+            else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
+            else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
+            else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
+            else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
+            else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
+        }
+        else if (list.equals("강동구")){
+            sigunguCode=2;
+            if (textView1Value.equals("먹기")) contentTypeId1 = 39;
+            else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
+            else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
+            else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
+            else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
+            else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
+            if (textView2Value.equals("먹기")) contentTypeId2 = 39;
+            else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
+            else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
+            else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
+            else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
+            else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
+            if (textView3Value.equals("먹기")) contentTypeId3 = 39;
+            else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
+            else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
+            else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
+            else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
+            else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
+        }
+        else if (list.equals("강북구")){
+            sigunguCode=3;
+            if (textView1Value.equals("먹기")) contentTypeId1 = 39;
+            else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
+            else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
+            else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
+            else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
+            else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
+            if (textView2Value.equals("먹기")) contentTypeId2 = 39;
+            else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
+            else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
+            else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
+            else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
+            else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
+            if (textView3Value.equals("먹기")) contentTypeId3 = 39;
+            else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
+            else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
+            else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
+            else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
+            else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
+        }
+        else if (list.equals("강서구")){
+            sigunguCode=4;
+            if (textView1Value.equals("먹기")) contentTypeId1 = 39;
+            else if (textView1Value.equals("숙박")) contentTypeId1 = 32;
+            else if (textView1Value.equals("관광지")) contentTypeId1 = 12;
+            else if (textView1Value.equals("놀기")) contentTypeId1 = 28;
+            else if (textView1Value.equals("문화시설")) contentTypeId1 = 14;
+            else if (textView1Value.equals("쇼핑")) contentTypeId1 = 38;
+            if (textView2Value.equals("먹기")) contentTypeId2 = 39;
+            else if (textView2Value.equals("숙박")) contentTypeId2 = 32;
+            else if (textView2Value.equals("관광지")) contentTypeId2 = 12;
+            else if (textView2Value.equals("놀기")) contentTypeId2 = 28;
+            else if (textView2Value.equals("문화시설")) contentTypeId2 = 14;
+            else if (textView2Value.equals("쇼핑")) contentTypeId2 = 38;
+            if (textView3Value.equals("먹기")) contentTypeId3 = 39;
+            else if (textView3Value.equals("숙박")) contentTypeId3 = 32;
+            else if (textView3Value.equals("관광지")) contentTypeId3 = 12;
+            else if (textView3Value.equals("놀기")) contentTypeId3 = 28;
+            else if (textView3Value.equals("문화시설")) contentTypeId3 = 14;
+            else if (textView3Value.equals("쇼핑")) contentTypeId3 = 38;
+        }
 
 
 
 
 
         if (list != null && !list.isEmpty()) {
-                if (list.equals("강남구") || list.equals("강북구") || list.equals("강동구") || list.equals("강서구")) {
-                    if (textView1Value.equals("먹기")) {
-                        result = ExcelReader.readDataFromExcel(assetManager, "food.xls", list);
-                    } else if (textView1Value.equals("숙박")) {
-                        result = ExcelReader.readDataFromExcel(assetManager, "sleep.xls", list);
-                    } else if (textView1Value.equals("관광지")) {
-                        result = ExcelReader.readDataFromExcel(assetManager, "tour.xls", list);
-                    } else if (textView1Value.equals("놀기")) {
-                        result = ExcelReader.readDataFromExcel(assetManager, "playing.xls", list);
-                    } else if (textView1Value.equals("문화시설")) {
-                        result = ExcelReader.readDataFromExcel(assetManager, "culture.xls", list);
-                    } else if (textView1Value.equals("쇼핑")) {
-                        result = ExcelReader.readDataFromExcel(assetManager, "shopping.xls", list);
-                    }
-
-                    if (textView2Value.equals("먹기")) {
-                        result2 = ExcelReader.readDataFromExcel(assetManager, "food.xls", list);
-                    } else if (textView2Value.equals("숙박")) {
-                        result2 = ExcelReader.readDataFromExcel(assetManager, "sleep.xls", list);
-                    } else if (textView2Value.equals("관광지")) {
-                        result2 = ExcelReader.readDataFromExcel(assetManager, "tour.xls", list);
-                    } else if (textView2Value.equals("놀기")) {
-                        result2 = ExcelReader.readDataFromExcel(assetManager, "playing.xls", list);
-                    } else if (textView2Value.equals("문화시설")) {
-                        result2 = ExcelReader.readDataFromExcel(assetManager, "culture.xls", list);
-                    } else if (textView2Value.equals("쇼핑")) {
-                        result2 = ExcelReader.readDataFromExcel(assetManager, "shopping.xls", list);
-                    }
-
-                    if (textView3Value.equals("먹기")) {
-                        result3 = ExcelReader.readDataFromExcel(assetManager, "food.xls", list);
-                    } else if (textView3Value.equals("숙박")) {
-                        result3 = ExcelReader.readDataFromExcel(assetManager, "sleep.xls", list);
-                    } else if (textView3Value.equals("관광지")) {
-                        result3 = ExcelReader.readDataFromExcel(assetManager, "tour.xls", list);
-                    } else if (textView3Value.equals("놀기")) {
-                        result3 = ExcelReader.readDataFromExcel(assetManager, "playing.xls", list);
-                    } else if (textView3Value.equals("문화시설")) {
-                        result3 = ExcelReader.readDataFromExcel(assetManager, "culture.xls", list);
-                    } else if (textView3Value.equals("쇼핑")) {
-                        result3 = ExcelReader.readDataFromExcel(assetManager, "shopping.xls", list);
-                    }
+            if (list.equals("강남구") || list.equals("강북구") || list.equals("강동구") || list.equals("강서구")) {
+                if (textView1Value.equals("먹기")) {
+                    result = ExcelReader.readDataFromExcel(assetManager, "food.xls", list);
+                } else if (textView1Value.equals("숙박")) {
+                    result = ExcelReader.readDataFromExcel(assetManager, "sleep.xls", list);
+                } else if (textView1Value.equals("관광지")) {
+                    result = ExcelReader.readDataFromExcel(assetManager, "tour.xls", list);
+                } else if (textView1Value.equals("놀기")) {
+                    result = ExcelReader.readDataFromExcel(assetManager, "playing.xls", list);
+                } else if (textView1Value.equals("문화시설")) {
+                    result = ExcelReader.readDataFromExcel(assetManager, "culture.xls", list);
+                } else if (textView1Value.equals("쇼핑")) {
+                    result = ExcelReader.readDataFromExcel(assetManager, "shopping.xls", list);
                 }
 
+                if (textView2Value.equals("먹기")) {
+                    result2 = ExcelReader.readDataFromExcel(assetManager, "food.xls", list);
+                } else if (textView2Value.equals("숙박")) {
+                    result2 = ExcelReader.readDataFromExcel(assetManager, "sleep.xls", list);
+                } else if (textView2Value.equals("관광지")) {
+                    result2 = ExcelReader.readDataFromExcel(assetManager, "tour.xls", list);
+                } else if (textView2Value.equals("놀기")) {
+                    result2 = ExcelReader.readDataFromExcel(assetManager, "playing.xls", list);
+                } else if (textView2Value.equals("문화시설")) {
+                    result2 = ExcelReader.readDataFromExcel(assetManager, "culture.xls", list);
+                } else if (textView2Value.equals("쇼핑")) {
+                    result2 = ExcelReader.readDataFromExcel(assetManager, "shopping.xls", list);
+                }
 
-                //텍스트 뷰에 출력
-               // Button btn1 = findViewById(R.id.text_view1);
-                columns = result.split("  ");
-                overview1 = columns[0]+ "\n\n" +columns[1]+ "\n\n" + columns[4] + "\n\n" + columns[5] + "\n\n" + columns[6];
-                result = columns[0] + "\n" + columns[1];
-               // btn1.setText(result);
-                MapPOIItem marker = new MapPOIItem();
-                double latitude = Double.parseDouble(columns[2]);
-                double longitude = Double.parseDouble(columns[3]);
-                MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
-                marker.setItemName(columns[0]);
-                marker.setTag(0);
-                marker.setMapPoint(mapPoint);
-                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-                mapView.addPOIItem(marker);
+                if (textView3Value.equals("먹기")) {
+                    result3 = ExcelReader.readDataFromExcel(assetManager, "food.xls", list);
+                } else if (textView3Value.equals("숙박")) {
+                    result3 = ExcelReader.readDataFromExcel(assetManager, "sleep.xls", list);
+                } else if (textView3Value.equals("관광지")) {
+                    result3 = ExcelReader.readDataFromExcel(assetManager, "tour.xls", list);
+                } else if (textView3Value.equals("놀기")) {
+                    result3 = ExcelReader.readDataFromExcel(assetManager, "playing.xls", list);
+                } else if (textView3Value.equals("문화시설")) {
+                    result3 = ExcelReader.readDataFromExcel(assetManager, "culture.xls", list);
+                } else if (textView3Value.equals("쇼핑")) {
+                    result3 = ExcelReader.readDataFromExcel(assetManager, "shopping.xls", list);
+                }
+            }
 
-               // Button btn2 = findViewById(R.id.text_view2);
-                columns2 = result2.split("  ");
-                overview2 = columns2[0]+ "\n\n" +columns2[1]+ "\n\n" + columns2[4] + "\n\n" + columns2[5] + "\n\n" + columns2[6];
 
-                result2 = columns2[0] + "\n" + columns2[1];
-               // btn2.setText(result2);
-                MapPOIItem marker2 = new MapPOIItem();
-                double latitude2 = Double.parseDouble(columns2[2]);
-                double longitude2 = Double.parseDouble(columns2[3]);
-                MapPoint mapPoint2 = MapPoint.mapPointWithGeoCoord(latitude2, longitude2);
-                marker2.setItemName(columns2[0]);
-                marker2.setTag(0);
-                marker2.setMapPoint(mapPoint2);
-                marker2.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker2.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-                mapView.addPOIItem(marker2);
+            //텍스트 뷰에 출력
+            // Button btn1 = findViewById(R.id.text_view1);
+            columns = result.split("  ");
+            overview1 = columns[0]+ "\n\n" +columns[1]+ "\n\n" + columns[4] + "\n\n" + columns[5] + "\n\n" + columns[6];
+            result = columns[0] + "\n" + columns[1];
+            // btn1.setText(result);
+            MapPOIItem marker = new MapPOIItem();
+            double latitude = Double.parseDouble(columns[2]);
+            double longitude = Double.parseDouble(columns[3]);
+            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
+            marker.setItemName(columns[0]);
+            marker.setTag(1);
+            marker.setMapPoint(mapPoint);
+            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+            marker.setCustomImageResourceId(R.drawable.custom_marker1);
+            marker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
-               // Button btn3 = findViewById(R.id.text_view3);
-                columns3 = result3.split("  ");
-                overview3 = columns3[0]+ "\n\n" +columns3[1]+ "\n\n" + columns3[4] + "\n\n" + columns3[5] + "\n\n" + columns3[6];
-                result3 = columns3[0] + "\n" + columns3[1];
-               // btn3.setText(result3);
-                MapPOIItem marker3 = new MapPOIItem();
-                double latitude3 = Double.parseDouble(columns3[2]);
-                double longitude3 = Double.parseDouble(columns3[3]);
-                MapPoint mapPoint3 = MapPoint.mapPointWithGeoCoord(latitude3, longitude3);
-                marker3.setItemName(columns3[0]);
-                marker3.setTag(0);
-                marker3.setMapPoint(mapPoint3);
-                marker3.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker3.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-                mapView.addPOIItem(marker3);
+            marker.setCustomSelectedImageResourceId(R.drawable.custom_marker2);
+            mapView.addPOIItem(marker);
 
-                MapPolyline polyline = new MapPolyline();
-                polyline.setTag(1000);
+            // Button btn2 = findViewById(R.id.text_view2);
+            columns2 = result2.split("  ");
+            overview2 = columns2[0]+ "\n\n" +columns2[1]+ "\n\n" + columns2[4] + "\n\n" + columns2[5] + "\n\n" + columns2[6];
 
-                polyline.addPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude));
-                polyline.addPoint(MapPoint.mapPointWithGeoCoord(latitude2, longitude2));
-                polyline.addPoint(MapPoint.mapPointWithGeoCoord(latitude3, longitude3));
+            result2 = columns2[0] + "\n" + columns2[1];
+            // btn2.setText(result2);
+            MapPOIItem marker2 = new MapPOIItem();
+            double latitude2 = Double.parseDouble(columns2[2]);
+            double longitude2 = Double.parseDouble(columns2[3]);
+            MapPoint mapPoint2 = MapPoint.mapPointWithGeoCoord(latitude2, longitude2);
+            marker2.setItemName(columns2[0]);
+            marker2.setTag(1);
+            marker2.setMapPoint(mapPoint2);
+            marker2.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+            marker2.setCustomImageResourceId(R.drawable.custom_marker1);
+            marker2.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
-                mapView.addPolyline(polyline);
+            marker2.setCustomSelectedImageResourceId(R.drawable.custom_marker2);
+            mapView.addPOIItem(marker2);
 
-                // 지도뷰의 중심좌표와 줌레벨을 Polyline이 모두 나오도록 조정.
-                MapPointBounds mapPointBounds = new MapPointBounds(polyline.getMapPoints());
-                int padding = 100; // px
-                mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
+            // Button btn3 = findViewById(R.id.text_view3);
+            columns3 = result3.split("  ");
+            overview3 = columns3[0]+ "\n\n" +columns3[1]+ "\n\n" + columns3[4] + "\n\n" + columns3[5] + "\n\n" + columns3[6];
+            result3 = columns3[0] + "\n" + columns3[1];
+            // btn3.setText(result3);
+            MapPOIItem marker3 = new MapPOIItem();
+            double latitude3 = Double.parseDouble(columns3[2]);
+            double longitude3 = Double.parseDouble(columns3[3]);
+            MapPoint mapPoint3 = MapPoint.mapPointWithGeoCoord(latitude3, longitude3);
+            marker3.setItemName(columns3[0]);
+            marker3.setTag(1);
+            marker3.setMapPoint(mapPoint3);
+            marker3.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+            marker3.setCustomImageResourceId(R.drawable.custom_marker1);
+            marker3.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+            marker3.setCustomSelectedImageResourceId(R.drawable.custom_marker2);
+
+            mapView.addPOIItem(marker3);
+
+            MapPolyline polyline = new MapPolyline();
+            polyline.setTag(1000);
+
+            polyline.addPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude));
+            polyline.addPoint(MapPoint.mapPointWithGeoCoord(latitude2, longitude2));
+            polyline.addPoint(MapPoint.mapPointWithGeoCoord(latitude3, longitude3));
+
+            mapView.addPolyline(polyline);
+
+            // 지도뷰의 중심좌표와 줌레벨을 Polyline이 모두 나오도록 조정.
+            MapPointBounds mapPointBounds = new MapPointBounds(polyline.getMapPoints());
+            int padding = 100; // px
+            mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
 
 //                imageView1 = findViewById(R.id.imageView1);
 //                imageView1.setOnClickListener(new View.OnClickListener() {
@@ -350,17 +359,17 @@ public class RandomActivity2 extends AppCompatActivity implements MapView.Curren
 //                });
 
 
-                dataListener = this;
-                API api = new API(contentTypeId1,sigunguCode);
-                api.new NetworkTask().execute();
-                API api2 = new API(contentTypeId2,sigunguCode);
-                api2.new NetworkTask().execute();
-                API api3 = new API(contentTypeId3,sigunguCode);
-                api3.new NetworkTask().execute();
+            dataListener = this;
+            API api = new API(contentTypeId1,sigunguCode);
+            api.new NetworkTask().execute();
+            API api2 = new API(contentTypeId2,sigunguCode);
+            api2.new NetworkTask().execute();
+            API api3 = new API(contentTypeId3,sigunguCode);
+            api3.new NetworkTask().execute();
 
-                viewPager = findViewById(R.id.viewPager);
-                adapter = new ImagePagerAdapter();
-                viewPager.setAdapter(adapter);
+            viewPager = findViewById(R.id.viewPager);
+            adapter = new ImagePagerAdapter();
+            viewPager.setAdapter(adapter);
 
         }
 //            else {
@@ -370,58 +379,58 @@ public class RandomActivity2 extends AppCompatActivity implements MapView.Curren
 //            }
 
 
-        }
+    }
 
-        @Override
-        public void onDataReceived(List<String> titles, List<String> images) {
+    @Override
+    public void onDataReceived(List<String> titles, List<String> images) {
 //            // 레이아웃에서 ViewPager2 찾기
 //            ViewPager2 viewPager = findViewById(R.id.viewPager);
 //            // 이미지 슬라이딩을 위한 이미지 URL 목록 생성
 //            List<String> imageUrls = new ArrayList<>();
-              if(count==0) {
-                  for (int i = 0; i < titles.size(); i++) {
-                      if (columns[0].equals(titles.get(i))) {
-                          String imageUrl = images.get(i);
-                          imageUrls.add(imageUrl);
-                          adapter.updateData(imageUrls);
-                          //imageView1 = findViewById(R.id.imageView1);
+        if(count==0) {
+            for (int i = 0; i < titles.size(); i++) {
+                if (columns[0].equals(titles.get(i))) {
+                    String imageUrl = images.get(i);
+                    imageUrls.add(imageUrl);
+                    adapter.updateData(imageUrls);
+                    //imageView1 = findViewById(R.id.imageView1);
 //                          if (imageUrl != null && !imageUrl.isEmpty()) {
 //
 //                              Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(imageView1);
 //                          }
-                      }
-                  }
-              }
-              else if (count==1) {
-                  for (int i = 0; i < titles.size(); i++) {
-                      if (columns2[0].equals(titles.get(i))) {
-                          String imageUrl = images.get(i);
-                          imageUrls.add(imageUrl);
-                          adapter.updateData(imageUrls);
+                }
+            }
+        }
+        else if (count==1) {
+            for (int i = 0; i < titles.size(); i++) {
+                if (columns2[0].equals(titles.get(i))) {
+                    String imageUrl = images.get(i);
+                    imageUrls.add(imageUrl);
+                    adapter.updateData(imageUrls);
 
-                          // imageView2 = findViewById(R.id.imageView2);
+                    // imageView2 = findViewById(R.id.imageView2);
 //                          if (imageUrl != null && !imageUrl.isEmpty()) {
 //                              Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(imageView2);
 //                          }
-                      }
-                  }
-              }
-              else if (count==2) {
-                  for (int i = 0; i < titles.size(); i++) {
-                      if (columns3[0].equals(titles.get(i))) {
-                          String imageUrl = images.get(i);
-                          imageUrls.add(imageUrl);
-                          adapter.updateData(imageUrls);
+                }
+            }
+        }
+        else if (count==2) {
+            for (int i = 0; i < titles.size(); i++) {
+                if (columns3[0].equals(titles.get(i))) {
+                    String imageUrl = images.get(i);
+                    imageUrls.add(imageUrl);
+                    adapter.updateData(imageUrls);
 
-                          // imageView3 = findViewById(R.id.imageView3);
+                    // imageView3 = findViewById(R.id.imageView3);
 //                          if (imageUrl != null && !imageUrl.isEmpty()) {
 //                              Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(imageView3);
 //                          }
-                      }
-                  }
-              }
-              count++;
+                }
+            }
         }
+        count++;
+    }
     private class ImagePagerAdapter extends PagerAdapter {
 
         @Override
@@ -593,4 +602,3 @@ public class RandomActivity2 extends AppCompatActivity implements MapView.Curren
 
     }
 }
-

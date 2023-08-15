@@ -36,9 +36,6 @@
             android:name=".Random"
             android:exported="false" />
         <activity
-            android:name=".MyPage"
-            android:exported="false" />
-        <activity
             android:name=".info"
             android:exported="true" />
         <activity
@@ -74,6 +71,8 @@
         <activity
             android:name=".FragLocation"
             android:exported="true" />
+        <activity android:name=".EditMyInfoActivity"
+            android:exported="true"/>
         <activity
             android:name=".List_Layout"
             android:exported="true" />

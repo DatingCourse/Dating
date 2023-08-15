@@ -132,7 +132,7 @@ public class CourseListActivity extends AppCompatActivity {
 //                mapViewContainer.addView(mapView);
 //            }
             mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
-            mapView.setShowCurrentLocationMarker(true);
+            mapView.setShowCurrentLocationMarker(false);
         }
     }
 

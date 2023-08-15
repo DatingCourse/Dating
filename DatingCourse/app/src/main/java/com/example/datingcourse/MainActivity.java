@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fm;
     private FragmentTransaction ft;
     private FragHome fh;
-    //    private FragCommunity fc;
+    private FragCommunity fc;
     private FragLocation fl;
     private FragMyPage fp;
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         fh = new FragHome();
-//        fc = new FragCommunity();
+        fc = new FragCommunity();
         fl = new FragLocation();
         fp = new FragMyPage();
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 ft.commit();
                 break;
             case 1 :
-//                ft.replace(R.id.main_frame, fc);
+                ft.replace(R.id.main_frame, fc);
                 ft.commit();
                 break;
             case 2 :

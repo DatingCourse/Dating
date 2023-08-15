@@ -2,22 +2,32 @@ package com.example.datingcourse;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FragHome extends Fragment {
     private View view;
-
+    private ViewPager viewPager;
+    private int currentPage = 0;
+    private int[] imageIds = {R.drawable.pig1, R.drawable.ad1, R.drawable.pig3};
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Nullable
@@ -25,6 +35,29 @@ public class FragHome extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.activity_main, container, false);
+
+        viewPager = view.findViewById(R.id.viewPager);
+        ImagePagerAdapter adapter = new ImagePagerAdapter(getActivity(), imageIds);
+        viewPager.setAdapter(adapter);
+
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                if (currentPage == imageIds.length) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        // 자동 슬라이드를 위한 타이머 설정
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(runnable);
+            }
+        }, 100, 4000); // 4초마다 슬라이드
 
         // 카페 페이지로 이동
         ImageButton imageButton1 = view.findViewById(R.id.imageButton1);
@@ -126,6 +159,5 @@ public class FragHome extends Fragment {
         return view;
     }
 }
-
 
 
