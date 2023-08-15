@@ -24,7 +24,7 @@ public class FragHome extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.activity_frag_home, container, false);
+        view = inflater.inflate(R.layout.activity_main, container, false);
 
         // 카페 페이지로 이동
         ImageButton imageButton1 = view.findViewById(R.id.imageButton1);

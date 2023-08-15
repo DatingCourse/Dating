@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(mFirebaseAuth.getCurrentUser().isEmailVerified()){
                                 //로그인 성공
                                 //성공시 메인 화면으로 이동 시켜주기 Intent 생성자 (현재 페이지, 이동할 페이지)
-                                startActivity(new Intent(LoginActivity.this,FragMain.class));
+                                startActivity(new Intent(LoginActivity.this,MainActivity.class));
                             }
                             else{
                                 Toast.makeText(LoginActivity.this,"로그인 실패! 이메일 인증을 해주세요!",Toast.LENGTH_SHORT).show();

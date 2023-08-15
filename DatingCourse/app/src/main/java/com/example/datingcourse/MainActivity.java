@@ -1,120 +1,96 @@
 package com.example.datingcourse;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private long backPressedTime = 0;    // 뒤로가기 버튼을 누른 시간
+
+    // bottom navigationbar 구현하기 위함
+    private BottomNavigationView bottomNavigationView;
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+    private FragHome fh;
+    //    private FragCommunity fc;
+    private FragLocation fl;
+    private FragMyPage fp;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_frag_main);
 
-        getSupportActionBar().setTitle("메인 화면");
-
-        // 카페 페이지로 이동
-        ImageButton imageButton1 = (ImageButton) findViewById(R.id.imageButton1);
-        imageButton1.setOnClickListener(new View.OnClickListener() {
+        // bottom navigationbar 구현
+        bottomNavigationView = findViewById(R.id.nav_view);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                int sigunguCode = 1;
-                int contentTypeId = 39;
-                String cat1 = "A05";
-                String cat2 = "A0502";
-                String cat3 = "A05020900";
-                Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
-                intent.putExtra("contentTypeId", contentTypeId);
-                intent.putExtra("sigunguCode", sigunguCode);
-                intent.putExtra("cat1", cat1);
-                intent.putExtra("cat2", cat2);
-                intent.putExtra("cat3", cat3);
-                intent.putExtra("selectedRegion", "서울특별시 강남구");
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.action_Home) {
+                    setFrag(0);
+                } else if (itemId == R.id.action_Community) {
+                    setFrag(1);
+                } else if (itemId == R.id.action_Location) {
+                    setFrag(2);
+                } else if (itemId == R.id.action_MyPage) {
+                    setFrag(3);
+                }
+                return true;
+
             }
+
         });
 
-        // 식당 페이지로 이동
-        ImageButton imageButton2 = (ImageButton) findViewById(R.id.imageButton2);
-        imageButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int sigunguCode = 1;
-                int contentTypeId = 39;
-                String cat1 = "";
-                String cat2 = "";
-                String cat3 = "";
-                Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
-                intent.putExtra("contentTypeId", contentTypeId);
-                intent.putExtra("sigunguCode", sigunguCode);
-                intent.putExtra("cat1", cat1);
-                intent.putExtra("cat2", cat2);
-                intent.putExtra("cat3", cat3);
-                intent.putExtra("selectedRegion", "서울특별시 강남구");
-                startActivity(intent);
-            }
-        });
+        fh = new FragHome();
+//        fc = new FragCommunity();
+        fl = new FragLocation();
+        fp = new FragMyPage();
 
-        // 숙박 페이지로 이동
-        ImageButton imageButton3 = (ImageButton) findViewById(R.id.imageButton3);
-        imageButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int sigunguCode = 1;
-                int contentTypeId = 32;
-                String cat1 = "";
-                String cat2 = "";
-                String cat3 = "";
-                Intent intent = new Intent(getApplicationContext(), PlaceList.class);    // Cafe
-                intent.putExtra("contentTypeId", contentTypeId);
-                intent.putExtra("sigunguCode", sigunguCode);
-                intent.putExtra("cat1", cat1);
-                intent.putExtra("cat2", cat2);
-                intent.putExtra("cat3", cat3);
-                intent.putExtra("selectedRegion", "서울특별시 강남구");
-                startActivity(intent);
-            }
-        });
+        setFrag(0); //첫 프래그먼트 화면을 무엇으로 지정해줄 것인지 선택
 
-        // 코스 만들기 페이지로 이동
-        ImageButton imageButton4 = (ImageButton) findViewById(R.id.imageButton4);
-        imageButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CourseMakingActivity.class);
-//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
-                startActivity(intent);
-            }
-        });
-
-        // 코스 추천 페이지로 이동
-        ImageButton imageButton5 = (ImageButton) findViewById(R.id.imageButton5);
-        imageButton5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BoardActivity.class);   // RecommendActivity
-//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
-                startActivity(intent);
-            }
-        });
-
-        // 랜덤 코스 페이지로 이동
-        ImageButton imageButton6 = (ImageButton) findViewById(R.id.imageButton6);
-        imageButton6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RandomActivity.class);  // Random
-//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
-                startActivity(intent);
-            }
-        });
     }
+
+    // 프래그먼트 교체가 일어나는 실행문
+    private void setFrag(int n) {
+        fm = getSupportFragmentManager();
+        ft = fm.beginTransaction();
+        switch(n){
+            case 0 :
+                ft.replace(R.id.main_frame, fh);
+                ft.commit();
+                break;
+            case 1 :
+//                ft.replace(R.id.main_frame, fc);
+                ft.commit();
+                break;
+            case 2 :
+                ft.replace(R.id.main_frame, fl);
+                ft.commit();
+                break;
+            case 3 :
+                ft.replace(R.id.main_frame, fp);
+                ft.commit();
+                break;
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         // 현재 시간을 가져온다.

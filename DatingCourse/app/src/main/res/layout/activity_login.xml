@@ -71,11 +71,12 @@
     <Button
         android:id="@+id/btn_checkInfo"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:shadowColor="#716D6D"
+        android:textSize="20sp"
         android:text="로그인"
         app:layout_constraintEnd_toEndOf="@id/layout_pass"
         app:layout_constraintStart_toStartOf="@id/layout_pass"
@@ -91,7 +92,7 @@
         app:layout_constraintStart_toStartOf="@id/btn_checkInfo"
         app:layout_constraintEnd_toStartOf="@id/btn_register"
         app:layout_constraintTop_toBottomOf="@id/btn_checkInfo"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
         />
 
@@ -107,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="@id/btn_checkInfo"
         app:layout_constraintStart_toEndOf="@id/next_before"
         app:layout_constraintTop_toBottomOf="@id/btn_checkInfo"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="78dp"
         tools:ignore="OnClick" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
