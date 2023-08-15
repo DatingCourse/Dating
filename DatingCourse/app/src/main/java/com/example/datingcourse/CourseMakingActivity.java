@@ -33,9 +33,10 @@ public class CourseMakingActivity extends AppCompatActivity {
     private PhotoAdapter photoAdapter;
 
     private ArrayList<HashMap<String, Object>> photosList = new ArrayList<>(); // 여러 장소 정보를 저장할 ArrayList
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
-    private FirebaseAuth mFirebaseAuth,mLoadFirebaseAuth;
-    private DatabaseReference mDatabaseRef,mLoadDatabaseRef;
+    private DatabaseReference mLoadDatabaseRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +52,12 @@ public class CourseMakingActivity extends AppCompatActivity {
             photos = new ArrayList<>(); // Initialize photos if it's null
             myApp.setPhotos(photos);
         }
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         //파이어베이스 인증 및 데이터베이스 초기화등
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
+//        mFirebaseAuth = FirebaseAuth.getInstance();
+//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
 
         Intent intent = getIntent();
         String imgUrl = intent.getStringExtra("imgUrl");
@@ -63,6 +66,7 @@ public class CourseMakingActivity extends AppCompatActivity {
         Double x = intent.getDoubleExtra("x", 0.0); // 기본값 0.0
         Double y = intent.getDoubleExtra("y", 0.0); // 기본값 0.0
         String tel = intent.getStringExtra("tel");
+        String userUid = mFirebaseUser.getUid().toString();
 
         // 값이 null이거나 빈 문자열인 경우 "정보 없음"으로 설정
         imgUrl = (imgUrl == null || imgUrl.isEmpty()) ? null : imgUrl;
@@ -73,8 +77,7 @@ public class CourseMakingActivity extends AppCompatActivity {
         // 받아온 정보를 Photo 객체로 생성
         if (imgUrl != null && titleName != null && addressName != null && x != null && y != null && tel != null) {
             // 값들이 유효하면 Photo 객체 생성
-            Photo photo = new Photo(imgUrl, titleName, addressName, x, y, tel);
-
+            Photo photo = new Photo(imgUrl, titleName, addressName, x, y, tel,userUid);
             boolean isPhotoExist = false;
             for (Photo p : photos) {
                 if (p.getImgUrl().equals(imgUrl) && p.getTitleName().equals(titleName)) {
@@ -96,6 +99,7 @@ public class CourseMakingActivity extends AppCompatActivity {
             photoMap.put("x", photo.getX());
             photoMap.put("y", photo.getY());
             photoMap.put("tel", photo.getTel());
+            photoMap.put("userUid",photo.getUserUid());
 
             // HashMap 객체를 ArrayList에 추가
             photosList.add(photoMap);
@@ -152,37 +156,34 @@ public class CourseMakingActivity extends AppCompatActivity {
             saveCourse.put("x",photo.getX());
             saveCourse.put("y",photo.getY());
             saveCourse.put("tel",photo.getTel());
+            saveCourse.put("userUid",photo.getUserUid());
 
             Log.d("CourseMakingActivity", "Photo Title: " + photo.getTitleName());
-                // TODO: 불러온 사진 정보를 여기서 처리합니다.
-                //필드에 선언한 것들 초기화 하기
-                mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름
-                mLoadFirebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser firebaseUser = mLoadFirebaseAuth.getCurrentUser();
+            mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름
 
-                int finalI = i;
-                mLoadDatabaseRef.child("UserCourse").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        int currentChild = (int) snapshot.getChildrenCount();
 
-                        int nextIndex = currentChild + 1;
-                        // 값을 새 노드에 저장합니다.
-                        mLoadDatabaseRef.child("UserCourse")
-                                .child(firebaseUser.getUid())
-                                .child(String.valueOf(nextIndex)) // 자식 노드의 이름을 1씩 증가시킴
-                                .child((finalI + 1) + "번째 코스")
-                                .setValue(saveCourse);
+            int finalI = i;
+            mLoadDatabaseRef.child("UserCourse").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int currentChild = (int) snapshot.getChildrenCount();
 
-                    }
+                    int nextIndex = currentChild + 1;
+                    // 값을 새 노드에 저장합니다.
+                    mLoadDatabaseRef.child("UserCourse")
+                            .child(String.valueOf(nextIndex)) // 자식 노드의 이름을 1씩 증가시킴
+                            .child((finalI + 1) + "번째 코스")
+                            .setValue(saveCourse);
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-                i++;
-            }
+                }
+            });
+            i++;
+
+        }
     }
 
 }

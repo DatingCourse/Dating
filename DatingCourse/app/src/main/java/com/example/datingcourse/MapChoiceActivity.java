@@ -84,7 +84,15 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
                 }
 
                 if (!isMatchFound) {  // 일치하는 항목이 없는 경우
-                    Toast.makeText(MapChoiceActivity.this, "선택한 장소의 정보가 없습니다. 다시 선택해주세요.", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(MapChoiceActivity.this, "선택한 장소의 정보가 없습니다. 다시 선택해주세요.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(MapChoiceActivity.this, infos.class);
+                    intent.putExtra("imgUrl", "");
+                    intent.putExtra("titleName", listItems.get(position).getName());
+                    intent.putExtra("addressName", listItems.get(position).getAddress());
+                    intent.putExtra("x", listItems.get(position).getX());
+                    intent.putExtra("y", listItems.get(position).getY());
+                    intent.putExtra("tel", listItems.get(position).getTel());
+                    startActivity(intent);
                 }
             }
         });
@@ -174,7 +182,7 @@ public class MapChoiceActivity extends AppCompatActivity implements MapView.Curr
             for (Place document : searchResult.getDocuments()) {
                 // 결과를 리사이클러 뷰에 추가
                 List_Layout item = new List_Layout(document.getPlaceName(), document.getRoadAddressName(),
-                        document.getAddressName(), Double.parseDouble(document.getX()), Double.parseDouble(document.getY()));
+                        document.getAddressName(), Double.parseDouble(document.getX()), Double.parseDouble(document.getY()), document.getPhone());
                 listItems.add(item);
             }
 

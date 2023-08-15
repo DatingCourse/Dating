@@ -2,9 +2,11 @@ package com.example.datingcourse;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,15 +38,38 @@ public class LoginActivity extends AppCompatActivity {
         //findViewById -> View 는 위 setContentView에 들어있는 activity_login 같은 view만 포함한다.
         mEtEmail = findViewById(R.id.et_email);
         mEtPwd = findViewById(R.id.et_password);
-
+//        mEtEmail = findViewById(R.id.user_id);
+//        mEtPwd = findViewById(R.id.user_pass);
         Button btn_login = findViewById(R.id.btn_checkInfo);
-        //btn_login이라고 된 id를 눌렀을 때
+//        Button btn_login = findViewById(R.id.logIn);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //로그인 요청
-                String strEmail = mEtEmail.getText().toString();
-                String strPwd = mEtPwd.getText().toString();
+                String strEmail = mEtEmail.getText().toString().trim();
+                String strPwd = mEtPwd.getText().toString().trim();
+
+                // 로그인 유효성 검사
+                // 이메일이 비어있는 경우
+                if (TextUtils.isEmpty(strEmail)) {
+                    Toast.makeText(LoginActivity.this, "이메일을 입력하지 않으셨습니다.", Toast.LENGTH_SHORT).show();
+                    mEtEmail.requestFocus();
+                    return;
+                }
+
+                // 비밀번호가 비어있는 경우
+                if (TextUtils.isEmpty(strPwd)) {
+                    Toast.makeText(LoginActivity.this, "비밀번호를 입력하지 않으셨습니다.", Toast.LENGTH_SHORT).show();
+                    mEtPwd.requestFocus();
+                    return;
+                }
+
+                // 이메일 형식이 올바르지 않은 경우
+                if (!(IsValidation.isValidEmail(strEmail))) {
+                    Toast.makeText(LoginActivity.this, "올바른 이메일 형식이 아닙니다", Toast.LENGTH_SHORT).show();
+                    mEtEmail.requestFocus();
+                    return;
+                }
                 mFirebaseAuth.signInWithEmailAndPassword(strEmail,strPwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -52,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(mFirebaseAuth.getCurrentUser().isEmailVerified()){
                                 //로그인 성공
                                 //성공시 메인 화면으로 이동 시켜주기 Intent 생성자 (현재 페이지, 이동할 페이지)
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                startActivity(new Intent(LoginActivity.this,FragMain.class));
                             }
                             else{
                                 Toast.makeText(LoginActivity.this,"로그인 실패! 이메일 인증을 해주세요!",Toast.LENGTH_SHORT).show();
@@ -76,15 +101,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button btn_register = findViewById(R.id.btn_register);
+        TextView btn_register = findViewById(R.id.btn_register);
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // loginActivity에서 회원가입 누르면 registerActivity로 이동하게 만들기
                 // 회원 가입 화면으로 이동함, 화면을 이동할 때 사용하는 Intent (현재 자신의 액티비티, 이동할 액티비티)
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(intent);
             }
         });
     }
+
+
 }

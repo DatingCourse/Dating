@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+    private long backPressedTime = 0;    // 뒤로가기 버튼을 누른 시간
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,22 +109,36 @@ public class MainActivity extends AppCompatActivity {
         imageButton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MapChoiceActivity.class);  // Random
+                Intent intent = new Intent(getApplicationContext(), RandomActivity.class);  // Random
 //                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        // 현재 시간을 가져온다.
+        long tempTime = System.currentTimeMillis();
+        // 마지막으로 뒤로가기 버튼을 누른 시간과 현재 시간을 비교한다.
+        long intervalTime = tempTime - backPressedTime;
 
-        // 마이페이지로 이동
-        ImageButton user = (ImageButton) findViewById(R.id.user);
-        user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MyPage.class);  // MyPage
-//                intent.putExtra("selectedNum", selectedNum);  // 구 정보 추가
-                startActivity(intent);
-            }
-        });
+        // 뒤로가기 버튼을 한 번 눌렀을 때
+        if (0 <= intervalTime && intervalTime <= 2000) {
+            // 뒤로가기 버튼을 연속으로 두 번 눌렀을 때, 앱 종료
+            super.onBackPressed();
+            finishAffinity();  // 액티비티 스택을 모두 종료
+            System.runFinalization();
+            System.exit(0);
+        } else {
+            // 마지막으로 뒤로가기 버튼을 누른 시간을 현재 시간으로 갱신
+            backPressedTime = tempTime;
+            // 앱을 종료하려면 한 번 더 누르라는 토스트 메시지 표시
+            showToast("앱을 종료하려면 한 번 더 누르세요.");
+        }
+    }
 
+    // 토스트 메시지를 출력하는 메소드
+    public void showToast(String message) {
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

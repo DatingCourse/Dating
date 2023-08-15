@@ -1,44 +1,70 @@
 package com.example.datingcourse;
 
+import androidx.annotation.NonNull;
+
 public class Points {
-    private String mImgName;    // 이미지
-    private String mMainText;   // 장소 이름
-    private String mSubText;    // 카테고리
+    private String imgUrl;
+    private String titleName;
+    private String addressName;
+    private Double x;
+    private Double y;
+    private String tel;
+    private String userUid;
 
-    private Double x;         // 경도(Longitude)
 
-    private Double y;         // 위도(Latitude)
+    //기본 생성자
+    public Points() {
+    }
 
-    public Points(String mImgName, String mMainText, String mSubText, Double x, Double y) {
-        this.mImgName = mImgName;
-        this.mMainText = mMainText;
-        this.mSubText = mSubText;
+    public Points(String imgUrl, String titleName, String addressName, Double x, Double y, String tel) {
+        this.imgUrl = imgUrl;
+        this.titleName = titleName;
+        this.addressName = addressName;
         this.x = x;
         this.y = y;
+        this.tel = tel;
     }
 
-    public String getImgName() {
-        return mImgName;
+    public Points(String imgUrl, String titleName, String addressName, Double x, Double y, String tel, String userUid) {
+        this.imgUrl = imgUrl;
+        this.titleName = titleName;
+        this.addressName = addressName;
+        this.x = x;
+        this.y = y;
+        this.tel = tel;
+        this.userUid = userUid;
     }
 
-    public void setImgName(String imgName) {
-        this.mImgName = imgName;
+    public String getUserUid() {
+        return userUid;
     }
 
-    public String getMainText() {
-        return mMainText;
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 
-    public void setMainText(String mMainCount) {
-        this.mMainText = mMainCount;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public String getSubText() {
-        return mSubText;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
-    public void setSubText(String subText) {
-        this.mSubText = subText;
+    public String getTitleName() {
+        return titleName;
+    }
+
+    public void setTitleName(String titleName) {
+        this.titleName = titleName;
+    }
+
+    public String getAddressName() {
+        return addressName;
+    }
+
+    public void setAddressName(String addressName) {
+        this.addressName = addressName;
     }
 
     public Double getX() {
@@ -55,5 +81,19 @@ public class Points {
 
     public void setY(Double y) {
         this.y = y;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return imgUrl+ " " +titleName+ " " +addressName+ " " +x+ " " +y+ " " + tel;
     }
 }

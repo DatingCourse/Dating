@@ -23,7 +23,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="7dp"
             android:hint="장소를 선택해주세요."
-            android:text=""
             android:textSize="20sp" />
 
         <Button
@@ -45,7 +44,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="20dp"
         android:layout_marginStart="10dp"
         android:text="이런 장소는 어떠신가요?"
@@ -53,7 +52,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewImg"
-
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="10dp" />
 
@@ -65,7 +63,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="480dp"
+        android:layout_marginTop="450dp"
         >
 
         <LinearLayout
@@ -122,17 +120,18 @@
         </LinearLayout>
 
     </HorizontalScrollView>
+
     <Button
         android:id="@+id/course_create_btns"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/white_button_background"
         android:text="코스 생성하기"
-        android:textColor="#000000"
-        android:layout_marginTop="20dp"
-        android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

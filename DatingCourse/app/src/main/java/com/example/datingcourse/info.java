@@ -40,6 +40,8 @@
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_info);
 
+            mapView = new MapView(this);
+
             // 데이터 받아오기
             Intent intent = getIntent();
             String imgUrl = intent.getStringExtra("imgUrl");
@@ -71,7 +73,6 @@
                     .load(imgUrl)
                     .into(representImage);
 
-            mapView = new MapView(this);
             final ScrollView scrollView = findViewById(R.id.scroll_view);
             mapViewContainer = (ViewGroup) findViewById(R.id.info_mapView);
             mapViewContainer.addView(mapView);
@@ -125,9 +126,19 @@
         }
 
         @Override
+        public void onBackPressed() {
+            // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
+            super.onBackPressed();
+        }
+
+        @Override
         protected void onPause() {
             super.onPause();
-            mapView.onPause();
+            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+            mapView.setShowCurrentLocationMarker(false);
+            if (mapView.getParent() != null) {
+                ((ViewGroup) mapView.getParent()).removeView(mapView);
+            }
         }
 
         @Override

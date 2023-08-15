@@ -36,10 +36,35 @@
         android:textColor="#333333"
         android:layout_height="wrap_content"
         android:text="content" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="16dp"
-        android:background="#000000"
-        />
+        android:background="#000000" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="수정"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="삭제"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+
 </LinearLayout>

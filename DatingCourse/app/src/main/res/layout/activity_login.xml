@@ -3,55 +3,111 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
 
-    <!--여기서 유저가 보는 화면에 대한 정보를 변경할 수 있음-->
-    <EditText
-        android:id="@+id/et_email"
-        android:layout_width="400dp"
-        android:layout_height="85dp"
-        android:layout_marginTop="200dp"
-        android:ems="10"
-        android:hint="이메일을 입력해주세요"
-        android:inputType="textEmailAddress"
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gmarket"
+        android:text="자기야 \n우리 오늘\n어디가?"
+        android:textColor="#000000"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@id/layout_id"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="400dp"
-        android:layout_height="85dp"
-        android:layout_marginTop="100dp"
-        android:ems="10"
-        android:hint="비밀번호를 입력해주세요"
-        android:inputType="textPassword"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/layout_id"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="65dp"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_id"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="240dp"
+        app:boxBackgroundColor="#FFFFFF"
+        app:boxBackgroundMode="outline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_email" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:drawableStart="@drawable/baseline_email_24"
+            android:drawablePadding="5dp"
+            android:hint="e-mail" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_pass"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        app:boxBackgroundColor="#FFFFFF"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintEnd_toEndOf="@id/layout_id"
+        app:layout_constraintStart_toStartOf="@id/layout_id"
+        app:layout_constraintTop_toBottomOf="@id/layout_id">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToOutline="false"
+            android:drawableStart="@drawable/pass"
+            android:drawablePadding="5dp"
+            android:inputType="textPassword"
+            android:hint="비밀번호" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_checkInfo"
         android:layout_width="0dp"
-        android:layout_height="63dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:shadowColor="#716D6D"
         android:text="로그인"
-        android:layout_margin="8dp"
-        android:backgroundTint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_register"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@id/layout_pass"
+        app:layout_constraintStart_toStartOf="@id/layout_pass"
+        app:layout_constraintTop_toBottomOf="@id/layout_pass" />
 
-    <Button
+    <TextView
+        android:id="@+id/next_before"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아직 회원이 아니신가요??"
+        android:textSize="18sp"
+
+        app:layout_constraintStart_toStartOf="@id/btn_checkInfo"
+        app:layout_constraintEnd_toStartOf="@id/btn_register"
+        app:layout_constraintTop_toBottomOf="@id/btn_checkInfo"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        />
+
+    <TextView
         android:id="@+id/btn_register"
-        android:layout_width="0dp"
-        android:layout_height="63dp"
-        android:layout_marginBottom="4dp"
-        android:text="회원가입"
-        android:layout_margin="8dp"
-        android:backgroundTint="@color/common_google_signin_btn_text_light_default"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_checkInfo" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="navigateToSignUp"
+        android:text="회원가입 \>>"
+        android:textColor="#2654FA"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@id/btn_checkInfo"
+        app:layout_constraintStart_toEndOf="@id/next_before"
+        app:layout_constraintTop_toBottomOf="@id/btn_checkInfo"
+        android:layout_marginTop="28dp"
+        tools:ignore="OnClick" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

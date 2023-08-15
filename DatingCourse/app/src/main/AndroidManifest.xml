@@ -20,13 +20,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".RandomActivity"
+            android:exported="true" />
+        <activity
+            android:name=".RandomActivity2"
+            android:theme="@style/Theme.DatingCourse2"
+            android:exported="true" />
+        <activity
             android:name=".GuChoose"
             android:exported="false" />
         <activity
             android:name=".BoardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Restuarant"
             android:exported="false" />
         <activity
             android:name=".Random"
@@ -42,9 +46,6 @@
             android:exported="true" />
         <activity
             android:name=".Cafe"
-            android:exported="false" />
-        <activity
-            android:name=".Beer"
             android:exported="false" />
         <activity
             android:name=".Comments"
@@ -65,18 +66,24 @@
             android:name=".ResultSearchKeyword"
             android:exported="false" />
         <activity
-            android:name=".List_Layout"
+            android:name=".FragMain"
             android:exported="true" />
         <activity
-            android:name=".PostsActivity"
-            android:exported="false" />
+            android:name=".FragHome"
+            android:exported="true" />
+        <activity
+            android:name=".FragMyPage"
+            android:exported="true" />
+        <activity
+            android:name=".FragLocation"
+            android:exported="true" />
+        <activity
+            android:name=".List_Layout"
+            android:exported="true" />
         <activity
             android:name=".PlaceList"
             android:label="PlaceList"
             android:launchMode="singleTop"/>
-        <activity
-            android:name=".AllPostsActivity"
-            android:exported="false" />
         <activity
             android:name=".MapChoiceActivity"
             android:exported="false" />
@@ -87,16 +94,10 @@
             android:name=".CourseListActivity"
             android:exported="false" />
         <activity
-            android:name=".AgeActivity"
+            android:name=".CourseInfo"
             android:exported="false" />
         <activity
             android:name=".CourseMakingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RecommendActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ModeActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
@@ -110,13 +111,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
 
         <meta-data

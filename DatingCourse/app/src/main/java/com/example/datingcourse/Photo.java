@@ -1,14 +1,23 @@
 package com.example.datingcourse;
 
-public class Photo {
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class Photo implements Serializable {
     private String imgUrl;
     private String titleName;
     private String addressName;
     private Double x;
     private Double y;
     private String tel;
+    private String userUid;
 
-    // 생성자
+
+    //기본 생성자
+    public Photo() {
+    }
+
     public Photo(String imgUrl, String titleName, String addressName, Double x, Double y, String tel) {
         this.imgUrl = imgUrl;
         this.titleName = titleName;
@@ -16,6 +25,24 @@ public class Photo {
         this.x = x;
         this.y = y;
         this.tel = tel;
+    }
+
+    public Photo(String imgUrl, String titleName, String addressName, Double x, Double y, String tel, String userUid) {
+        this.imgUrl = imgUrl;
+        this.titleName = titleName;
+        this.addressName = addressName;
+        this.x = x;
+        this.y = y;
+        this.tel = tel;
+        this.userUid = userUid;
+    }
+
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 
     public String getImgUrl() {
@@ -64,5 +91,11 @@ public class Photo {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return imgUrl+ " " +titleName+ " " +addressName+ " " +x+ " " +y+ " " + tel;
     }
 }

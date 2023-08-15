@@ -91,7 +91,7 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
         polyline.addPoint(mapPoint);
         mapView.addPolyline(polyline);  // Polyline 지도에 올리기.
 
-        Button btnSearch = findViewById(R.id.finding_btns);
+        Button btnSearch = findViewById(R.id.finding_btn);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -15,11 +15,11 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalViewHolder> {
-    private ArrayList<Points> dataList;
+    private ArrayList<Photo> dataList;
     private PointAdapter.OnItemClickListener itemClickListener;
     public Context context;
 
-    public PointAdapter(Context context, ArrayList<Points> dataList) {
+    public PointAdapter(Context context, ArrayList<Photo> dataList) {
         this.context = context;
         this.dataList = dataList;
     }
@@ -53,29 +53,29 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalVi
     // position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
-        Points item = dataList.get(position);
+        Photo item = dataList.get(position);
 
-        if(item != null && item.getImgName() != null){
-            Glide.with(context).load(item.getImgName()).into(holder.imgView_item);
+        if(item != null && item.getImgUrl() != null){
+            Glide.with(context).load(item.getImgUrl()).into(holder.imgView_item);
         } else{
             holder.imgView_item.setImageResource(R.drawable.pig1);
         }
 
-        holder.txt_main.setText(item.getMainText());
-        holder.txt_sub.setText(item.getSubText());
+        holder.txt_main.setText(item.getTitleName());
+        holder.txt_sub.setText(item.getAddressName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null){
-                    itemClickListener.onClick(v, position);
+                    itemClickListener.onClick(v, position, item);
                 }
             }
         });
     }
 
     public interface OnItemClickListener {
-        void onClick(View v, int position);
+        void onClick(View v, int position, Photo photo);
     }
 
     @Override
