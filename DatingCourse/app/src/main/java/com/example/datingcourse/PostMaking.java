@@ -122,6 +122,7 @@ public class PostMaking extends AppCompatActivity {
         postData.put("when",whenTimestamp);
         postData.put("title", titleText);
         postData.put("context",commentText);
+        postData.put("NickName", nickName);
         postData.put("userId",mFirebaseAuth.getCurrentUser().getUid()); //현재 사용자의 uid를 Authentication에서 가져와서 commentData에 넣어준다.
         db.collection("posts")
                 .add(postData)

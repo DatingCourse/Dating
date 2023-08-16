@@ -4,21 +4,24 @@ import com.google.firebase.Timestamp;
 
 public class Post {
     private String title;   // 제목
-    private String nickname;    // 닉네임
+    private String NickName;    // 닉네임
     private String content; // 내용
-    private String[] imageRes; // 이미지 리소스 ID
-    private Timestamp date;    // 시간
+    private String[] imageUrls; // 이미지 리소스 ID
+    private Timestamp when;    // 시간
     private String picture; // 유저 사진
-    private String documentId;  // 게시물 이름
+    private String userId;  // 게시물 이름
 
-    public Post(String title, String nickname, String content, String[] imageRes, Timestamp date, String picture, String documentId) {
+    public Post() {
+    }
+
+    public Post(String title, String NickName, String content, String[] imageUrls, Timestamp when, String picture, String userId) {
         this.title = title;
-        this.nickname = nickname;
+        this.NickName = NickName;
         this.content = content;
-        this.imageRes = imageRes;
-        this.date = date;
+        this.imageUrls = imageUrls;
+        this.when = when;
         this.picture = picture;
-        this.documentId = documentId;
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -30,11 +33,11 @@ public class Post {
     }
 
     public String getNickname() {
-        return nickname;
+        return NickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickname(String NickName) {
+        this.NickName = NickName;
     }
 
     public String getContent() {
@@ -46,19 +49,19 @@ public class Post {
     }
 
     public String[] getImageRes() {
-        return imageRes;
+        return imageUrls;
     }
 
-    public void setImageRes(String[] imageRes) {
-        this.imageRes = imageRes;
+    public void setImageRes(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 
     public Timestamp getDate() {
-        return date;
+        return when;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setDate(Timestamp when) {
+        this.when = when;
     }
 
     public String getPicture() {
@@ -70,11 +73,11 @@ public class Post {
     }
 
     public String getDocumentId() {
-        return documentId;
+        return userId;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+    public void setDocumentId(String userId) {
+        this.userId = userId;
     }
 }
 
