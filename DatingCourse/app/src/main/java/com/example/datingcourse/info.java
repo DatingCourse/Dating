@@ -77,7 +77,7 @@
             mapViewContainer = (ViewGroup) findViewById(R.id.info_mapView);
             mapViewContainer.addView(mapView);
             mapView.setMapViewEventListener(this);
-            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+            // mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
             // 지도에 polyline 추가
             polyline = new MapPolyline();
@@ -91,8 +91,11 @@
             MapPOIItem point = new MapPOIItem();
             point.setItemName(titleName);
             point.setMapPoint(MapPoint.mapPointWithGeoCoord(y, x));
-            point.setMarkerType(MapPOIItem.MarkerType.BluePin);
-            point.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+            point.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+            point.setCustomImageResourceId(R.drawable.custom_marker1);
+            point.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+
+            point.setCustomSelectedImageResourceId(R.drawable.custom_marker2);
             mapView.addPOIItem(point);
 
             // Polyline에 좌표 추가

@@ -26,25 +26,9 @@ public class BoardActivity extends AppCompatActivity {
     private ArrayList<ArrayList<Photo>> allBoardList = new ArrayList();
     private ArrayList<HashMap<String,Object>> allPhotoList = new ArrayList<>();
 
-    private String img; // 이미지
-
-    private String categories;  // 카테고리
-
-    private String room_name;   // 가게 이름
-
     private DatabaseReference mDatabaseRef;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-
-    public BoardActivity() {
-
-    }
-
-    public BoardActivity(String img, String categories, String room_name){
-        this.img = img;
-        this.categories = categories;
-        this.room_name = room_name;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +36,6 @@ public class BoardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_board);
 
         this.initializeData();
-//        RecyclerView view = findViewById(R.id.recyclerView);
-//
-//        BoardAdapter verticalAdapter = new BoardAdapter(this, allBoardList, "윤겸빈");
-//
-//        view.setHasFixedSize(true);
-//        view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//        view.setAdapter(verticalAdapter);
 
         // 코스 만들기 페이지로 이동
         ImageButton write1 = (ImageButton) findViewById(R.id.write1);

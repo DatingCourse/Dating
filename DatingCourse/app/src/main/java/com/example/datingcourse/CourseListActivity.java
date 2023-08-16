@@ -85,8 +85,11 @@ public class CourseListActivity extends AppCompatActivity {
         marker.setItemName(name);
         marker.setTag(0);
         marker.setMapPoint(mapPoint);
-        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+        marker.setCustomImageResourceId(R.drawable.custom_marker1);
+        marker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+
+        marker.setCustomSelectedImageResourceId(R.drawable.custom_marker2);
         mapView.addPOIItem(marker);
     }
 

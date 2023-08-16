@@ -55,9 +55,16 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.HorizontalVi
 
         if(item != null){
             if(item.getImgUrl().equals("정보 없음")){
-                holder.photo_item.setImageResource(R.drawable.pig1);
+                Glide.with(context)
+                        .asGif()  // GIF 파일로 로드
+                        .load(R.drawable.no_data)  // 'no_data'는 res/drawable 폴더에 있는 GIF 파일의 이름입니다.
+                        .into(holder.photo_item);
             } else if(item.getImgUrl() != null){
-                Glide.with(context).load(item.getImgUrl()).into(holder.photo_item);
+                Glide.with(context).load(item.getImgUrl())
+                        .load(item.getImgUrl())
+                        .placeholder(R.drawable.no_data)  // 로딩 중에 표시할 이미지 설정
+                        .error(R.drawable.no_data)  // 이미지 로딩 실패 시 표시할 이미지 설정
+                        .into(holder.photo_item);  // 결과 이미지를 표시할 ImageView
             }
         }
 

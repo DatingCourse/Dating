@@ -7,12 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,13 +23,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class CourseMakingActivity extends AppCompatActivity {
+public class CourseMakingActivity extends AppCompatActivity implements InformationAPI.DataListener{
 
     private MyApp myApp;
     private ArrayList<Photo> photos;
@@ -35,8 +41,10 @@ public class CourseMakingActivity extends AppCompatActivity {
     private ArrayList<HashMap<String, Object>> photosList = new ArrayList<>(); // 여러 장소 정보를 저장할 ArrayList
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-
+    public static InformationAPI.DataListener dataListener;
+    private int count=0;  //API호출 시 증가
     private DatabaseReference mLoadDatabaseRef;
+    private java.util.Random random = new Random();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +135,11 @@ public class CourseMakingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadPhotosFromGlobal();
+
+                if (myApp != null) {
+                    myApp.setPhotos(new ArrayList<Photo>());
+                }
+
                 Intent intent = new Intent(getApplicationContext(), BoardActivity.class);   // RecommendActivity
                 startActivity(intent);
             }
@@ -141,6 +154,106 @@ public class CourseMakingActivity extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+
+        dataListener = this;
+        int randomIndex = random.nextInt(4)+1;
+        InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+        api.new NetworkTask().execute();
+        InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+        api2.new NetworkTask().execute();
+        InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+        api3.new NetworkTask().execute();
+    }
+
+    @Override
+    public void onDataReceived(List<String> titles, List<String> images, List<String> address, List<String> x, List<String> y, List<String> tel) {
+        count++;
+        if(count==1) {
+            ImageView place1 = findViewById(R.id.place1);
+            TextView textPlace1 = findViewById(R.id.textPlace1);
+            int randomIndex = random.nextInt(titles.size());
+            String imageUrl = images.get(randomIndex);
+            if (!isFinishing()) {
+                // Activity가 종료 중이 아닐 때만 이미지를 로드
+                Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place1);
+            }
+            textPlace1.setText(titles.get(randomIndex));
+            place1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CourseMakingActivity.this, infos.class);
+                    intent.putExtra("imgUrl", imageUrl);
+                    intent.putExtra("titleName", titles.get(randomIndex));
+                    intent.putExtra("addressName", address.get(randomIndex));
+                    intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
+                    intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
+                    intent.putExtra("tel", tel.get(randomIndex));
+                    startActivity(intent);
+                }
+            });
+        }
+        else if (count==2) {
+            ImageView place2 = findViewById(R.id.place2);
+            TextView textPlace2 = findViewById(R.id.textPlace2);
+            int randomIndex = random.nextInt(titles.size());
+            String imageUrl = images.get(randomIndex);
+            if (!isFinishing()) {
+                // Activity가 종료 중이 아닐 때만 이미지를 로드
+                Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place2);
+            }
+            textPlace2.setText(titles.get(randomIndex));
+            place2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CourseMakingActivity.this, infos.class);
+                    intent.putExtra("imgUrl", imageUrl);
+                    intent.putExtra("titleName", titles.get(randomIndex));
+                    intent.putExtra("addressName", address.get(randomIndex));
+                    intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
+                    intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
+                    intent.putExtra("tel", tel.get(randomIndex));
+                    startActivity(intent);
+                }
+            });
+        }
+        else if (count==3) {
+            ImageView place3 = findViewById(R.id.place3);
+            TextView textPlace3 = findViewById(R.id.textPlace3);
+            int randomIndex = random.nextInt(titles.size());
+            String imageUrl = images.get(randomIndex);
+            if (!isFinishing()) {
+                // Activity가 종료 중이 아닐 때만 이미지를 로드
+                Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place3);
+            }
+            textPlace3.setText(titles.get(randomIndex));
+            place3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CourseMakingActivity.this, infos.class);
+                    intent.putExtra("imgUrl", imageUrl);
+                    intent.putExtra("titleName", titles.get(randomIndex));
+                    intent.putExtra("addressName", address.get(randomIndex));
+                    intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
+                    intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
+                    intent.putExtra("tel", tel.get(randomIndex));
+                    startActivity(intent);
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        // MyApp 객체의 photos 데이터 초기화
+        if (myApp != null) {
+            myApp.setPhotos(new ArrayList<Photo>());
+        }
+
+        // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
     }
 
     private void loadPhotosFromGlobal() {
@@ -173,7 +286,19 @@ public class CourseMakingActivity extends AppCompatActivity {
                     mLoadDatabaseRef.child("UserCourse")
                             .child(String.valueOf(nextIndex)) // 자식 노드의 이름을 1씩 증가시킴
                             .child((finalI + 1) + "번째 코스")
-                            .setValue(saveCourse);
+                            .setValue(saveCourse, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    if (error == null) {
+                                        // 데이터 저장 성공. BoardActivity로 이동
+                                        Intent intent = new Intent(CourseMakingActivity.this, BoardActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        // 데이터 저장 실패. 오류 메시지를 출력
+                                        Log.e("TAG", "Data could not be saved. " + error.getMessage());
+                                    }
+                                }
+                            });
                 }
 
                 @Override

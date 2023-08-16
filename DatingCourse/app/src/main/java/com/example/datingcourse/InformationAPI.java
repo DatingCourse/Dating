@@ -89,6 +89,9 @@ public class InformationAPI extends AppCompatActivity {
                 } else {
                     Log.d("error", "error");
                 }
+                if (CourseMakingActivity.dataListener != null) {
+                    CourseMakingActivity.dataListener.onDataReceived(titles, images,address,x,y,tel);
+                }
             }
         }
 

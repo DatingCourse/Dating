@@ -22,7 +22,7 @@ public class FragHome extends Fragment {
     private View view;
     private ViewPager viewPager;
     private int currentPage = 0;
-    private int[] imageIds = {R.drawable.pig1, R.drawable.ad1, R.drawable.pig3};
+    private int[] imageIds = {R.drawable.ad1, R.drawable.ad2, R.drawable.ad3,R.drawable.ad4};
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,5 +159,6 @@ public class FragHome extends Fragment {
         return view;
     }
 }
+
 
 

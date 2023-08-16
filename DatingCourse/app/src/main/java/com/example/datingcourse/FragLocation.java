@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -15,6 +17,7 @@ import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView.CurrentLocationEventListener;
 
 public class FragLocation extends Fragment implements CurrentLocationEventListener {
+    private static final int PERMISSIONS_REQUEST_CODE = 1000;
 
     private View view;
     private MapView mapView;
@@ -28,23 +31,48 @@ public class FragLocation extends Fragment implements CurrentLocationEventListen
         mapView = new MapView(getActivity());
         ViewGroup mapViewContainer = (ViewGroup) view.findViewById(R.id.location_mapView);
         mapViewContainer.addView(mapView);
+        mapView.setCurrentLocationEventListener(this);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        mapView.setShowCurrentLocationMarker(true);  // 현재 위치 마커 표시
 
-        // 위치 권한 확인
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mapView.setCurrentLocationEventListener(this);
-            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
-        }
+        requestLocationPermission();
 
         return view;
+    }
+
+    private void requestLocationPermission() {
+        String[] permissions = {
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(permissions, PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CODE && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mapView.setCurrentLocationEventListener(this);
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                mapView.setShowCurrentLocationMarker(true);  // 현재 위치 마커 표시
+            } else {
+                // 권한이 거부되었을 때의 처리
+                Toast.makeText(getActivity(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-        mapView.setShowCurrentLocationMarker(false);
-        mapView = null;
+        if (mapView != null) {
+            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+            mapView.setShowCurrentLocationMarker(false);
+            mapView = null;
+        }
     }
 
     @Override
@@ -62,6 +90,7 @@ public class FragLocation extends Fragment implements CurrentLocationEventListen
     @Override
     public void onCurrentLocationUpdateFailed(MapView mapView) {
         // 현재 위치 업데이트 실패 시 호출되는 콜백
+        Toast.makeText(getActivity(), "현재 위치 정보를 가져오는데 실패했습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

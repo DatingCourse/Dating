@@ -126,7 +126,15 @@ public class EditMyInfoActivity extends AppCompatActivity {
 
             }
         });
-
+        Button btn_go_main=findViewById(R.id.go_main);
+        btn_go_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // MainActivity로 이동하는 Intent 생성
+                Intent intent = new Intent(EditMyInfoActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
         //회원탈퇴
         withdrawal = (TextView) findViewById(R.id.remove_Info);
         withdrawal.setOnClickListener(new View.OnClickListener() {
