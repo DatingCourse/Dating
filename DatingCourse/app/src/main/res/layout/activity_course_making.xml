@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CourseMakingActivity">
+    tools:context=".EditMyInfoActivity">
 
 
     <FrameLayout
@@ -29,10 +29,13 @@
             android:id="@+id/search_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소 검색"
-            android:textSize="15sp"
             android:layout_marginStart="300dp"
-            />
+            android:backgroundTint="@color/white"
+            android:text="장소 검색"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            app:strokeColor="#FF5D7D"
+            app:strokeWidth="2dp" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -140,15 +143,18 @@
 
     <Button
         android:id="@+id/course_create_btns"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_width="350dp"
+        android:layout_height="63dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/white_button_background"
+        android:backgroundTint="@color/white"
         android:text="코스 생성하기"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
+
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+        app:strokeColor="#FF5D7D"
+        app:strokeWidth="2dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

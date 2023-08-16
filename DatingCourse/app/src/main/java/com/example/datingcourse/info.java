@@ -71,6 +71,8 @@
             ImageView representImage = findViewById(R.id.represent_image);
             Glide.with(this)
                     .load(imgUrl)
+                    .error(R.drawable.noimage)
+                    .fallback(R.drawable.noimage)
                     .into(representImage);
 
             final ScrollView scrollView = findViewById(R.id.scroll_view);

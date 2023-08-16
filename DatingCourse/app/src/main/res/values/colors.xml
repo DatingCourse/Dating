@@ -11,6 +11,7 @@
     <color name="purple_200">#FC86CD</color>
     <color name="purple_500">#FF6591</color>
     <color name="purple_700">#FF4178</color>
+    <color name="gray_stroke">#B1B1B1</color>
 
     <color name="list_search_edit_frame">#FF0063</color>
 

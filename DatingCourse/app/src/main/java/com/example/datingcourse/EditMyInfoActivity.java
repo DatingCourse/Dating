@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,10 +35,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class EditMyInfoActivity extends AppCompatActivity {
 
@@ -60,6 +65,7 @@ public class EditMyInfoActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 1000;
 
     private boolean isImageChanged = false;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +154,10 @@ public class EditMyInfoActivity extends AppCompatActivity {
         });
         //프로필 이미지뷰에 현재 DB에서 가져온 사진 업로드
         profile = findViewById(R.id.profile);
-        getFireBaseProfileImage();
+        progressDialog = new ProgressDialog(EditMyInfoActivity.this);
+        progressDialog.setTitle("Uploading Images...");
+        progressDialog.show();
+        downloadImg();
 
         //프로필 사진 변경 버튼
         changeProfile = findViewById(R.id.changePicture);
@@ -165,6 +174,9 @@ public class EditMyInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isImageChanged) {
+                    progressDialog = new ProgressDialog(EditMyInfoActivity.this);
+                    progressDialog.setTitle("Uploading Images...");
+                    progressDialog.show();
                     createProfile_Photo_and_Delete(uri);
                 }
                 else if(checkNickComplete){
@@ -234,35 +246,63 @@ public class EditMyInfoActivity extends AppCompatActivity {
     }
 
 
-    /**이미지 다운로드해서 가져오기 메서드 */
     private void downloadImg() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference profileImageRef = storageRef.child("profile_img/profile" + uid + ".jpg");
+        String imgName = "profile" + uid;
+
+        List<String> extensions = Arrays.asList(".jpg", ".jpeg", ".png");
+
         StorageReference defaultImageRef = storageRef.child("profile_img/default_profile_image.png"); // 기본 이미지 파일 경로
 
-        profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(EditMyInfoActivity.this).load(uri).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(profile);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // 프로필 이미지가 존재하지 않을 경우 기본 이미지를 로드
-                defaultImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(EditMyInfoActivity.this).load(uri).into(profile);
+        loadProfileImage(storageRef, imgName, extensions, 0, defaultImageRef);
+    }
+
+    private void loadProfileImage(StorageReference storageRef, String imgName, List<String> extensions, int index, StorageReference defaultImageRef) {
+        if (index < extensions.size()) {
+            StorageReference profileImageRef = storageRef.child("profile_img/" + imgName + extensions.get(index));
+            profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(EditMyInfoActivity.this)
+                            .load(uri)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .circleCrop()
+                            .skipMemoryCache(true).into(profile);
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // 기본 이미지 로드에 실패한 경우 로그를 출력하거나 에러 처리를 할 수 있습니다.
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof StorageException) {
+                        StorageException storageException = (StorageException) e;
+                        if (storageException.getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                            // 파일이 존재하지 않을 때 다음 확장자로 시도
+                            loadProfileImage(storageRef, imgName, extensions, index + 1, defaultImageRef);
+                        } else {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                }
+            });
+        } else {
+            // 모든 확장자를 시도했음에도 프로필 이미지가 존재하지 않을 경우 기본 이미지를 로드
+            defaultImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(EditMyInfoActivity.this).load(uri).into(profile);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // 기본 이미지 로드에 실패한 경우 로그를 출력하거나 에러 처리를 할 수 있습니다.
+                }
+            });
+        }
     }
 
     private void createProfile_Photo_and_Delete(Uri uri) {
@@ -270,26 +310,38 @@ public class EditMyInfoActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance(); //스토리지 인스턴스를 만들고,
         StorageReference storageRef = storage.getReference();//스토리지를 참조한다
         //파일명을 만들자.
-        String filename = "profile" + uid + ".jpg";  //ex) profile1.jpg 로그인하는 사람에 따라 그에 식별값에 맞는 프로필 사진 가져오기
+        String filename = "profile" + uid; //ex) profile1 로그인하는 사람에 따라 그에 식별값에 맞는 프로필 사진 가져오기
+        List<String> extensions = Arrays.asList(".jpg", ".jpeg", ".png"); // 지원되는 모든 확장자를 여기에 추가하세요.
+
         Uri file = uri;
         Log.d("유알", String.valueOf(file));
+
+        // 파일 확장자 추출
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString()).toLowerCase();
+        if (!extensions.contains("." + fileExtension)) {
+            fileExtension = "jpg"; // 확장자가 지원되지 않는 경우 기본 확장자를 사용합니다.
+        }
+        String newExtension = "." + fileExtension;
+
         //여기서 원하는 이름 넣어준다. (filename 넣어주기)
-        StorageReference riversRef = storageRef.child("profile_img/" + filename);
-        UploadTask uploadTask = riversRef.putFile(file);
+        StorageReference newProfileImgRef = storageRef.child("profile_img/" + filename + newExtension);
+        UploadTask uploadTask = newProfileImgRef.putFile(file);
 
-        // Create a reference to the file to delete
-        StorageReference desertRef = storageRef.child("profile_img/" + filename); //삭제할 프로필이미지 명
-        // Delete the file
-        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-            }
-        });
-
+        // 기존 파일 삭제
+        for (String extension : extensions) {
+            StorageReference desertRef = storageRef.child("profile_img/" + filename + extension); //삭제할 프로필이미지 명
+            // Delete the file
+            desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                }
+            }).addOnFailureListener(
+                    new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            });
+        }
 
         // TODO: 2021-03-17 새로운 프로필 이미지 저장
         // Register observers to listen for when the download is done or if it fails
@@ -307,16 +359,16 @@ public class EditMyInfoActivity extends AppCompatActivity {
 
     // TODO: 2021-03-16 존나 중요!! 파이어베이스 이미지 (시작할때 프로필 가져오기)
     /**프로필 이미지 (파이어베이스 스토리지에서 가져오기) */
-    private void getFireBaseProfileImage() {
-        //우선 디렉토리 파일 하나만든다.
-        File file = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"); //이미지를 저장할 수 있는 디렉토리
-        //구분할 수 있게 /toolbar_images폴더에 넣어준다.
-        //이 파일안에 저 디렉토리가 있는지 확인
-        if (!file.isDirectory()) { //디렉토리가 없으면,
-            file.mkdir(); //디렉토리를 만든다.
-        }
-        downloadImg(); //이미지 다운로드해서 가져오기 메서드
-    }
+//    private void getFireBaseProfileImage() {
+//        //우선 디렉토리 파일 하나만든다.
+//        File file = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"); //이미지를 저장할 수 있는 디렉토리
+//        //구분할 수 있게 /toolbar_images폴더에 넣어준다.
+//        //이 파일안에 저 디렉토리가 있는지 확인
+//        if (!file.isDirectory()) { //디렉토리가 없으면,
+//            file.mkdir(); //디렉토리를 만든다.
+//        }
+//        downloadImg(); //이미지 다운로드해서 가져오기 메서드
+//    }
 
     private void pickImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -333,7 +385,13 @@ public class EditMyInfoActivity extends AppCompatActivity {
 
             // imageView에 선택한 이미지 표시
             //profile.setImageURI(uri);
-            Glide.with(EditMyInfoActivity.this).load(uri).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(profile);
+            Glide.with(EditMyInfoActivity.this)
+                    .load(uri).diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .circleCrop()
+                    .skipMemoryCache(true).into(profile);
+            if(progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
             // 이미지가 변경되었음을 표시
             isImageChanged = true;
         }
@@ -346,9 +404,13 @@ public class EditMyInfoActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //텍스트가 변경되면 버튼 활성화
-            doubleCheckNick.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             checkNickComplete = false;
+            //텍스트가 변경되면 버튼 활성화
+            if(s.length()>=3 && s.length() <= 16){
+                doubleCheckNick.setEnabled(true);
+            }else{
+                doubleCheckNick.setEnabled(false);
+            }
         }
 
         @Override

@@ -55,20 +55,12 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalVi
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
         Photo item = dataList.get(position);
 
-        if(item != null){
-            if(item.getImgUrl().equals("정보 없음")){
-                Glide.with(context)
-                        .asGif()  // GIF 파일로 로드
-                        .load(R.drawable.no_data)  // 'no_data'는 res/drawable 폴더에 있는 GIF 파일의 이름입니다.
-                        .into(holder.imgView_item);
-            } else if(item.getImgUrl() != null){
-                Glide.with(context)
-                        .load(item.getImgUrl())
-                        .placeholder(R.drawable.no_data)  // 로딩 중에 표시할 이미지 설정
-                        .error(R.drawable.no_data)  // 이미지 로딩 실패 시 표시할 이미지 설정
-                        .into(holder.imgView_item);  // 결과 이미지를 표시할 ImageView
-            }
-        }
+        Glide.with(context)
+                .load(item.getImgUrl())
+                .error(R.drawable.noimage)
+                .fallback(R.drawable.noimage)
+                .placeholder(R.drawable.noimage)
+                .into(holder.imgView_item);  // 결과 이미지를 표시할 ImageView
 
         holder.txt_main.setText(item.getTitleName());
         holder.txt_sub.setText(item.getAddressName());

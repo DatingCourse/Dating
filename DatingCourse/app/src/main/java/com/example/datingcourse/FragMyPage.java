@@ -1,5 +1,6 @@
 package com.example.datingcourse;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,9 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class FragMyPage extends Fragment {
     private Button btn_logOut,editInfo;
@@ -41,6 +45,7 @@ public class FragMyPage extends Fragment {
     private String uid;
 
     private View view;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,8 +85,11 @@ public class FragMyPage extends Fragment {
         });
 
         profile = view.findViewById(R.id.profile);
-        getFireBaseProfileImage();
-
+//        getFireBaseProfileImage();
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Uploading Images...");
+        progressDialog.show();
+        downloadImg();
         return view;
     }
     public void fetchSingleValueFromUserRef(FirebaseAuth mFirebaseAuth, DatabaseReference mDatabaseRef){
@@ -117,44 +125,78 @@ public class FragMyPage extends Fragment {
 
     // TODO: 2021-03-16 존나 중요!! 파이어베이스 이미지 (시작할때 프로필 가져오기)
     /**프로필 이미지 (파이어베이스 스토리지에서 가져오기) */
-    private void getFireBaseProfileImage() {
-        //우선 디렉토리 파일 하나만든다.
-        File file = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"); //이미지를 저장할 수 있는 디렉토리
-        //구분할 수 있게 /toolbar_images폴더에 넣어준다.
-        //이 파일안에 저 디렉토리가 있는지 확인
-        if (!file.isDirectory()) { //디렉토리가 없으면,
-            file.mkdir(); //디렉토리를 만든다.
-        }
-        downloadImg(); //이미지 다운로드해서 가져오기 메서드
-    }
+//    private void getFireBaseProfileImage() {
+//        //우선 디렉토리 파일 하나만든다.
+//        File file = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profile_img"); //이미지를 저장할 수 있는 디렉토리
+//        //구분할 수 있게 /toolbar_images폴더에 넣어준다.
+//        //이 파일안에 저 디렉토리가 있는지 확인
+//        if (!file.isDirectory()) { //디렉토리가 없으면,
+//            file.mkdir(); //디렉토리를 만든다.
+//        }
+//        downloadImg(); //이미지 다운로드해서 가져오기 메서드
+//    }
     private void downloadImg() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference profileImageRef = storageRef.child("profile_img/profile" + uid + ".jpg");
+        String imgName = "profile" + uid;
+
+        List<String> extensions = Arrays.asList(".jpg", ".jpeg", ".png");
+
         StorageReference defaultImageRef = storageRef.child("profile_img/default_profile_image.png"); // 기본 이미지 파일 경로
 
-        profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(FragMyPage.this).load(uri).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(profile);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // 프로필 이미지가 존재하지 않을 경우 기본 이미지를 로드
-                defaultImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(FragMyPage.this).load(uri).into(profile);
+        loadProfileImage(storageRef, imgName, extensions, 0, defaultImageRef);
+    }
+
+    private void loadProfileImage(StorageReference storageRef, String imgName, List<String> extensions, int index, StorageReference defaultImageRef) {
+        if (index < extensions.size()) {
+            StorageReference profileImageRef = storageRef.child("profile_img/" + imgName + extensions.get(index));
+            profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(FragMyPage.this)
+                            .load(uri)
+                            .circleCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true).into(profile);
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // 기본 이미지 로드에 실패한 경우 로그를 출력하거나 에러 처리를 할 수 있습니다.
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof StorageException) {
+                        StorageException storageException = (StorageException) e;
+                        if (storageException.getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                            // 파일이 존재하지 않을 때 다음 확장자로 시도
+                            loadProfileImage(storageRef, imgName, extensions, index + 1, defaultImageRef);
+                        } else {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                }
+            });
+        } else {
+            // 모든 확장자를 시도했음에도 프로필 이미지가 존재하지 않을 경우 기본 이미지를 로드
+            defaultImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(FragMyPage.this)
+                            .load(uri)
+                            .circleCrop().into(profile);
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // 기본 이미지 로드에 실패한 경우 로그를 출력하거나 에러 처리를 할 수 있습니다.
+                }
+            });
+        }
     }
 
 }

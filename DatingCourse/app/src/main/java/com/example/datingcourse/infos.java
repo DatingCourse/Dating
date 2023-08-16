@@ -60,9 +60,9 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
 
         ImageView representImage = findViewById(R.id.represents_image);
         Glide.with(this)
-                .asGif()  // GIF 파일로 로드
-                .load(R.drawable.no_data)
                 .load(imgUrl)
+                .error(R.drawable.noimage)
+                .fallback(R.drawable.noimage)
                 .into(representImage);
 
         mapView = new MapView(this);

@@ -177,7 +177,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 if(!(IsValidation.isValidNickName(strNickName))){
-                    Toast.makeText(RegisterActivity.this, "닉네임은 최소 3자, 최대 16자의 한글,문자,숫자만 사용 가능합니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "닉네임은 한글,문자,숫자만 사용 가능합니다", Toast.LENGTH_SHORT).show();
                     mEtNickName.requestFocus();
                     return;
                 }
@@ -292,9 +292,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //텍스트가 변경되면 버튼 활성화
-            mBtnDoubleCheck.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             checkNickComplete = false;
+            //텍스트가 변경되면 버튼 활성화
+            if(s.length()>=3 && s.length() <= 16){
+                mBtnDoubleCheck.setEnabled(true);
+            }else{
+                mBtnDoubleCheck.setEnabled(false);
+            }
         }
 
         @Override

@@ -3,16 +3,27 @@ package com.example.datingcourse;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,30 +36,44 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PostMaking extends AppCompatActivity {
-    private String userId;
+    private String uid;
+    private String filename;
     private String nickName;
     private ArrayList<Model> models;
+    private Uri uri;
+    ArrayList<Uri> mArrayUri = new ArrayList<>();
+    // 사용자 앨범에서 사진 띄워주기
+    private ImageView album;
     private FirebaseFirestore db;
     private TextView et_nickName;
     private EditText et_title;
     private EditText et_comment;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-
+    private ProgressDialog progressDialog;
+    private DocumentReference postDocumentReference;
+    private final int PICK_IMAGE_MULTIPLE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_making);
+
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 로그인한 사용자의 UID 가져오기
+        filename = uid + ".jpg"; // 파일명을 사용자의 UID로 설정
 
         //파이어베이스 인증 및 데이터베이스 초기화등
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -61,6 +86,15 @@ public class PostMaking extends AppCompatActivity {
         //입력한 댓글 가져오기
         et_title = findViewById(R.id.postTitle);
         et_comment = findViewById(R.id.postContent);
+        db = FirebaseFirestore.getInstance();
+
+        Button btnChooseImages = findViewById(R.id.btn_choose_images);
+        btnChooseImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
 
         Button saveBtn = findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +103,14 @@ public class PostMaking extends AppCompatActivity {
                 // 게시물 내용
                 String titleText = et_title.getText().toString();
                 String commentText = et_comment.getText().toString();
+
+                if (titleText.isEmpty() || commentText.isEmpty()) {
+                    Toast.makeText(PostMaking.this, "Please fill out all fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 createPostFromGlobal(titleText, commentText, nickName);
+
             }
         });
     }
@@ -77,13 +118,13 @@ public class PostMaking extends AppCompatActivity {
     public void createPostFromGlobal(String titleText, String commentText, String nickName){
         com.google.firebase.Timestamp whenTimestamp = com.google.firebase.Timestamp.now();
 
-        Map<String,Object> commentData = new HashMap<>();
-        commentData.put("when",whenTimestamp);
-        commentData.put("title", titleText);
-        commentData.put("context",commentText);
-        commentData.put("userId",mFirebaseAuth.getCurrentUser().getUid()); //현재 사용자의 uid를 Authentication에서 가져와서 commentData에 넣어준다.
+        Map<String,Object> postData = new HashMap<>();
+        postData.put("when",whenTimestamp);
+        postData.put("title", titleText);
+        postData.put("context",commentText);
+        postData.put("userId",mFirebaseAuth.getCurrentUser().getUid()); //현재 사용자의 uid를 Authentication에서 가져와서 commentData에 넣어준다.
         db.collection("posts")
-                .add(commentData)
+                .add(postData)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -92,7 +133,8 @@ public class PostMaking extends AppCompatActivity {
                         et_comment.setText(""); // Clear the EditText after successful submission
 
                         Toast.makeText(PostMaking.this, "Comment Added Successfully!", Toast.LENGTH_SHORT).show();
-
+                        postDocumentReference = documentReference;
+                        uploadImagesToFirebase();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -119,6 +161,12 @@ public class PostMaking extends AppCompatActivity {
                     if(snapshot.exists()){
                         //값을 String으로 캐스팅하고 사용
                         nickName = snapshot.getValue(String.class);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                et_nickName.setText(snapshot.getValue(String.class));
+                            }
+                        });
                     } else {
                         Log.w("TAG", "해당하는 닉네임 없음");
                     }
@@ -133,5 +181,121 @@ public class PostMaking extends AppCompatActivity {
 
         }
 
+    }
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_MULTIPLE);
+    }
+
+    private void uploadImagesToFirebase() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Images...");
+        progressDialog.show();
+
+        String postId = postDocumentReference.getId();  // 게시물 고유 ID를 받음
+
+        for (int i = 0; i < mArrayUri.size(); i++) {
+            Uri individualImage = mArrayUri.get(i);
+
+            final StorageReference individualFileRef = storageRef.child("post_images/" + postId + System.currentTimeMillis() + "_" + i + ".jpg");
+
+            individualFileRef.putFile(individualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(PostMaking.this, "Images Uploaded Successfully!", Toast.LENGTH_SHORT).show();
+                    individualFileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String downloadUrl = uri.toString();
+
+                            if (postDocumentReference != null) {
+                                String postId = postDocumentReference.getId();
+                                db.collection("posts").document(postId)
+                                        .update("imageUrls", FieldValue.arrayUnion(downloadUrl));
+                            }
+
+                            if(progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(PostMaking.this, "Failed to Upload Images!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_MULTIPLE && resultCode == RESULT_OK && data != null) {
+            // If a single image is selected
+            if (data.getData() != null) {
+                mArrayUri.add(data.getData());
+            }
+            // If multiple images are selected
+            else if (data.getClipData() != null) {
+                ClipData mClipData = data.getClipData();
+                for (int i = 0; i < mClipData.getItemCount(); i++) {
+                    ClipData.Item item = mClipData.getItemAt(i);
+                    Uri uri = item.getUri();
+                    mArrayUri.add(uri);
+                }
+            }
+
+            // Update the ViewPager2 after images are selected
+            ViewPager2 viewPager2 = findViewById(R.id.post_img);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, mArrayUri);
+            viewPager2.setAdapter(viewPagerAdapter);
+        }
+    }
+
+    public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
+
+        private ArrayList<Uri> mArrayUri;
+        private Context context;
+
+        public ViewPagerAdapter(Context context, ArrayList<Uri> mArrayUri) {
+            this.context = context;
+            this.mArrayUri = mArrayUri;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_viewpager, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            Glide.with(context).load(mArrayUri.get(position)).into(holder.imageView);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mArrayUri.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            ImageView imageView;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                imageView = itemView.findViewById(R.id.image);
+            }
+        }
     }
 }

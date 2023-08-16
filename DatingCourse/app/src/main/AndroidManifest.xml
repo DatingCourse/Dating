@@ -39,9 +39,6 @@
             android:name=".BoardActivity"
             android:exported="false" />
         <activity
-            android:name=".Random"
-            android:exported="false" />
-        <activity
             android:name=".info"
             android:exported="true" />
         <activity

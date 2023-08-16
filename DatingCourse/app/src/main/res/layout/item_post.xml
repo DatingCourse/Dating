@@ -39,7 +39,7 @@
                 android:id="@+id/postNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:text="글쓴사람 닉네임"
                 android:textColor="#000000"
                 app:layout_constraintStart_toEndOf="@id/postprofile"
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:text="게시물 제목임"
+                android:hint="게시물 제목임"
                 android:textColor="#000000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -76,6 +76,7 @@
             android:layout_height="350dp"
             android:layout_marginTop="15dp">
             <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/post_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </androidx.viewpager2.widget.ViewPager2>
@@ -117,6 +118,11 @@
                 <TextView
                     android:layout_width="30dp"
                     android:layout_height="match_parent"/>
+
+                <TextView
+                    android:id="@+id/postDate"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 

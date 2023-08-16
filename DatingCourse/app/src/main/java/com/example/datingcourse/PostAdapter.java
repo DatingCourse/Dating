@@ -9,39 +9,38 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
-    private Context context;  // 필드명 변경: content -> context
+    private Context context;
     private List<Post> posts;
     private String currentUserId;
     private ArrayList<String> documentId;
 
-    public PostAdapter(List<Post> posts){
-        this.posts = posts;
-    }
+    private OnCommentActionListener mOnCommentActionListener;
 
-    public PostAdapter(Context context, List<Post> posts, String currentUserId, ArrayList<String> documentId) {
-        this.context = context; // 수정된 필드명으로 변경
-        this.posts = posts; // 초기화 코드 수정
+    public PostAdapter(Context context, ArrayList<Post> posts, String currentUserId, ArrayList<String> documentId) {
+        this.context = context;
+        this.posts = posts;
         this.currentUserId = currentUserId;
         this.documentId = documentId;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView, nicknameTextView, contentTextView, dateTextView;
-        ImageView imageView;
+        ViewPager2 imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.postTitle);
             nicknameTextView = itemView.findViewById(R.id.postNickname);
             contentTextView = itemView.findViewById(R.id.postContent);
-            imageView = itemView.findViewById(R.id.postprofile);
-            //imageView = itemView.findViewById(R.id.postImage); // 주석 처리된 코드 제거
+            dateTextView = itemView.findViewById(R.id.postDate); // 추가
+            imageView = itemView.findViewById(R.id.post_image);
         }
     }
 
@@ -58,7 +57,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.titleTextView.setText(post.getTitle());
         holder.nicknameTextView.setText(post.getNickname());
         holder.contentTextView.setText(post.getContent());
-        holder.imageView.setImageResource(post.getImageRes()); // 중복 코드 제거
+//        holder.dateTextView.setText(post.getDate()); // 날짜 표시를 위해 추가
+//        holder.imageView.setCurrentItem(post.getImageRes()); // 이미지 리소스 설정
     }
 
     @Override
