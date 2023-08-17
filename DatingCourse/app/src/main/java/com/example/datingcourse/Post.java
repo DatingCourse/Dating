@@ -9,7 +9,7 @@ import java.util.List;
 public class Post {
     private String title;   // 제목
     private String NickName;    // 닉네임
-    private String content; // 내용
+    private String context; // 내용
     private List<String> imageUrls; // 이미지 리소스 ID
     private Timestamp when;    // 시간
     private Uri picture; // 유저 사진
@@ -20,10 +20,10 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String NickName, String content, List<String> imageUrls, Timestamp when, Uri picture, String userId) {
+    public Post(String title, String NickName, String context, List<String> imageUrls, Timestamp when, Uri picture, String userId) {
         this.title = title;
         this.NickName = NickName;
-        this.content = content;
+        this.context = context;
         this.imageUrls = imageUrls;
         this.when = when;
         this.picture = picture;
@@ -46,12 +46,12 @@ public class Post {
         NickName = nickName;
     }
 
-    public String getContent() {
-        return content;
+    public String getContext() {
+        return context;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public List<String> getImageUrls() {

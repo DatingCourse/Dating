@@ -1,6 +1,7 @@
 package com.example.datingcourse;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -159,11 +160,19 @@ public class FragCommunity extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PostMaking.class); // 글 쓰기
                 intent.putExtra("nickName", nickName);
+
+                // Add flags to clear the activity stack and start a new instance
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
                 Toast.makeText(getContext(), "글 쓰기", Toast.LENGTH_LONG).show();
+
+                int REQUEST_EDIT_POST = 100;
+                startActivityForResult(intent, REQUEST_EDIT_POST);
+                loadComments();
             }
         });
-
+        loadComments();
         //여기 recycerView에 어탭더 적용시켜줌
         mRecyclerView.setAdapter(mRecyclerAdapter)  ;
         mRecyclerAdapter.setOnBtnClickListener(new OnPostActionListener() {
@@ -174,63 +183,22 @@ public class FragCommunity extends Fragment {
                 //선택한 댓글의 문서 ID 가져오기
                 String editDocumentId = item.getDocumentId();
 
-                // 다이얼 로그 생성
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                //레이아웃 인플레이터를 사용하여 앱이 실행할 때 레이아웃 파일을 뷰 객체로 변환함
-                View view = getLayoutInflater().inflate(R.layout.item_edit_comment,null);
-                //item_edit_comment.xml 에 있는 editTextComment 버튼 인식
-                EditText editTextComment = view.findViewById(R.id.editTextComment);
-                //builder.setView(view)를 통해 레이아웃을 설정
-                builder.setView(view);
+                Intent intent = new Intent(getActivity(), PostEditActivity.class);
+                intent.putExtra("documentId", item.getDocumentId());
+                intent.putExtra("title", item.getTitle());
+                intent.putExtra("context", item.getContext());
+                intent.putExtra("nickName", item.getNickName());
+                intent.putStringArrayListExtra("postImg", (ArrayList<String>) item.getImageUrls());
 
-                //posts밑에있는 문서 id에 있는 context 필드의 값을 가져와서
-                //editText에 설정
-                db.collection("posts").document(editDocumentId)
-                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                String editCommentText = documentSnapshot.getString("context");
-                                editTextComment.setText(editCommentText);
-                            }
-                        });
-                //AlertDialog 세팅 및 버튼 리스너 등록
-                builder.setTitle("댓글 수정")
-                        .setPositiveButton("수정", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //입력한 댓글 텍스트 가져오기
-                                String updateCommentText = editTextComment.getText().toString();
-
-                                db.collection("posts").document(editDocumentId)
-                                        .update("context",updateCommentText)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                mRecyclerAdapter.notifyDataSetChanged();
-                                                loadComments();
-                                                Toast.makeText(getActivity(),"댓글이 수정되었습니다.",Toast.LENGTH_SHORT).show();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getActivity(),"댓글 수정에 실패하였습니다.",Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }
-                        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                // 수정 화면에서 돌아올 때 결과를 받기 위한 Request Code
+                int REQUEST_EDIT_POST = 100;
+                startActivityForResult(intent, REQUEST_EDIT_POST);
             }
 
             @Override
             public void onPostDeleteClick(Post item, int position) {
                 Log.d("TAG", "Deleting doc ID: " + item.getDocumentId() + ", Position: " + position);
-                String commentUserId = item.getDocumentId();
+                String commentUserId = item.getUserId();
                 String documentId = item.getDocumentId();
 
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(commentUserId)) {
@@ -238,7 +206,7 @@ public class FragCommunity extends Fragment {
                         onDeleteConfirmed(documentId, position);
                     }
                 }else {
-                    Toast.makeText(getActivity(), "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "아으 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -246,6 +214,25 @@ public class FragCommunity extends Fragment {
         EventChangeListener(); //스냅샷 이벤트 변경 리스너 설정
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh the community posts here
+        loadComments();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        int REQUEST_EDIT_POST = 100;
+
+        if (requestCode == REQUEST_EDIT_POST) {
+            if (resultCode == Activity.RESULT_OK) {
+                loadComments();
+            }
+        }
     }
 
     private void onDeleteConfirmed(String documentId, int position) {
@@ -268,7 +255,7 @@ public class FragCommunity extends Fragment {
                         }
                     });
         } else {
-            Toast.makeText(getActivity(), "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "하흐 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
     private void EventChangeListener() {

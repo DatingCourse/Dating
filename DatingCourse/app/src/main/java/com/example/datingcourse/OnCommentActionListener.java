@@ -9,3 +9,8 @@ interface OnPostActionListener {
     void onPostEditClick(Post item);
     void onPostDeleteClick(Post item, int position);
 }
+
+interface OnMyPostActionListener {
+    void onMyPostEditClick(Post item);
+    void onMyPostDeleteClick(Post item, int position);
+}

@@ -4,6 +4,7 @@ package com.example.datingcourse;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -68,6 +69,8 @@ public class RecycleActivity extends AppCompatActivity {
 
         //입력한 댓글 가져오기
         et_comment = findViewById(R.id.et_comment);
+        Intent intent = getIntent();
+        String postId = intent.getStringExtra("documentId");
 
         //댓글 쓰기 버튼 눌렀을 때 이벤트
         btn_write = findViewById(R.id.btn_write);
@@ -77,8 +80,8 @@ public class RecycleActivity extends AppCompatActivity {
                 //댓글 내용
                 String commentText = et_comment.getText().toString();
                 //text에 쓰여진 댓글과 아까 가져온 닉네임을 매개변수로 전송
-                createComment(commentText,nickName);
-                loadComments();
+                createComment(commentText,nickName,postId);
+                loadComments(postId);
             }
         });
 
@@ -100,7 +103,7 @@ public class RecycleActivity extends AppCompatActivity {
 
         //adapter 생성자에 매개변수로 전달해줌
         documentIds = new ArrayList<String>(); // ArrayList 초기화
-        loadComments();
+        loadComments(postId);
         Log.d("TAG", "activity2 Comments list: " + mCommentsItems.toString());
         mRecyclerAdapter = new CommentsAdapter(RecycleActivity.this, mCommentsItems, mFirebaseAuth.getCurrentUser().getUid(), documentIds); // documentIds를 어댑터로 전달
 
@@ -125,7 +128,7 @@ public class RecycleActivity extends AppCompatActivity {
 
                 //posts밑에있는 문서 id에 있는 context 필드의 값을 가져와서
                 //editText에 설정
-                db.collection("posts").document(editDocumentId)
+                db.collection("posts").document(postId).collection("Comments").document(editDocumentId)
                         .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -141,13 +144,13 @@ public class RecycleActivity extends AppCompatActivity {
                                 //입력한 댓글 텍스트 가져오기
                                 String updateCommentText = editTextComment.getText().toString();
 
-                                db.collection("posts").document(editDocumentId)
+                                db.collection("posts").document(postId).collection("Comments").document(editDocumentId)
                                         .update("context",updateCommentText)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 mRecyclerAdapter.notifyDataSetChanged();
-                                                loadComments();
+                                                loadComments(postId);
                                                 Toast.makeText(RecycleActivity.this,"댓글이 수정되었습니다.",Toast.LENGTH_SHORT).show();
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
@@ -175,7 +178,7 @@ public class RecycleActivity extends AppCompatActivity {
 
                 if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(commentUserId)) {
                     if(position >= 0 && position < mCommentsItems.size()) {
-                        onDeleteConfirmed(documentId, position);
+                        onDeleteConfirmed(documentId, position,postId);
                     }
                 }else {
                     Toast.makeText(RecycleActivity.this, "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
@@ -183,21 +186,21 @@ public class RecycleActivity extends AppCompatActivity {
             }
         });
 
-        EventChangeListener(); //스냅샷 이벤트 변경 리스너 설정
+        EventChangeListener(postId); //스냅샷 이벤트 변경 리스너 설정
 
 
 
     }
-    private void onDeleteConfirmed(String documentId, int position) {
+    private void onDeleteConfirmed(String documentId, int position,String postId) {
         if (position >= 0 && position < mCommentsItems.size() && position < documentIds.size()) {
-            db.collection("posts").document(documentId)
+            db.collection("posts").document(postId).collection("Comments").document(documentId)
                     .delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             mRecyclerAdapter.notifyItemRemoved(position);
                             mRecyclerAdapter.notifyItemRangeChanged(position, mCommentsItems.size());
-                            loadComments();
+                            loadComments(postId);
                             Toast.makeText(RecycleActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -211,9 +214,9 @@ public class RecycleActivity extends AppCompatActivity {
             Toast.makeText(RecycleActivity.this, "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
-    private void EventChangeListener() {
+    private void EventChangeListener(String postId) {
 
-        db.collection("posts").orderBy("when", Query.Direction.ASCENDING)
+        db.collection("posts").document(postId).collection("Comments").orderBy("when", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                     //새로운 데이터가 생성
@@ -248,7 +251,7 @@ public class RecycleActivity extends AppCompatActivity {
                 });
 
     }
-    public void createComment(String commentText,String nickName){
+    public void createComment(String commentText,String nickName,String postId){
 
 
         com.google.firebase.Timestamp whenTimestamp = com.google.firebase.Timestamp.now();
@@ -258,7 +261,7 @@ public class RecycleActivity extends AppCompatActivity {
         commentData.put("when",whenTimestamp);
         commentData.put("context",commentText);
         commentData.put("userId",mFirebaseAuth.getCurrentUser().getUid()); //현재 사용자의 uid를 Authentication에서 가져와서 commentData에 넣어준다.
-        db.collection("posts")
+        db.collection("posts").document(postId).collection("Comments")
                 .add(commentData)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -314,48 +317,48 @@ public class RecycleActivity extends AppCompatActivity {
     }
 
 
-public void loadComments() {
-    db.collection("posts")
-            .orderBy("when", Query.Direction.ASCENDING)
-            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        Log.w("TAG", "Listen failed.", error);
-                        progressDialog.dismiss();
-                        return;
-                    }
+    public void loadComments(String postId) {
+        db.collection("posts")
+                .document(postId).collection("Comments").orderBy("when", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Log.w("TAG", "Listen failed.", error);
+                            progressDialog.dismiss();
+                            return;
+                        }
 
-                    ArrayList<Comments> newComments = new ArrayList<>();
-                    ArrayList<String> newDocumentIds = new ArrayList<>();
+                        ArrayList<Comments> newComments = new ArrayList<>();
+                        ArrayList<String> newDocumentIds = new ArrayList<>();
 
-                    for (DocumentChange dc : value.getDocumentChanges()) {
-                        if (dc.getType() == DocumentChange.Type.ADDED) {
-                            Comments commentItem = dc.getDocument().toObject(Comments.class);
-                            String documentId = dc.getDocument().getId();
-                            commentItem.setDocumentId(documentId);
-                            newDocumentIds.add(documentId);
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                Comments commentItem = dc.getDocument().toObject(Comments.class);
+                                String documentId = dc.getDocument().getId();
+                                commentItem.setDocumentId(documentId);
+                                newDocumentIds.add(documentId);
 
-                            newComments.add(commentItem);
-                            mRecyclerView.scrollToPosition(newComments.size() - 1);
+                                newComments.add(commentItem);
+                                mRecyclerView.scrollToPosition(newComments.size() - 1);
+                            }
+                        }
+                        documentIds.clear();
+                        documentIds.addAll(newDocumentIds);
+
+                        mCommentsItems.clear();
+                        mCommentsItems.addAll(newComments);
+
+                        mRecyclerAdapter.setCommentList(mCommentsItems);
+                        mRecyclerAdapter.setDocumentId(documentIds);
+                        mRecyclerAdapter.notifyDataSetChanged();
+
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
                         }
                     }
-                    documentIds.clear();
-                    documentIds.addAll(newDocumentIds);
-
-                    mCommentsItems.clear();
-                    mCommentsItems.addAll(newComments);
-
-                    mRecyclerAdapter.setCommentList(mCommentsItems);
-                    mRecyclerAdapter.setDocumentId(documentIds);
-                    mRecyclerAdapter.notifyDataSetChanged();
-
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                }
-            });
-}
+                });
+    }
 
 
 

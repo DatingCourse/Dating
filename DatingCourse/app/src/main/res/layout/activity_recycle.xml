@@ -10,7 +10,45 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_height="50dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="댓글"
+            android:fontFamily="@font/nasqua"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_stroke"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:elevation="2dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_RecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_marginTop="7dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_stroke"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <Button
             android:id="@+id/btn_write"
@@ -20,6 +58,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:text="입력"
+            android:elevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,16 +74,11 @@
             android:layout_marginEnd="10dp"
             android:ems="10"
             android:hint="댓글을 입력해주세요"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textMultiLine"
             app:layout_constraintEnd_toStartOf="@+id/btn_write"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_RecycleView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

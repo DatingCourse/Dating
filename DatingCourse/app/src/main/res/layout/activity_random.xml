@@ -27,6 +27,7 @@
             android:layout_height="200dp"
             android:layout_weight="1"
             android:background="#FFFFFF"
+            android:elevation="4dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -42,7 +43,7 @@
                     android:text="첫번째"
                     android:gravity="center"
                     android:fontFamily="@font/nasqua"
-                    android:textSize="26sp"
+                    android:textSize="23sp"
                     android:textStyle="normal"
                     android:textColor="#2B2B2B"
                     />
@@ -54,7 +55,7 @@
                     android:text="두번째"
                     android:gravity="center"
                     android:fontFamily="@font/nasqua"
-                    android:textSize="26sp"
+                    android:textSize="23sp"
                     android:textStyle="normal"
                     android:textColor="#2B2B2B"
                     />
@@ -66,12 +67,11 @@
                     android:text="세번째"
                     android:fontFamily="@font/nasqua"
                     android:gravity="center"
-                    android:textSize="26sp"
+                    android:textSize="23sp"
                     android:textStyle="normal"
                     android:textColor="#2B2B2B"
                     />
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="150dp"
@@ -86,11 +86,12 @@
                     android:id="@+id/textView1"
                     android:layout_width="220dp"
                     android:layout_height="160dp"
+                    android:layout_marginLeft="7dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="7dp"
                     android:layout_weight="1"
                     android:background="#E6E5E5"
+                    android:elevation="2dp"
                     android:gravity="center"
                     android:text="  "
                     android:textColor="#000000"
@@ -101,11 +102,12 @@
                     android:id="@+id/textView2"
                     android:layout_width="220dp"
                     android:layout_height="160dp"
+                    android:layout_marginLeft="7dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="7dp"
                     android:layout_weight="1"
                     android:background="#E6E5E5"
+                    android:elevation="2dp"
                     android:gravity="center"
                     android:text="  "
                     android:textColor="#000000"
@@ -116,15 +118,16 @@
                     android:id="@+id/textView3"
                     android:layout_width="220dp"
                     android:layout_height="160dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="7dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:background="#E6E5E5"
-                    android:textSize="25sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
+                    android:elevation="2dp"
                     android:gravity="center"
-                    android:text="  " />
+                    android:text="  "
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ImageButton
@@ -140,13 +143,11 @@
 
         </LinearLayout>
 
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             >
             <ImageButton
                 android:id="@+id/btn_culture"
@@ -321,25 +322,29 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
+            android:orientation="vertical"
             >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@drawable/line_gray"/>
             <Button
                 android:id="@+id/btn_ok"
-                android:layout_marginStart="50dp"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
-                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/app_icon_background"
                 android:gravity="center"
                 android:textColor="#2B2B2B"
                 android:text="코스 추천받기"
                 android:textStyle="normal"
-                android:textSize="23sp"
+                android:textSize="21sp"
                 app:strokeColor="@color/pink_500"
                 app:strokeWidth="2dp" />
 

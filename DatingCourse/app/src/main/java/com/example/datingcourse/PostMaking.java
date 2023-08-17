@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -53,8 +54,7 @@ public class PostMaking extends AppCompatActivity {
     private String uid;
     private String filename;
     private String nickName;
-    private ArrayList<Model> models;
-    private Uri uri;
+    private String documentId;
     ArrayList<Uri> mArrayUri = new ArrayList<>();
     // 사용자 앨범에서 사진 띄워주기
     private ImageView album;
@@ -66,6 +66,8 @@ public class PostMaking extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private ProgressDialog progressDialog;
     private DocumentReference postDocumentReference;
+    private Button deleteImageBtn; // 이미지 삭제 버튼
+    private int currentImagePosition = 0; // 현재 보여지는 이미지의 인덱스
     private final int PICK_IMAGE_MULTIPLE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +76,6 @@ public class PostMaking extends AppCompatActivity {
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 로그인한 사용자의 UID 가져오기
         filename = uid + ".jpg"; // 파일명을 사용자의 UID로 설정
-
-
 
         //파이어베이스 인증 및 데이터베이스 초기화등
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -98,6 +98,23 @@ public class PostMaking extends AppCompatActivity {
             }
         });
 
+        ViewPager2 viewPager2 = findViewById(R.id.post_img);
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                currentImagePosition = position; // 현재 보여지는 이미지의 인덱스를 업데이트
+            }
+        });
+
+        deleteImageBtn = findViewById(R.id.btn_delete_image);
+        deleteImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteImage();
+            }
+        });
+
         Button saveBtn = findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +133,26 @@ public class PostMaking extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void deleteImage() {
+        if (mArrayUri != null && mArrayUri.size() > 0) {
+            // 현재 보여지는 이미지의 Uri를 가져옵니다
+            Uri imageToDelete = mArrayUri.get(currentImagePosition);
+
+            // 리스트에서 이미지 Uri를 삭제합니다
+            mArrayUri.remove(currentImagePosition);
+
+            // ViewPager2를 업데이트합니다
+            ViewPager2 viewPager2 = findViewById(R.id.post_img);
+            ViewPagerAdapter viewPagerAdapter = (ViewPagerAdapter) viewPager2.getAdapter();
+            viewPagerAdapter.notifyDataSetChanged();
+
+            // 삭제 후 현재 위치를 재조정합니다
+            if (currentImagePosition > 0) {
+                currentImagePosition--;
+            }
+        }
     }
 
     public void createPostFromGlobal(String titleText, String commentText, String nickName){
@@ -202,6 +239,7 @@ public class PostMaking extends AppCompatActivity {
         progressDialog.show();
 
         String postId = postDocumentReference.getId();  // 게시물 고유 ID를 받음
+        documentId = postId;
 
         for (int i = 0; i < mArrayUri.size(); i++) {
             Uri individualImage = mArrayUri.get(i);
@@ -211,7 +249,6 @@ public class PostMaking extends AppCompatActivity {
             individualFileRef.putFile(individualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
                     Toast.makeText(PostMaking.this, "Images Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                     individualFileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
@@ -233,11 +270,19 @@ public class PostMaking extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                     Toast.makeText(PostMaking.this, "Failed to Upload Images!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+        // 업데이트가 성공적으로 이루어진 후에는 결과를 설정하고 액티비티를 종료합니다.
+        Log.d("제발 해줘 제발", documentId);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("documentId", documentId);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 
     @Override

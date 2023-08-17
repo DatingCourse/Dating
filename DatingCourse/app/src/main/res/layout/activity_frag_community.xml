@@ -31,59 +31,66 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="600dp">
+                android:layout_height="610dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="610dp">
 
-                <!-- 내가 작성한 글 -->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_myWrite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/write"
-                    app:backgroundTint="#FF7CA5"
-                    app:fabSize="auto"
-                    app:layout_constraintBottom_toBottomOf="@id/fab_main"
-                    app:layout_constraintEnd_toEndOf="@id/fab_main"
-                    app:layout_constraintStart_toStartOf="@id/fab_main"
-                    app:layout_constraintTop_toTopOf="@id/fab_main"
-                    tools:ignore="MissingConstraints" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <!-- 글쓰기 -->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_write"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/pencil"
-                    app:backgroundTint="#FF7CA5"
-                    app:fabSize="auto"
-                    app:layout_constraintBottom_toBottomOf="@id/fab_main"
-                    app:layout_constraintEnd_toEndOf="@id/fab_main"
-                    app:layout_constraintStart_toStartOf="@id/fab_main"
-                    app:layout_constraintTop_toTopOf="@id/fab_main"
-                    tools:ignore="MissingConstraints" />
+                    <!-- 내가 작성한 글 -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_myWrite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:src="@drawable/write"
+                        app:backgroundTint="#FF7CA5"
+                        app:fabSize="auto"
+                        app:layout_constraintBottom_toBottomOf="@id/fab_main"
+                        app:layout_constraintEnd_toEndOf="@id/fab_main"
+                        app:layout_constraintStart_toStartOf="@id/fab_main"
+                        app:layout_constraintTop_toTopOf="@id/fab_main"
+                        tools:ignore="MissingConstraints" />
 
-                <!-- 버튼 옵션 펼치기 -->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/plus_wh"
-                    app:backgroundTint="#FF6591"
-                    app:fabSize="auto"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:ignore="MissingConstraints" />
+                    <!-- 글쓰기 -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_write"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:src="@drawable/pencil"
+                        app:backgroundTint="#FF7CA5"
+                        app:fabSize="auto"
+                        app:layout_constraintBottom_toBottomOf="@id/fab_main"
+                        app:layout_constraintEnd_toEndOf="@id/fab_main"
+                        app:layout_constraintStart_toStartOf="@id/fab_main"
+                        app:layout_constraintTop_toTopOf="@id/fab_main"
+                        tools:ignore="MissingConstraints" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- 버튼 옵션 펼치기 -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:src="@drawable/plus_wh"
+                        app:backgroundTint="#FF6591"
+                        app:fabSize="auto"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:ignore="MissingConstraints" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
 
         </LinearLayout>
 

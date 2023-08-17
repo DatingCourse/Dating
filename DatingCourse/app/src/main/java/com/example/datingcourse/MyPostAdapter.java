@@ -35,27 +35,27 @@ import java.util.List;
 import java.util.Locale;
 
 //리사이클러 뷰 어댑터 생성
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder> {
 
     private ArrayList<Post> mCommentList;
     private Context context;
     private String currentUserId;
     private ArrayList<String> documentId;
 
-    private PostAdapter.OnItemClickListener itemClickListener;
+    private MyPostAdapter.OnItemClickListener itemClickListener;
 
-    private OnPostActionListener mOnPostActionListener;
+    private OnMyPostActionListener mOnMyPostActionListener;
 
     //어댑터 생성자
-    public PostAdapter(Context context, ArrayList<Post> mCommentList, String currentUserId, ArrayList<String> documentId) {
+    public MyPostAdapter(Context context, ArrayList<Post> mCommentList, String currentUserId, ArrayList<String> documentId) {
         this.mCommentList = mCommentList;
         this.context = context;
         this.currentUserId = currentUserId;
         this.documentId = documentId;
     }
-    public void setOnBtnClickListener(OnPostActionListener clickListener){
+    public void setOnBtnClickListener(OnMyPostActionListener clickListener){
 
-        mOnPostActionListener = clickListener;
+        mOnMyPostActionListener = clickListener;
     }
     public void setCommentList(ArrayList<Post> mCommentList) {
         this.mCommentList = mCommentList;
@@ -72,7 +72,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //뷰 홀더 생성
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
-        return new ViewHolder(view, mOnPostActionListener);
+        return new ViewHolder(view, mOnMyPostActionListener);
     }
 
     //데이터 바인딩
@@ -94,7 +94,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         void onClick(View v, int position, Post post);
     }
 
-    public void setItemClickListener(PostAdapter.OnItemClickListener onItemClickListener) {
+    public void setItemClickListener(MyPostAdapter.OnItemClickListener onItemClickListener) {
         this.itemClickListener = onItemClickListener;
     }
 
@@ -109,9 +109,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         Button edit_post, delete_post;
 
-        OnPostActionListener mOnPostActionListener;
+        OnMyPostActionListener mOnMyPostActionListener;
 
-        public ViewHolder(@NonNull View itemView,OnPostActionListener onPostActionListener) {
+        public ViewHolder(@NonNull View itemView,OnMyPostActionListener onMyPostActionListener) {
             super(itemView);
 
             userNick = (TextView) itemView.findViewById(R.id.postNickname);
@@ -131,28 +131,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             db = FirebaseFirestore.getInstance();
 
-            mOnPostActionListener = onPostActionListener;
+            mOnMyPostActionListener = onMyPostActionListener;
         }
 
         //데이터 바인딩 메소드
         //어댑터 클래스에서 데이터를 표시하기 위한 뷰와 실제 데이터 연결
         void onBind(Post item) {
             Log.d("TAG", "Nickname in Adapter: " + item.getContext());
-            userNick.setText(item.getNickName());
-            postTitle.setText(item.getTitle());
-            postContent.setText(item.getContext());
-
-            // Timestamp를 문자열로 변환
-            com.google.firebase.Timestamp whenTimestamp = item.getWhen();
-            if (whenTimestamp != null) {
-                Date whenDate = whenTimestamp.toDate();
-                String whenString = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault()).format(whenDate);
-                postDate.setText(whenString); // 변환한 문자열로 TextView 업데이트
-            } else {
-                postDate.setText(""); // when 값이 없는 경우, 비워 둡니다.
-            }
 
             if (currentUserId != null && currentUserId.equals(item.getUserId())) {
+                userNick.setText(item.getNickName());
+                postTitle.setText(item.getTitle());
+                postContent.setText(item.getContext());
+
+                // Timestamp를 문자열로 변환
+                com.google.firebase.Timestamp whenTimestamp = item.getWhen();
+                if (whenTimestamp != null) {
+                    Date whenDate = whenTimestamp.toDate();
+                    String whenString = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault()).format(whenDate);
+                    postDate.setText(whenString); // 변환한 문자열로 TextView 업데이트
+                } else {
+                    postDate.setText(""); // when 값이 없는 경우, 비워 둡니다.
+                }
                 edit_post.setVisibility(View.VISIBLE);
                 delete_post.setVisibility(View.VISIBLE);
                 Log.d("TAG", "UID 일치: " + currentUserId + " == " + item.getUserId());
@@ -161,14 +161,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         Log.d("TAG", "수정버튼눌림" + item.getDocumentId());
-                        mOnPostActionListener.onPostEditClick(item);
+                        mOnMyPostActionListener.onMyPostEditClick(item);
                     }
                 });
                 delete_post.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.d("TAG", "Deleting doc ID: " + item.getDocumentId() + ", Position: " + getAdapterPosition());
-                        mOnPostActionListener.onPostDeleteClick(item, getAdapterPosition());
+                        mOnMyPostActionListener.onMyPostDeleteClick(item, getAdapterPosition());
                     }
                 });
             }

@@ -56,6 +56,8 @@
         <activity
             android:name=".CommentsAdapter"
             android:exported="true" />
+        <activity android:name=".PostEditActivity"
+            android:exported="true"/>
         <activity
             android:name=".UserAccount"
             android:exported="true" />
