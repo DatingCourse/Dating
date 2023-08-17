@@ -75,6 +75,8 @@ public class PostMaking extends AppCompatActivity {
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 로그인한 사용자의 UID 가져오기
         filename = uid + ".jpg"; // 파일명을 사용자의 UID로 설정
 
+
+
         //파이어베이스 인증 및 데이터베이스 초기화등
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
@@ -108,8 +110,9 @@ public class PostMaking extends AppCompatActivity {
                     Toast.makeText(PostMaking.this, "Please fill out all fields!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                String nickStr = et_nickName.getText().toString();
 
-                createPostFromGlobal(titleText, commentText, nickName);
+                createPostFromGlobal(titleText, commentText, nickStr);
 
             }
         });
@@ -161,11 +164,11 @@ public class PostMaking extends AppCompatActivity {
                     //데이터 스냅샷이 한 번 호출되어 값을 가져옴
                     if(snapshot.exists()){
                         //값을 String으로 캐스팅하고 사용
-                        nickName = snapshot.getValue(String.class);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 et_nickName.setText(snapshot.getValue(String.class));
+                                nickName = snapshot.getValue(String.class);
                             }
                         });
                     } else {

@@ -104,6 +104,34 @@ public class FragCommunity extends Fragment {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
 
+        fetchSingleValueFromUserRef(mFirebaseAuth,mDatabaseRef);
+
+        if (getActivity() != null) {
+            progressDialog = new ProgressDialog(getActivity());
+        }
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Fetching Data... ");
+        progressDialog.show();
+
+        // RecyclerView 초기화 코드
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManagerWrapper(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        db = FirebaseFirestore.getInstance();
+
+        //새로운 Comments 클래스 타입의 arraylist만들어서
+        mCommentsItems = new ArrayList<Post>(); // ArrayList 초기화
+        Log.d("TAG", "activity1 Comments list: " + mCommentsItems.toString());
+
+        documentIds = new ArrayList<String>(); // ArrayList 초기화
+
+        loadComments();
+
+        Log.d("TAG", "activity2 Comments list: " + mCommentsItems.toString());
+        mRecyclerAdapter = new PostAdapter(getActivity(), mCommentsItems, mFirebaseAuth.getCurrentUser().getUid(), documentIds); // documentIds를 어댑터로 전달
+
         // 플로팅 버튼 구현
         fab_main = view.findViewById(R.id.fab_main);
         fab_write = view.findViewById(R.id.fab_write);
@@ -130,36 +158,11 @@ public class FragCommunity extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PostMaking.class); // 글 쓰기
+                intent.putExtra("nickName", nickName);
                 startActivity(intent);
                 Toast.makeText(getContext(), "글 쓰기", Toast.LENGTH_LONG).show();
             }
         });
-
-        fetchSingleValueFromUserRef(mFirebaseAuth,mDatabaseRef);
-
-        if (getActivity() != null) {
-            progressDialog = new ProgressDialog(getActivity());
-        }
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Fetching Data... ");
-        progressDialog.show();
-
-        // RecyclerView 초기화 코드
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManagerWrapper(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        db = FirebaseFirestore.getInstance();
-
-        //새로운 Comments 클래스 타입의 arraylist만들어서
-        mCommentsItems = new ArrayList<Post>(); // ArrayList 초기화
-        Log.d("TAG", "activity1 Comments list: " + mCommentsItems.toString());
-
-        documentIds = new ArrayList<String>(); // ArrayList 초기화
-        loadComments();
-        Log.d("TAG", "activity2 Comments list: " + mCommentsItems.toString());
-        mRecyclerAdapter = new PostAdapter(getActivity(), mCommentsItems, mFirebaseAuth.getCurrentUser().getUid(), documentIds); // documentIds를 어댑터로 전달
 
         //여기 recycerView에 어탭더 적용시켜줌
         mRecyclerView.setAdapter(mRecyclerAdapter)  ;
