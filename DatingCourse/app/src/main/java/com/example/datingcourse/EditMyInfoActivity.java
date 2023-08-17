@@ -272,6 +272,9 @@ public class EditMyInfoActivity extends AppCompatActivity {
                     if(progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -295,6 +298,9 @@ public class EditMyInfoActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     Glide.with(EditMyInfoActivity.this).load(uri).into(profile);
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

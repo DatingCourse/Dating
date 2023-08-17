@@ -136,6 +136,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"/>
                 <ImageView
+                    android:id="@+id/recycle"
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/chat"

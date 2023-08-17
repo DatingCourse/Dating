@@ -273,7 +273,7 @@ public class FragCommunity extends Fragment {
     }
     private void EventChangeListener() {
 
-        db.collection("posts").orderBy("when", Query.Direction.ASCENDING)
+        db.collection("posts").orderBy("when", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                     //새로운 데이터가 생성
@@ -343,7 +343,7 @@ public class FragCommunity extends Fragment {
 
     private void loadComments() {
         db.collection("posts")
-                .orderBy("when", Query.Direction.ASCENDING)
+                .orderBy("when", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -364,7 +364,7 @@ public class FragCommunity extends Fragment {
                                 newDocumentIds.add(documentId);
 
                                 newPosts.add(postItem);
-                                mRecyclerView.scrollToPosition(newPosts.size() - 1);
+//                                mRecyclerView.scrollToPosition(newPosts.size() - 1);
                             }
                         }
                         documentIds.clear();
@@ -376,6 +376,8 @@ public class FragCommunity extends Fragment {
                         mRecyclerAdapter.setCommentList(mCommentsItems);
                         mRecyclerAdapter.setDocumentId(documentIds);
                         mRecyclerAdapter.notifyDataSetChanged();
+
+                        mRecyclerView.scrollToPosition(0);
 
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();

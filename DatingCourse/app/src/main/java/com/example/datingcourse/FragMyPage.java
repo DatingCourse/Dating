@@ -72,6 +72,15 @@ public class FragMyPage extends Fragment {
                 startActivity(intent);
             }
         });
+
+        Button btn_myCourse = view.findViewById(R.id.myCourse);
+        btn_myCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyCourse.class);
+                startActivity(intent);
+            }
+        });
         nick = view.findViewById(R.id.nick);
         fetchSingleValueFromUserRef(mFirebaseAuth, mDatabaseRef);
 

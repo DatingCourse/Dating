@@ -20,7 +20,7 @@ public class IsValidation {
     //닉네임을 입력했을 때 그 닉네임이 영어 대소문자 A-za-z, 완성된 한글 가-힣, 숫자 0-9 중 하나 이상 포함하는지 matches( ) 메소드로 확인
     //{3,16}을 이용해서 3~16자까지 허용
     public static boolean isValidNickName(String nickName) {
-        return nickName.matches("^[A-Za-z가-힣0-9\\S]{3,16}$");
+        return nickName.matches("^[A-Za-z가-힣0-9]{3,16}$");
     }
 
     //이메일 유효성 검사 메소드 -> 안드로이드 util.Patterns 클래스에 포함된 정규식 패턴

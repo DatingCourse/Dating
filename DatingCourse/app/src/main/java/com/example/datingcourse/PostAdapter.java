@@ -1,6 +1,7 @@
 package com.example.datingcourse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +41,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private Context context;
     private String currentUserId;
     private ArrayList<String> documentId;
+
+    private PostAdapter.OnItemClickListener itemClickListener;
 
     private OnPostActionListener mOnPostActionListener;
 
@@ -81,11 +84,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.onBind(comments);
     }
 
-
     //아이템 개수 반환
     @Override
     public int getItemCount() {
         return mCommentList.size();
+    }
+
+    public interface OnItemClickListener {
+        void onClick(View v, int position, Post post);
+    }
+
+    public void setItemClickListener(PostAdapter.OnItemClickListener onItemClickListener) {
+        this.itemClickListener = onItemClickListener;
     }
 
 
@@ -94,7 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNick, postTitle, postContent, postDate;
         ViewPager2 post_image;
-        ImageView picture;
+        ImageView picture, recycle;
         FirebaseFirestore db;
 
         OnPostActionListener mOnPostActionListener;
@@ -108,19 +118,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postDate = (TextView) itemView.findViewById(R.id.postDate);
 
             picture = (ImageView) itemView.findViewById(R.id.postprofile);
+            recycle = (ImageView) itemView.findViewById(R.id.recycle);
 
             post_image = (ViewPager2) itemView.findViewById(R.id.post_image);
 
             db = FirebaseFirestore.getInstance();
 
             mOnPostActionListener = onPostActionListener;
-
         }
 
         //데이터 바인딩 메소드
         //어댑터 클래스에서 데이터를 표시하기 위한 뷰와 실제 데이터 연결
         void onBind(Post item) {
-            Log.d("TAG", "Nickname in Adapter: " + item.getUserId());
+            Log.d("TAG", "Nickname in Adapter: " + item.getContent());
             userNick.setText(item.getNickName());
             postTitle.setText(item.getTitle());
             postContent.setText(item.getContent());
@@ -134,8 +144,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             } else {
                 postDate.setText(""); // when 값이 없는 경우, 비워 둡니다.
             }
+
+            recycle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, RecycleActivity.class);
+                    intent.putExtra("documentId", item.getDocumentId());
+                    intent.putExtra("title", item.getTitle());
+                    context.startActivity(intent);
+                }
+            });
+
             downloadImg(item);
-            for (int i = 0; i < item.getImageUrls().size(); i++){
+            for (int i = 0; i < item.getImageUrls().size(); i++) {
                 Log.d("images 제발", item.getImageUrls().get(i));
             }
         }
