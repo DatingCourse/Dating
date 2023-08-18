@@ -1,33 +1,34 @@
 package com.example.datingcourse;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,11 +43,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.HashMap;
 
-public class FragCommunity extends Fragment {
+public class MyPostActivity extends AppCompatActivity {
+
     private String nickName;
-    private PostAdapter mRecyclerAdapter; //어댑터 클래스
     private MyPostAdapter myPostAdapter;
     private ArrayList<Post> mCommentsItems; //코멘트 리스트 객체 생성
     private FirebaseFirestore db;
@@ -60,47 +62,12 @@ public class FragCommunity extends Fragment {
     private View view;
 
     private RecyclerView mRecyclerView;
+    private boolean checkNickComplete;
 
-    private boolean fab_main_status = false; //플로팅 버튼 상태
-    private FloatingActionButton fab_main;
-    private FloatingActionButton fab_myWrite;
-    private FloatingActionButton fab_write;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    public void toggleFab() {  //플로팅 버튼 애니메이션
-
-        if(fab_main_status){
-            //플로팅 액션 버튼 닫기
-            //애니메이션 추가
-            ObjectAnimator fm_animation = ObjectAnimator.ofFloat(fab_myWrite, "translationY", 0f);
-            fm_animation.start();
-
-            ObjectAnimator fw_animation = ObjectAnimator.ofFloat(fab_write, "translationY", 0f);
-            fw_animation.start();
-            //메인 플로팅 이미지 변경
-            fab_main.setImageResource(R.drawable.heart);
-        }else {
-            //플로팅 액션 버튼 열기
-            ObjectAnimator fm_animation = ObjectAnimator.ofFloat(fab_myWrite, "translationY", -200f);
-            fm_animation.start();
-
-            ObjectAnimator fw_animation = ObjectAnimator.ofFloat(fab_write, "translationY", -400f);
-            fw_animation.start();
-            //메인 플로팅 이미지 변경
-            fab_main.setImageResource(R.drawable.plus_wh);
-        }
-        //플로팅 버튼 상태 변경
-        fab_main_status = !fab_main_status;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_frag_community, container, false);
+        setContentView(R.layout.activity_my_post);
 
         //파이어베이스 인증 및 데이터베이스 초기화등
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -108,16 +75,16 @@ public class FragCommunity extends Fragment {
 
         fetchSingleValueFromUserRef(mFirebaseAuth,mDatabaseRef);
 
-        if (getActivity() != null) {
-            progressDialog = new ProgressDialog(getActivity());
+        if (this != null) {
+            progressDialog = new ProgressDialog(this);
         }
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Fetching Data... ");
         progressDialog.show();
 
         // RecyclerView 초기화 코드
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManagerWrapper(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManagerWrapper(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView = findViewById(R.id.MyrecyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -131,61 +98,26 @@ public class FragCommunity extends Fragment {
 
         loadComments();
 
+        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
+        String currentUserId = null;
+        if (currentUser != null) {
+            currentUserId = currentUser.getUid();
+        }
+
         Log.d("TAG", "activity2 Comments list: " + mCommentsItems.toString());
-        mRecyclerAdapter = new PostAdapter(getActivity(), mCommentsItems, mFirebaseAuth.getCurrentUser().getUid(), documentIds); // documentIds를 어댑터로 전달
+        myPostAdapter = new MyPostAdapter(this, mCommentsItems, currentUserId, documentIds); // documentIds를 어댑터로 전달
 
-        // 플로팅 버튼 구현
-        fab_main = view.findViewById(R.id.fab_main);
-        fab_write = view.findViewById(R.id.fab_write);
-        fab_myWrite = view.findViewById(R.id.fab_myWrite);
-
-        fab_main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFab();
-            }
-        });
-
-        fab_myWrite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = getContext();
-
-                Intent intent = new Intent(getActivity(), MyPostActivity.class);
-                startActivity(intent);
-                Toast.makeText(context, "내가 쓴 글", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        fab_write.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PostMaking.class); // 글 쓰기
-                intent.putExtra("nickName", nickName);
-
-                // Add flags to clear the activity stack and start a new instance
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                startActivity(intent);
-                Toast.makeText(getContext(), "글 쓰기", Toast.LENGTH_LONG).show();
-
-                int REQUEST_EDIT_POST = 100;
-                startActivityForResult(intent, REQUEST_EDIT_POST);
-                loadComments();
-            }
-        });
-        loadComments();
         //여기 recycerView에 어탭더 적용시켜줌
-        mRecyclerView.setAdapter(mRecyclerAdapter)  ;
-        mRecyclerAdapter.setOnBtnClickListener(new OnPostActionListener() {
+        mRecyclerView.setAdapter(myPostAdapter)  ;
+        myPostAdapter.setOnBtnClickListener(new OnMyPostActionListener() {
 
             @Override
-            public void onPostEditClick(Post item) {
+            public void onMyPostEditClick(Post item) {
                 Log.d("TAG","수정 버튼 눌림");
                 //선택한 댓글의 문서 ID 가져오기
                 String editDocumentId = item.getDocumentId();
 
-                Intent intent = new Intent(getActivity(), PostEditActivity.class);
+                Intent intent = new Intent(MyPostActivity.this, PostEditActivity.class);
                 intent.putExtra("documentId", item.getDocumentId());
                 intent.putExtra("title", item.getTitle());
                 intent.putExtra("context", item.getContext());
@@ -198,7 +130,7 @@ public class FragCommunity extends Fragment {
             }
 
             @Override
-            public void onPostDeleteClick(Post item, int position) {
+            public void onMyPostDeleteClick(Post item, int position) {
                 Log.d("TAG", "Deleting doc ID: " + item.getDocumentId() + ", Position: " + position);
                 String commentUserId = item.getUserId();
                 String documentId = item.getDocumentId();
@@ -208,21 +140,12 @@ public class FragCommunity extends Fragment {
                         onDeleteConfirmed(documentId, position);
                     }
                 }else {
-                    Toast.makeText(getActivity(), "아으 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyPostActivity.this, "아으 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         EventChangeListener(); //스냅샷 이벤트 변경 리스너 설정
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Refresh the community posts here
-        loadComments();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -244,25 +167,25 @@ public class FragCommunity extends Fragment {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            mRecyclerAdapter.notifyItemRemoved(position);
-                            mRecyclerAdapter.notifyItemRangeChanged(position, mCommentsItems.size());
+                            myPostAdapter.notifyItemRemoved(position);
+                            myPostAdapter.notifyItemRangeChanged(position, mCommentsItems.size());
                             loadComments();
-                            Toast.makeText(getActivity(), "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MyPostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "삭제에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MyPostActivity.this, "삭제에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
-            Toast.makeText(getActivity(), "하흐 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyPostActivity.this, "하흐 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
     private void EventChangeListener() {
 
-        db.collection("posts").orderBy("when", Query.Direction.DESCENDING)
+        db.collection("posts").orderBy("when", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                     //새로운 데이터가 생성
@@ -289,7 +212,7 @@ public class FragCommunity extends Fragment {
                             mCommentsItems.add(doc.toObject(Post.class));
                         }
 
-                        mRecyclerAdapter.notifyDataSetChanged();
+                        myPostAdapter.notifyDataSetChanged();
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
@@ -362,9 +285,9 @@ public class FragCommunity extends Fragment {
                         mCommentsItems.clear();
                         mCommentsItems.addAll(newPosts);
 
-                        mRecyclerAdapter.setCommentList(mCommentsItems);
-                        mRecyclerAdapter.setDocumentId(documentIds);
-                        mRecyclerAdapter.notifyDataSetChanged();
+                        myPostAdapter.setCommentList(mCommentsItems);
+                        myPostAdapter.setDocumentId(documentIds);
+                        myPostAdapter.notifyDataSetChanged();
 
                         mRecyclerView.scrollToPosition(0);
 
@@ -375,5 +298,5 @@ public class FragCommunity extends Fragment {
                 });
     }
 
-}
 
+}

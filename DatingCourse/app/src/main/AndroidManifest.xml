@@ -53,6 +53,8 @@
         <activity
             android:name=".RecycleActivity"
             android:exported="true" />
+        <activity android:name=".MyPostActivity"
+            android:exported="true"/>
         <activity
             android:name=".CommentsAdapter"
             android:exported="true" />

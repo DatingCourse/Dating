@@ -80,8 +80,16 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post comments = mCommentList.get(position);
         comments.setDocumentId(documentId.get(position));
-        //댓글 생성
-        holder.onBind(comments);
+        Log.d("userID", currentUserId);
+        Log.d("Post in userID", comments.getUserId());
+        if (currentUserId != null && currentUserId.equals(comments.getUserId())) {
+            holder.onBind(comments);
+            holder.itemView.setVisibility(View.VISIBLE);
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        } else {
+            holder.itemView.setVisibility(View.GONE);
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+        }
     }
 
     //아이템 개수 반환
@@ -138,21 +146,21 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
         //어댑터 클래스에서 데이터를 표시하기 위한 뷰와 실제 데이터 연결
         void onBind(Post item) {
             Log.d("TAG", "Nickname in Adapter: " + item.getContext());
+            userNick.setText(item.getNickName());
+            postTitle.setText(item.getTitle());
+            postContent.setText(item.getContext());
+
+            // Timestamp를 문자열로 변환
+            com.google.firebase.Timestamp whenTimestamp = item.getWhen();
+            if (whenTimestamp != null) {
+                Date whenDate = whenTimestamp.toDate();
+                String whenString = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault()).format(whenDate);
+                postDate.setText(whenString); // 변환한 문자열로 TextView 업데이트
+            } else {
+                postDate.setText(""); // when 값이 없는 경우, 비워 둡니다.
+            }
 
             if (currentUserId != null && currentUserId.equals(item.getUserId())) {
-                userNick.setText(item.getNickName());
-                postTitle.setText(item.getTitle());
-                postContent.setText(item.getContext());
-
-                // Timestamp를 문자열로 변환
-                com.google.firebase.Timestamp whenTimestamp = item.getWhen();
-                if (whenTimestamp != null) {
-                    Date whenDate = whenTimestamp.toDate();
-                    String whenString = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault()).format(whenDate);
-                    postDate.setText(whenString); // 변환한 문자열로 TextView 업데이트
-                } else {
-                    postDate.setText(""); // when 값이 없는 경우, 비워 둡니다.
-                }
                 edit_post.setVisibility(View.VISIBLE);
                 delete_post.setVisibility(View.VISIBLE);
                 Log.d("TAG", "UID 일치: " + currentUserId + " == " + item.getUserId());

@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FragMyPage extends Fragment {
-    private Button btn_logOut,editInfo;
+    private Button btn_logOut,editInfo, btn_my_Write;
     private TextView nick;
 
     private ImageView profile;
@@ -62,6 +62,16 @@ public class FragMyPage extends Fragment {
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
         uid = mFirebaseAuth.getCurrentUser().getUid(); // 로그인한 사용자의 UID 가져오기
+
+        btn_my_Write = view.findViewById(R.id.myWrite);
+        btn_my_Write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyPostActivity
+                        .class);
+                startActivity(intent);
+            }
+        });
 
         btn_logOut = view.findViewById(R.id.logOut);
         btn_logOut.setOnClickListener(new View.OnClickListener() {
