@@ -272,9 +272,6 @@ public class EditMyInfoActivity extends AppCompatActivity {
                     if(progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    if(progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -359,6 +356,9 @@ public class EditMyInfoActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(EditMyInfoActivity.this, "프로필 이미지가 변경되었습니다.", Toast.LENGTH_SHORT).show();
+                if(progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
             }
         });
     }

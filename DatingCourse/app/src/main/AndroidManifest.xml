@@ -33,6 +33,12 @@
             android:exported="true"
             android:theme="@style/Theme.DatingCourse2" />
         <activity
+            android:name=".MBTI"
+            android:exported="true" />
+        <activity
+            android:name=".MBTI_map"
+            android:exported="true" />
+        <activity
             android:name=".GuChoose"
             android:exported="false" />
         <activity

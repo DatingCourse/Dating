@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -163,6 +164,21 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         api2.new NetworkTask().execute();
         InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
         api3.new NetworkTask().execute();
+
+        ImageButton btn_again = findViewById(R.id.btn_again);
+        btn_again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                count=0;
+                int randomIndex = random.nextInt(4)+1;
+                InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+                api.new NetworkTask().execute();
+                InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+                api2.new NetworkTask().execute();
+                InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+                api3.new NetworkTask().execute();
+            }
+        });
     }
 
     @Override

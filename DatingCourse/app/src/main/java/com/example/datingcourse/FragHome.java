@@ -156,6 +156,50 @@ public class FragHome extends Fragment {
                 startActivity(intent);
             }
         });
+
+        ImageButton mbti_i = view.findViewById(R.id.mbti_i);
+        mbti_i.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String mbti = "i";
+                Intent intent = new Intent(getActivity(),MBTI.class);
+                intent.putExtra("mbti", mbti);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton mbti_e = view.findViewById(R.id.mbti_e);
+        mbti_e.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String mbti = "e";
+                Intent intent = new Intent(getActivity(),MBTI.class);
+                intent.putExtra("mbti", mbti);
+                startActivity(intent);
+            }
+        });
+        ImageButton mbti_p = view.findViewById(R.id.mbti_p);
+        mbti_p.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String mbti = "p";
+                Intent intent = new Intent(getActivity(),MBTI.class);
+                intent.putExtra("mbti", mbti);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton mbti_j = view.findViewById(R.id.mbti_j);
+        mbti_j.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String mbti = "j";
+                Intent intent = new Intent(getActivity(),MBTI.class);
+                intent.putExtra("mbti", mbti);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 }

@@ -2,6 +2,4 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="#FFFFFF" /> <!-- 배경 색상 -->
     <corners android:radius="50dp" /> <!-- 50%로 원형 모양 생성 -->
-    <size android:height="100dp"/>
-    <size android:width="100dp"/>
 </shape>
