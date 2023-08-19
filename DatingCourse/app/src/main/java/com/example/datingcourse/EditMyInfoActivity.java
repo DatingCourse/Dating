@@ -155,7 +155,7 @@ public class EditMyInfoActivity extends AppCompatActivity {
         //프로필 이미지뷰에 현재 DB에서 가져온 사진 업로드
         profile = findViewById(R.id.profile);
         progressDialog = new ProgressDialog(EditMyInfoActivity.this);
-        progressDialog.setTitle("Uploading Images...");
+        progressDialog.setTitle("이미지 업로드 중...");
         progressDialog.show();
         downloadImg();
 
@@ -424,11 +424,4 @@ public class EditMyInfoActivity extends AppCompatActivity {
 
         }
     };
-    @Override
-    public void onBackPressed() {
-        // MyPageActivity를 시작
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-    }
 }

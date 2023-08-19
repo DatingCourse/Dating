@@ -64,13 +64,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.Horizontal
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
         Photo item = dataList.get(position);
 
-        if(item != null){
-            if(item.getImgUrl().equals("정보 없음")){
-                holder.course_imgView_item.setImageResource(R.drawable.pig1);
-            } else if(item.getImgUrl() != null){
-                Glide.with(context).load(item.getImgUrl()).into(holder.course_imgView_item);
-            }
-        }
+        Glide.with(context)
+                .load(item.getImgUrl())
+                .error(R.drawable.noimage)
+                .fallback(R.drawable.noimage)
+                .placeholder(R.drawable.loading)
+                .into(holder.course_imgView_item);
 
         holder.txt_course_name.setText(item.getTitleName());
         holder.txt_course_address.setText(item.getAddressName());

@@ -5,24 +5,25 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //리사이클러 뷰 어댑터 생성
 public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder> {
@@ -45,13 +47,15 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
     private MyPostAdapter.OnItemClickListener itemClickListener;
 
     private OnMyPostActionListener mOnMyPostActionListener;
+    private OnLikeButtonClickListener onLikeButtonClickListener;
 
     //어댑터 생성자
-    public MyPostAdapter(Context context, ArrayList<Post> mCommentList, String currentUserId, ArrayList<String> documentId) {
+    public MyPostAdapter(Context context, ArrayList<Post> mCommentList, String currentUserId, ArrayList<String> documentId, OnLikeButtonClickListener onLikeButtonClickListener) {
         this.mCommentList = mCommentList;
         this.context = context;
         this.currentUserId = currentUserId;
         this.documentId = documentId;
+        this.onLikeButtonClickListener = onLikeButtonClickListener;
     }
     public void setOnBtnClickListener(OnMyPostActionListener clickListener){
 
@@ -106,6 +110,22 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
         this.itemClickListener = onItemClickListener;
     }
 
+    //새로고침
+    public void updateLikeButton(int position, boolean isLiked) {
+        if (position >= 0 && position < mCommentList.size()) {
+            Post post = mCommentList.get(position);
+
+            if (isLiked) {
+                post.getLikeUserList().remove(currentUserId);
+            } else {
+                post.getLikeUserList().add(currentUserId);
+            }
+
+            post.setCurrentUserLikes(!isLiked);
+            notifyItemChanged(position);
+        }
+    }
+
 
     // 어댑터에서 createViewHolder할때
     //뷰 홀더 이너클래스
@@ -114,8 +134,8 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
         ViewPager2 post_image;
         ImageView picture, recycle;
         FirebaseFirestore db;
-
-        Button edit_post, delete_post;
+        ImageButton btn_more;
+        ImageButton like; //좋아요 이미지 버튼
 
         OnMyPostActionListener mOnMyPostActionListener;
 
@@ -129,26 +149,80 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
             postLikeSize = (TextView) itemView.findViewById(R.id.post_like_size);
             postRecycleSize = (TextView) itemView.findViewById(R.id.post_recycle_size);
 
+            //좋아요 이미지 버튼 할당
+            like = (ImageButton) itemView.findViewById(R.id.post_like);
+            btn_more = (ImageButton) itemView.findViewById(R.id.btn_more);
+
             picture = (ImageView) itemView.findViewById(R.id.postprofile);
             recycle = (ImageView) itemView.findViewById(R.id.post_recycle);
 
             post_image = (ViewPager2) itemView.findViewById(R.id.post_image);
 
-            edit_post = (Button) itemView.findViewById(R.id.edit_post);
-            delete_post = (Button) itemView.findViewById(R.id.delete_post);
-
             db = FirebaseFirestore.getInstance();
 
             mOnMyPostActionListener = onMyPostActionListener;
+
+            //like 버튼 눌렀을 때 이벤트 처리
+            like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //현재 클릭된 position 가져오기
+                    int position = getAdapterPosition();
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        //현재 위치에 있는 Post의 정보 가져오기
+                        Post item = mCommentList.get(position);
+                        boolean isLiked = item.isCurrentUserLikes();
+                        onLikeButtonClickListener.onLikeButtonClick(position, item.getDocumentId(), currentUserId, isLiked);
+
+                        // 좋아요 버튼의 이미지 업데이트
+                        if (!isLiked) {
+                            like.setImageResource(R.drawable.like_after);
+                        } else {
+                            like.setImageResource(R.drawable.like_before);
+                        }
+
+                        // 좋아요 개수의 텍스트를 업데이트합니다.
+                        postLikeSize.setText((item.getLikeUserList().size() + (!isLiked ? 1 : -1)) + "개");
+                    }
+                }
+            });
         }
 
         //데이터 바인딩 메소드
         //어댑터 클래스에서 데이터를 표시하기 위한 뷰와 실제 데이터 연결
         void onBind(Post item) {
             Log.d("TAG", "Nickname in Adapter: " + item.getContext());
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("posts").document(item.getDocumentId()).collection("Comments").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                int count = task.getResult().size();
+                                postRecycleSize.setText(String.valueOf(count) + "개");
+                            } else {
+                                Log.d("TAG", "Error getting comments count: ", task.getException());
+                                postRecycleSize.setText("0개");
+                            }
+                        }
+                    });
+
             userNick.setText(item.getNickName());
             postTitle.setText(item.getTitle());
             postContent.setText(item.getContext());
+
+            if (currentUserId != null && currentUserId.equals(item.getUserId())) {
+                btn_more.setVisibility(View.VISIBLE);
+                btn_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 이미지 버튼을 클릭하면 PopupMenu 생성 및 보이기
+                        showPopupMenu(v, item, MyPostAdapter.ViewHolder.this);
+                    }
+                });
+            }
 
             // Timestamp를 문자열로 변환
             com.google.firebase.Timestamp whenTimestamp = item.getWhen();
@@ -160,27 +234,6 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
                 postDate.setText(""); // when 값이 없는 경우, 비워 둡니다.
             }
 
-            if (currentUserId != null && currentUserId.equals(item.getUserId())) {
-                edit_post.setVisibility(View.VISIBLE);
-                delete_post.setVisibility(View.VISIBLE);
-                Log.d("TAG", "UID 일치: " + currentUserId + " == " + item.getUserId());
-
-                edit_post.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("TAG", "수정버튼눌림" + item.getDocumentId());
-                        mOnMyPostActionListener.onMyPostEditClick(item);
-                    }
-                });
-                delete_post.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("TAG", "Deleting doc ID: " + item.getDocumentId() + ", Position: " + getAdapterPosition());
-                        mOnMyPostActionListener.onMyPostDeleteClick(item, getAdapterPosition());
-                    }
-                });
-            }
-
             recycle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -190,6 +243,10 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
                     context.startActivity(intent);
                 }
             });
+
+            // 좋아요 개수 초기 설정
+            postLikeSize.setText(item.getLikeUserList().size() + "개");
+            checkCurrentLike(item, like);
 
             downloadImg(item);
             // 이미지 URL 리스트를 가져와 ImageAdapter에 연결
@@ -261,6 +318,48 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder
                 });
             }
         }
+    }
+
+    public void checkCurrentLike(Post post, ImageButton likeButton) {
+        ArrayList<String> likeUserList = (ArrayList<String>) post.getLikeUserList();
+        AtomicBoolean currentUserLikes = new AtomicBoolean(false);
+        likeUserList.forEach(userId -> {
+            if (userId.equals(currentUserId)) {
+                currentUserLikes.set(true);
+            }
+        });
+        post.setCurrentUserLikes(currentUserLikes.get());
+
+        if (currentUserLikes.get()) {
+            likeButton.setImageResource(R.drawable.like_after);
+        } else {
+            likeButton.setImageResource(R.drawable.like_before);
+        }
+    }
+
+    private void showPopupMenu(View view, Post items, ViewHolder viewHolder) {
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.inflate(R.menu.drop); // 메뉴 리소스 파일을 팝업 메뉴에 연결
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 메뉴 아이템 클릭 시 처리할 로직 구현
+                switch (item.getItemId()) {
+                    case R.id.edit_post:
+                        mOnMyPostActionListener.onMyPostEditClick(items);
+                        return true;
+                    case R.id.delete_post:
+                        mOnMyPostActionListener.onMyPostDeleteClick(items, viewHolder.getAdapterPosition());
+                        return true;
+                    // 다른 메뉴 아이템들에 대한 처리도 추가 가능
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popupMenu.show(); // PopupMenu 보이기
     }
 
     public static class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {

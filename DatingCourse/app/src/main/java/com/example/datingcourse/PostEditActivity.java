@@ -101,7 +101,7 @@ public class PostEditActivity extends AppCompatActivity {
         if (image != null && image.size() > 0) {
             image.remove(currentImagePosition); // 현재 보여지는 이미지를 삭제
             post_image.getAdapter().notifyDataSetChanged(); // ViewPager2 업데이트
-            Toast.makeText(PostEditActivity.this, "Image Deleted Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostEditActivity.this, "이미지가 삭제 되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -129,7 +129,7 @@ public class PostEditActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostEditActivity.this ,"댓글 수정에 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostEditActivity.this ,"게시판 수정에 실패하였습니다.",Toast.LENGTH_SHORT).show();
                     }
                 });
 

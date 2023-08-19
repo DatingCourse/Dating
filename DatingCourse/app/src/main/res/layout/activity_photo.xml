@@ -30,7 +30,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="top|end"
-            android:background="@drawable/twotone_clear_24"
+            android:background="@drawable/close_squa"
             android:contentDescription="Close" />
 
     </FrameLayout>

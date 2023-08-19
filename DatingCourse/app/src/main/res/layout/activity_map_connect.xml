@@ -20,7 +20,7 @@
             android:id="@+id/rv_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#E8EAF6"
+            android:background="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/btn_nextPage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,25 +28,31 @@
 
         <Button
             android:id="@+id/btn_prevPage"
-            style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:enabled="false"
+            android:backgroundTint="@color/white"
             android:text="이전"
+            android:enabled="false"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="#FF5D7D"
+            app:strokeWidth="2dp" />
 
         <Button
             android:id="@+id/btn_nextPage"
-            style="@style/Widget.AppCompat.Button"
+            android:enabled="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:enabled="false"
+            android:backgroundTint="@color/white"
             android:text="다음"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:strokeColor="#FF5D7D"
+            app:strokeWidth="2dp" />
 
         <TextView
             android:id="@+id/tv_pageNumber"

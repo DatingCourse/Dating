@@ -35,8 +35,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -46,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class MyPostActivity extends AppCompatActivity {
+public class MyPostActivity extends AppCompatActivity implements OnLikeButtonClickListener {
 
     private String nickName;
     private MyPostAdapter myPostAdapter;
@@ -105,7 +107,7 @@ public class MyPostActivity extends AppCompatActivity {
         }
 
         Log.d("TAG", "activity2 Comments list: " + mCommentsItems.toString());
-        myPostAdapter = new MyPostAdapter(this, mCommentsItems, currentUserId, documentIds); // documentIds를 어댑터로 전달
+        myPostAdapter = new MyPostAdapter(this, mCommentsItems, currentUserId, documentIds, this); // documentIds를 어댑터로 전달
 
         //여기 recycerView에 어탭더 적용시켜줌
         mRecyclerView.setAdapter(myPostAdapter)  ;
@@ -140,7 +142,7 @@ public class MyPostActivity extends AppCompatActivity {
                         onDeleteConfirmed(documentId, position);
                     }
                 }else {
-                    Toast.makeText(MyPostActivity.this, "아으 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyPostActivity.this, "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -180,7 +182,7 @@ public class MyPostActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(MyPostActivity.this, "하흐 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyPostActivity.this, "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
     private void EventChangeListener() {
@@ -219,6 +221,25 @@ public class MyPostActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    @Override
+    public void onLikeButtonClick(int position, String documentId, String userId, boolean isLiked) {
+        DocumentReference postRef = db.collection("posts").document(documentId);
+
+        if (isLiked) {
+            postRef.update("likeUserList", FieldValue.arrayRemove(userId)).addOnCompleteListener(task -> {
+                myPostAdapter.updateLikeButton(position, true);
+                // 데이터 새로고침
+                loadComments();
+            });
+        } else {
+            postRef.update("likeUserList", FieldValue.arrayUnion(userId)).addOnCompleteListener(task -> {
+                myPostAdapter.updateLikeButton(position, false);
+                // 데이터 새로고침
+                loadComments();
+            });
+        }
     }
 
     //realtimeDatabase에서 특정 값 하나만 가져오기(별명)

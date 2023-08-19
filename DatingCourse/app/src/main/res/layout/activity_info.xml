@@ -90,20 +90,23 @@
             app:layout_constraintTop_toBottomOf="@+id/represent_phone_num"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
         <Button
             android:id="@+id/finding_btn"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="0dp"
+            android:layout_width="250dp"
+            android:layout_height="70dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
-            android:background="@drawable/white_button_background"
-            android:drawableBottom="@drawable/here"
+            android:backgroundTint="@color/white"
+            android:drawableEnd="@drawable/here"
+            android:drawableTint="#FF5D7D"
             android:text="길찾기"
+            android:textColor="#000000"
             android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@+id/info_mapView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/info_mapView"
+            app:strokeColor="#FF5D7D"
+            app:strokeWidth="2dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

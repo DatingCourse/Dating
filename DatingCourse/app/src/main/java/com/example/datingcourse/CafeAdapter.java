@@ -60,7 +60,7 @@ public class CafeAdapter extends RecyclerView.Adapter<CafeAdapter.HorizontalView
                 .load(item.getImgName())
                 .error(R.drawable.noimage)
                 .fallback(R.drawable.noimage)
-                .placeholder(R.drawable.noimage)
+                .placeholder(R.drawable.loading)
                 .into(holder.imgView_item);
 
         holder.txt_main.setText(item.getMainText());

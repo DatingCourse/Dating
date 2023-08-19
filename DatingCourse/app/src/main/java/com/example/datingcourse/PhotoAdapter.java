@@ -57,7 +57,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.HorizontalVi
                 .load(item.getImgUrl())
                 .error(R.drawable.noimage)
                 .fallback(R.drawable.noimage)
-                .placeholder(R.drawable.noimage)
+                .placeholder(R.drawable.loading)
                 .into(holder.photo_item);  // 결과 이미지를 표시할 ImageView
 
         holder.delete_item.setOnClickListener(new View.OnClickListener() {

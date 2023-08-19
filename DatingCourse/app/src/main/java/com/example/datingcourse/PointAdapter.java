@@ -59,7 +59,7 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.HorizontalVi
                 .load(item.getImgUrl())
                 .error(R.drawable.noimage)
                 .fallback(R.drawable.noimage)
-                .placeholder(R.drawable.noimage)
+                .placeholder(R.drawable.loading)
                 .into(holder.imgView_item);  // 결과 이미지를 표시할 ImageView
 
         holder.txt_main.setText(item.getTitleName());

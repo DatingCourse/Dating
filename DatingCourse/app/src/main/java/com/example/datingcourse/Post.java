@@ -3,7 +3,9 @@ package com.example.datingcourse;
 import android.net.Uri;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Post {
@@ -15,9 +17,15 @@ public class Post {
     private Uri picture; // 유저 사진
     private String userId;  // 유저 아이디
 
+    private boolean currentUserLikes;
+
+    private List<String> likeUserList; // 좋아요 누른 유저의 아이디를 저장할 리스트 변수
+
     private String documentId;   // 게시물 아이디
 
     public Post() {
+        likeUserList = new ArrayList<>();
+        currentUserLikes = false;
     }
 
     public Post(String title, String NickName, String context, List<String> imageUrls, Timestamp when, Uri picture, String userId) {
@@ -28,6 +36,28 @@ public class Post {
         this.when = when;
         this.picture = picture;
         this.userId = userId;
+
+    }
+
+    public boolean isCurrentUserLikes() {
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid == null) {
+            return false;
+        }
+
+        return likeUserList.contains(uid);
+    }
+
+    public void setCurrentUserLikes(boolean currentUserLikes) {
+        this.currentUserLikes = currentUserLikes;
+    }
+
+    public List<String> getLikeUserList() {
+        return likeUserList;
+    }
+
+    public void setLikeUserList(List<String> likeUserList) {
+        this.likeUserList = likeUserList;
     }
 
     public String getTitle() {
@@ -94,4 +124,3 @@ public class Post {
         this.documentId = documentId;
     }
 }
-

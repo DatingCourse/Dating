@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:elevation="4dp">
 
     <ImageView
         android:id="@+id/place_image"
         android:layout_width="411dp"
         android:layout_height="230dp"
         android:scaleType="fitXY"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        tools:srcCompat="@tools:sample/backgrounds/scenic"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/place_content"

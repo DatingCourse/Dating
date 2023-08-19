@@ -99,15 +99,18 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/ed_id"
                     android:layout_marginTop="10dp">
+
                     <Button
                         android:id="@+id/check_nickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="중복 확인"
                         android:enabled="false"
+                        android:text="중복 확인"
                         android:textSize="18sp"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:strokeColor="#FFFFFF"
+                        app:strokeWidth="1dp"
                         tools:ignore="MissingConstraints" />
 
                     <Button
@@ -116,21 +119,28 @@
                         android:layout_height="55dp"
                         android:layout_marginTop="50dp"
                         android:text="저장"
+                        android:elevation="6dp"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/check_nickname" />
+                        app:layout_constraintTop_toBottomOf="@id/check_nickname"
+                        app:strokeColor="#FFFFFF"
+                        app:strokeWidth="2dp" />
 
                     <Button
                         android:id="@+id/go_main"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:layout_marginTop="30dp"
-                        android:text="홈으로"
+                        android:backgroundTint="@color/white"
+                        android:text="홈으로 >>"
+                        android:textColor="#000000"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/save_MyInfo" />
+                        app:layout_constraintTop_toBottomOf="@id/save_MyInfo"
+                        app:strokeColor="#FF5D7D"
+                        app:strokeWidth="2dp" />
 
                     <TextView
                         android:id="@+id/remove"

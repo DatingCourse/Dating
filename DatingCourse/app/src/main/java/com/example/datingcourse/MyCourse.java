@@ -157,13 +157,6 @@ public class MyCourse extends AppCompatActivity {
         });
         //DB에서 값 가져오기
     }
-    @Override
-    public void onBackPressed() {
-        // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
-        Intent intents = new Intent(this, MainActivity.class);
-        startActivity(intents);
-        super.onBackPressed();
-    }
     public void fetchSingleValueFromUserRef(FirebaseAuth mFirebaseAuth, DatabaseReference mDatabaseRef){
         FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
         if(currentUser != null){

@@ -87,7 +87,7 @@ public class RecycleActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Fetching Data... ");
+        progressDialog.setMessage("로딩중... ");
         progressDialog.show();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManagerWrapper(RecycleActivity.this, LinearLayoutManager.VERTICAL, false);

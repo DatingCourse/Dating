@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,8 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -44,7 +48,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragCommunity extends Fragment {
+public class FragCommunity extends Fragment implements OnLikeButtonClickListener {
     private String nickName;
     private PostAdapter mRecyclerAdapter; //어댑터 클래스
     private MyPostAdapter myPostAdapter;
@@ -112,7 +116,7 @@ public class FragCommunity extends Fragment {
             progressDialog = new ProgressDialog(getActivity());
         }
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Fetching Data... ");
+        progressDialog.setMessage("로딩중... ");
         progressDialog.show();
 
         // RecyclerView 초기화 코드
@@ -131,8 +135,11 @@ public class FragCommunity extends Fragment {
 
         loadComments();
 
+        int spacing = 50; // 50px
+        mRecyclerView.addItemDecoration(new ItemOffsetDecoration(spacing));
+
         Log.d("TAG", "activity2 Comments list: " + mCommentsItems.toString());
-        mRecyclerAdapter = new PostAdapter(getActivity(), mCommentsItems, mFirebaseAuth.getCurrentUser().getUid(), documentIds); // documentIds를 어댑터로 전달
+        mRecyclerAdapter = new PostAdapter(getActivity(), mCommentsItems, mFirebaseAuth.getCurrentUser().getUid(), documentIds, this); // documentIds를 어댑터로 전달
 
         // 플로팅 버튼 구현
         fab_main = view.findViewById(R.id.fab_main);
@@ -153,7 +160,6 @@ public class FragCommunity extends Fragment {
 
                 Intent intent = new Intent(getActivity(), MyPostActivity.class);
                 startActivity(intent);
-                Toast.makeText(context, "내가 쓴 글", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -167,7 +173,6 @@ public class FragCommunity extends Fragment {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 startActivity(intent);
-                Toast.makeText(getContext(), "글 쓰기", Toast.LENGTH_LONG).show();
 
                 int REQUEST_EDIT_POST = 100;
                 startActivityForResult(intent, REQUEST_EDIT_POST);
@@ -208,7 +213,7 @@ public class FragCommunity extends Fragment {
                         onDeleteConfirmed(documentId, position);
                     }
                 }else {
-                    Toast.makeText(getActivity(), "아으 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -216,6 +221,41 @@ public class FragCommunity extends Fragment {
         EventChangeListener(); //스냅샷 이벤트 변경 리스너 설정
 
         return view;
+    }
+
+    public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+
+        private int mItemOffset;
+
+        public ItemOffsetDecoration(int itemOffset) {
+            mItemOffset = itemOffset;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
+        }
+    }
+
+
+    @Override
+    public void onLikeButtonClick(int position, String documentId, String userId, boolean isLiked) {
+        DocumentReference postRef = db.collection("posts").document(documentId);
+
+        if (isLiked) {
+            postRef.update("likeUserList", FieldValue.arrayRemove(userId)).addOnCompleteListener(task -> {
+                mRecyclerAdapter.updateLikeButton(position, true);
+                // 데이터 새로고침
+                loadComments();
+            });
+        } else {
+            postRef.update("likeUserList", FieldValue.arrayUnion(userId)).addOnCompleteListener(task -> {
+                mRecyclerAdapter.updateLikeButton(position, false);
+                // 데이터 새로고침
+                loadComments();
+            });
+        }
     }
 
     @Override
@@ -257,7 +297,7 @@ public class FragCommunity extends Fragment {
                         }
                     });
         } else {
-            Toast.makeText(getActivity(), "하흐 지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
     private void EventChangeListener() {
