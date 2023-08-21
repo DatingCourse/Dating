@@ -7,15 +7,57 @@
     android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/multy_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewVertical">
+        <TextView
+            android:id="@+id/myCourse_Nick"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="OOO"
+            android:textSize="20sp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="2dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="님의 코스!"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/myCourse_Nick"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"/>
+
+        <Button
+            android:id="@+id/myCourse_Delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="삭제"
+            android:textColor="#000000"
+            app:strokeColor="#FF5D7D"
+            app:strokeWidth="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginHorizontal="0.8dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewVertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-159dp"
-        tools:layout_editor_absoluteY="16dp">
-    </FrameLayout>
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/multy_layout"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

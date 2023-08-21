@@ -141,24 +141,25 @@
             super.onPause();
             mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
             mapView.setShowCurrentLocationMarker(false);
-            if (mapView.getParent() != null) {
-                ((ViewGroup) mapView.getParent()).removeView(mapView);
-            }
         }
 
         @Override
         protected void onResume() {
             super.onResume();
+            if (mapView.getParent() == null) {
+                mapViewContainer.addView(mapView);
+            }
+            mapView.setShowCurrentLocationMarker(true);
             mapView.onResume();
         }
 
 
         private void openKakaoMapForNavigation(Double x, Double y) {
             Intent intent;
-            String kakaoUri = "kakaomap://route?sp=&ep=" + y + "," + x + "&by=FOOT"; // 도보 길찾기
+            String kakaoUri = "kakaomap://route?sp=&ep=" + y + "," + x + "&by=PUBLICTRANSIT"; // 버스 길찾기
             // 카카오맵 앱이 설치되어 있는지 확인
             try {
-                getPackageManager().getPackageInfo("net.daum.android.map", 0);
+                getPackageManager().getPackageInfo(getPackageName(), 0);
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(kakaoUri));
             } catch (PackageManager.NameNotFoundException e) {
                 // 카카오맵 앱이 설치되어 있지 않은 경우, Play Store로 연결

@@ -1,6 +1,7 @@
 package com.example.datingcourse;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -102,6 +103,10 @@ public class BoardActivity extends AppCompatActivity {
 
                 // 데이터 로딩이 완료되면 RecyclerView를 업데이트합니다.
                 RecyclerView view = findViewById(R.id.recyclerView);
+
+                int spacing = 50; // 50px
+                view.addItemDecoration(new BoardActivity.ItemOffsetDecoration(spacing));
+
                 BoardAdapter verticalAdapter = new BoardAdapter(BoardActivity.this, allBoardList, "");
                 view.setHasFixedSize(true);
                 view.setLayoutManager(new LinearLayoutManager(BoardActivity.this, LinearLayoutManager.VERTICAL, false));
@@ -146,6 +151,21 @@ public class BoardActivity extends AppCompatActivity {
         Intent intents = new Intent(this, MainActivity.class);
         startActivity(intents);
         super.onBackPressed();
+    }
+
+    public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+
+        private int mItemOffset;
+
+        public ItemOffsetDecoration(int itemOffset) {
+            mItemOffset = itemOffset;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
+        }
     }
 }
 

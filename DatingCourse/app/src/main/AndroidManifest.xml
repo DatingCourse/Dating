@@ -12,7 +12,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/app_icon"
-        android:label="DatingCourse"
+        android:label="자기야"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/app_icon_foreground"
         android:supportsRtl="true"
@@ -21,96 +21,127 @@
         tools:targetApi="31">
         <activity
             android:name=".MyCourse"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".PostMaking"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".RandomActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".RandomActivity2"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true"
             android:theme="@style/Theme.DatingCourse2" />
         <activity
             android:name=".MBTI"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".MBTI_map"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".GuChoose"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".BoardActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".info"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".infos"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".Cafe"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".Comments"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".RecycleActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity android:name=".MyPostActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true"/>
         <activity
             android:name=".CommentsAdapter"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity android:name=".PostEditActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true"/>
         <activity
             android:name=".UserAccount"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".ResultSearchKeyword"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".FragHome"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".FragMyPage"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".FragLocation"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".EditMyInfoActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".List_Layout"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
         <activity
             android:name=".PlaceList"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:label="PlaceList"
             android:launchMode="singleTop" />
         <activity
             android:name=".MapChoiceActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".MapConnectActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".CourseListActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".CourseInfo"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".CourseMakingActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -120,6 +151,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true" />
 
         <meta-data

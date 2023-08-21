@@ -38,7 +38,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
     private MyApp myApp;
     private ArrayList<Photo> photos;
     private PhotoAdapter photoAdapter;
-
+    private String nickName;
     private ArrayList<HashMap<String, Object>> photosList = new ArrayList<>(); // 여러 장소 정보를 저장할 ArrayList
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -276,6 +276,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         int i = 0;
         for (int j =0; j<myApp.getPhotos().size();j++){
             Photo photo = myApp.getPhotos().get(j);
+            fetchSingleValueFromUserRef(mFirebaseAuth, mLoadDatabaseRef);
 
             HashMap<String,Object> saveCourse = new HashMap<String,Object>();
 
@@ -286,6 +287,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
             saveCourse.put("y",photo.getY());
             saveCourse.put("tel",photo.getTel());
             saveCourse.put("userUid",photo.getUserUid());
+            saveCourse.put("nickName",nickName);
 
             Log.d("CourseMakingActivity", "Photo Title: " + photo.getTitleName());
             mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름
@@ -324,6 +326,37 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
             });
             i++;
 
+        }
+    }
+
+    public void fetchSingleValueFromUserRef(FirebaseAuth mFirebaseAuth, DatabaseReference mDatabaseRef){
+        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
+        if(currentUser != null){
+            String uid = currentUser.getUid();
+
+            DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
+            DatabaseReference specificValueRef = userRef.child("NickName");
+
+            specificValueRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                nickName = dataSnapshot.getValue(String.class);
+                            }
+                        });
+                    } else {
+                        Log.w("TAG", "해당하는 닉네임 없음");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.w("TAG", "데이터 불러오는 과정에서 오류 발생");
+                }
+            });
         }
     }
 

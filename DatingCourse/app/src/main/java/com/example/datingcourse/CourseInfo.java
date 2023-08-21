@@ -79,7 +79,7 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
         mapViewContainer = (ViewGroup) findViewById(R.id.info_mapView);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
         // 지도에 polyline 추가
         polyline = new MapPolyline();
@@ -93,8 +93,11 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
         MapPOIItem point = new MapPOIItem();
         point.setItemName(titleName);
         point.setMapPoint(MapPoint.mapPointWithGeoCoord(y, x));
-        point.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        point.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+        point.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+        point.setCustomImageResourceId(R.drawable.custom_marker1);
+        point.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+
+        point.setCustomSelectedImageResourceId(R.drawable.custom_marker2);
         mapView.addPOIItem(point);
 
         // Polyline에 좌표 추가
@@ -140,26 +143,27 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         mapView.setShowCurrentLocationMarker(false);
-        if (mapView.getParent() != null) {
-            ((ViewGroup) mapView.getParent()).removeView(mapView);
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mapView.getParent() == null) {
+            mapViewContainer.addView(mapView);
+        }
+        mapView.setShowCurrentLocationMarker(true);
         mapView.onResume();
     }
 
 
     private void openKakaoMapForNavigation(Double x, Double y) {
         Intent intent;
-        String kakaoUri = "kakaomap://route?sp=&ep=" + y + "," + x + "&by=FOOT"; // 도보 길찾기
+        String kakaoUri = "kakaomap://route?sp=&ep=" + y + "," + x + "&by=PUBLICTRANSIT"; // 버스 길찾기
         // 카카오맵 앱이 설치되어 있는지 확인
         try {
-            getPackageManager().getPackageInfo("net.daum.android.map", 0);
+            getPackageManager().getPackageInfo(getPackageName(), 0);
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(kakaoUri));
         } catch (PackageManager.NameNotFoundException e) {
             // 카카오맵 앱이 설치되어 있지 않은 경우, Play Store로 연결

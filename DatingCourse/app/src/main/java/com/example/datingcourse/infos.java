@@ -140,24 +140,29 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+        mapView.setShowCurrentLocationMarker(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mapView.getParent() == null) {
+            mapViewContainer.addView(mapView);
+        }
+        mapView.setShowCurrentLocationMarker(true);
         mapView.onResume();
     }
 
 
     private void openKakaoMapForNavigation(Double x, Double y) {
-        String kakaoUri = "kakaomap://route?sp=&ep=" + y + "," + x + "&by=FOOT"; // 도보 길찾기
+        String kakaoUri = "kakaomap://route?sp=&ep=" + y + "," + x + "&by=PUBLICTRANSIT"; // 버스 길찾기
 
         // 카카오맵 앱이 설치되어 있는지 확인
         PackageManager pm = getPackageManager();
         Intent intent;
         try {
-            pm.getPackageInfo("net.daum.android.map", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo(getPackageName(), 0);
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(kakaoUri));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } catch (PackageManager.NameNotFoundException e) {

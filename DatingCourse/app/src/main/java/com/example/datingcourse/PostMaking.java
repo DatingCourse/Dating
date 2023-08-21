@@ -261,7 +261,7 @@ public class PostMaking extends AppCompatActivity {
                                         .update("imageUrls", FieldValue.arrayUnion(downloadUrl));
                             }
 
-                            if(progressDialog.isShowing()) {
+                            if (progressDialog.isShowing() && !isFinishing()) {
                                 progressDialog.dismiss();
                             }
                         }
@@ -330,7 +330,9 @@ public class PostMaking extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Glide.with(context).load(mArrayUri.get(position)).into(holder.imageView);
+            Glide.with(context)
+                    .load(mArrayUri.get(position))
+                    .into(holder.imageView);
         }
 
         @Override
