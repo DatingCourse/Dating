@@ -532,10 +532,12 @@ public class RandomActivity2 extends AppCompatActivity implements MapView.Curren
             }
         }
     }
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
+        mapView.removeAllPOIItems();
+        super.onBackPressed();
+    }
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {

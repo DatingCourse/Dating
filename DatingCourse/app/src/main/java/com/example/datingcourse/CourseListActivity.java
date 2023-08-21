@@ -42,9 +42,8 @@ public class CourseListActivity extends AppCompatActivity {
 
         ArrayList<Photo> photosList = (ArrayList<Photo>) getIntent().getSerializableExtra("photosList");
         if (photosList != null) {
-            // 모든 사진 위치에 마커 추가
             mapView.removeAllPOIItems();
-
+            // 모든 사진 위치에 마커 추가
             for (Photo photo : photosList) {
                 addMarkerToMap(mapView, photo.getX(), photo.getY(), photo.getTitleName());
             }
@@ -109,6 +108,7 @@ public class CourseListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        mapView.removeAllPOIItems();
         // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
         super.onBackPressed();
     }
@@ -133,7 +133,7 @@ public class CourseListActivity extends AppCompatActivity {
 //                RelativeLayout mapViewContainer = findViewById(R.id.course_mapView);
 //                mapViewContainer.addView(mapView);
 //            }
-            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+            //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
             mapView.setShowCurrentLocationMarker(false);
         }
     }

@@ -42,6 +42,8 @@
 
             mapView = new MapView(this);
 
+            mapView.removeAllPOIItems();
+
             // 데이터 받아오기
             Intent intent = getIntent();
             String imgUrl = intent.getStringExtra("imgUrl");
@@ -133,6 +135,7 @@
 
         @Override
         public void onBackPressed() {
+            mapView.removeAllPOIItems();
             // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
             super.onBackPressed();
         }

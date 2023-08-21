@@ -108,6 +108,7 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
         btnCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mapView.removeAllPOIItems();
                 // 데이터 받아오기
                 Intent intent = getIntent();
                 String imgUrl = intent.getStringExtra("imgUrl");

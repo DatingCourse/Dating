@@ -82,6 +82,7 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
         mapViewContainer = (ViewGroup) findViewById(R.id.info_mapView);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
         // 지도에 polyline 추가
@@ -136,6 +137,7 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
     @Override
     public void onBackPressed() {
         // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
+        mapView.removeAllPOIItems();
         ArrayList<Photo> photosList = (ArrayList<Photo>) getIntent().getSerializableExtra("photosList");
         Intent intents = new Intent(this, CourseListActivity.class);
         intents.putExtra("photosList", photosList);
@@ -146,7 +148,7 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
     @Override
     protected void onPause() {
         super.onPause();
-        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         mapView.setShowCurrentLocationMarker(false);
     }
 
