@@ -139,9 +139,9 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         create_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nickStr = et_nickName.getText().toString();
-                loadPhotosFromGlobal(nickStr);
-
+                /*String nickStr = et_nickName.getText().toString();
+                loadPhotosFromGlobal(nickStr);*/
+                loadPhotosFromGlobal();
                 if (myApp != null) {
                     myApp.setPhotos(new ArrayList<Photo>());
                 }
@@ -277,7 +277,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         super.onBackPressed();
     }
 
-    private void loadPhotosFromGlobal(String nickStr) {
+    private void loadPhotosFromGlobal() {   // String nickStr
         int i = 0;
         for (int j =0; j<myApp.getPhotos().size();j++){
             Photo photo = myApp.getPhotos().get(j);
@@ -291,7 +291,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
             saveCourse.put("y",photo.getY());
             saveCourse.put("tel",photo.getTel());
             saveCourse.put("userUid",photo.getUserUid());
-            saveCourse.put("NickName",nickStr);
+            /*saveCourse.put("NickName",nickStr);*/
 
             Log.d("CourseMakingActivity", "Photo Title: " + photo.getTitleName());
             mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름

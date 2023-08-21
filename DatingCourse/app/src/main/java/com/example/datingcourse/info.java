@@ -73,6 +73,7 @@
                     .load(imgUrl)
                     .error(R.drawable.noimage)
                     .fallback(R.drawable.noimage)
+                    .placeholder(R.drawable.loading)
                     .into(representImage);
 
             final ScrollView scrollView = findViewById(R.id.scroll_view);

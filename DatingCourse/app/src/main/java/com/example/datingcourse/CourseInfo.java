@@ -73,6 +73,9 @@ public class CourseInfo extends AppCompatActivity implements MapView.CurrentLoca
         ImageView representImage = findViewById(R.id.represent_image);
         Glide.with(this)
                 .load(imgUrl)
+                .error(R.drawable.noimage)
+                .fallback(R.drawable.noimage)
+                .placeholder(R.drawable.loading)
                 .into(representImage);
 
         final ScrollView scrollView = findViewById(R.id.scroll_view);

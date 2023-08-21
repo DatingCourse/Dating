@@ -43,6 +43,8 @@ public class CourseListActivity extends AppCompatActivity {
         ArrayList<Photo> photosList = (ArrayList<Photo>) getIntent().getSerializableExtra("photosList");
         if (photosList != null) {
             // 모든 사진 위치에 마커 추가
+            mapView.removeAllPOIItems();
+
             for (Photo photo : photosList) {
                 addMarkerToMap(mapView, photo.getX(), photo.getY(), photo.getTitleName());
             }

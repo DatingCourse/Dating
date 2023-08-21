@@ -63,6 +63,7 @@ public class infos extends AppCompatActivity implements MapView.CurrentLocationE
                 .load(imgUrl)
                 .error(R.drawable.noimage)
                 .fallback(R.drawable.noimage)
+                .placeholder(R.drawable.loading)
                 .into(representImage);
 
         mapView = new MapView(this);
