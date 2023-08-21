@@ -42,6 +42,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
     private ArrayList<HashMap<String, Object>> photosList = new ArrayList<>(); // 여러 장소 정보를 저장할 ArrayList
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private TextView et_nickName;
     public static InformationAPI.DataListener dataListener;
     private int count=0;  //API호출 시 증가
     private DatabaseReference mLoadDatabaseRef;
@@ -63,6 +64,9 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         }
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        et_nickName = findViewById(R.id.nickNameMaking);
+        fetchSingleValueFromUserRef(mFirebaseAuth, mLoadDatabaseRef);
 
         //파이어베이스 인증 및 데이터베이스 초기화등
 //        mFirebaseAuth = FirebaseAuth.getInstance();
@@ -135,7 +139,8 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         create_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadPhotosFromGlobal();
+                String nickStr = et_nickName.getText().toString();
+                loadPhotosFromGlobal(nickStr);
 
                 if (myApp != null) {
                     myApp.setPhotos(new ArrayList<Photo>());
@@ -272,11 +277,10 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
         super.onBackPressed();
     }
 
-    private void loadPhotosFromGlobal() {
+    private void loadPhotosFromGlobal(String nickStr) {
         int i = 0;
         for (int j =0; j<myApp.getPhotos().size();j++){
             Photo photo = myApp.getPhotos().get(j);
-            fetchSingleValueFromUserRef(mFirebaseAuth, mLoadDatabaseRef);
 
             HashMap<String,Object> saveCourse = new HashMap<String,Object>();
 
@@ -287,7 +291,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
             saveCourse.put("y",photo.getY());
             saveCourse.put("tel",photo.getTel());
             saveCourse.put("userUid",photo.getUserUid());
-            saveCourse.put("nickName",nickName);
+            saveCourse.put("NickName",nickStr);
 
             Log.d("CourseMakingActivity", "Photo Title: " + photo.getTitleName());
             mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름
@@ -330,6 +334,10 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
     }
 
     public void fetchSingleValueFromUserRef(FirebaseAuth mFirebaseAuth, DatabaseReference mDatabaseRef){
+        if(mDatabaseRef == null) {
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
+        }
+
         FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
         if(currentUser != null){
             String uid = currentUser.getUid();
@@ -344,6 +352,7 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                et_nickName.setText(dataSnapshot.getValue(String.class));
                                 nickName = dataSnapshot.getValue(String.class);
                             }
                         });

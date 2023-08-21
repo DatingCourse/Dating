@@ -28,14 +28,25 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="20dp"/>
         <TextView
+            android:id="@+id/nickNameMaking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="나만의 코스 만들기"
+            android:hint="ㅇㅇ"
             android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/myCourse_title"
             app:layout_constraintStart_toStartOf="@id/myCourse_title"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="의 코스 만들기"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/myCourse_title"
+            app:layout_constraintStart_toEndOf="@id/nickNameMaking"
             android:layout_marginTop="10dp"/>
 
         <ImageView
@@ -59,10 +70,10 @@
             />
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             app:layout_constraintStart_toEndOf="@id/myCourse_title"
-            app:layout_constraintTop_toBottomOf="@id/myCourse_title"
+            app:layout_constraintBottom_toBottomOf="@id/myCourse_title"
             android:layout_marginStart="10dp"
 
             android:src="@drawable/mycourse_title"/>

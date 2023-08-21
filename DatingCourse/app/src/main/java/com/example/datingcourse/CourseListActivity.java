@@ -108,8 +108,6 @@ public class CourseListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // 기존 액티비티 스택을 사용하여 이전 화면(CourseListActivity)으로 돌아감
-        Intent intent = new Intent(this, BoardActivity.class);
-        startActivity(intent);
         super.onBackPressed();
     }
 
