@@ -45,51 +45,62 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //로그인 요청
                 String strEmail = mEtEmail.getText().toString().trim();
                 String strPwd = mEtPwd.getText().toString().trim();
 
-                // 로그인 유효성 검사
-                // 이메일이 비어있는 경우
-                if (TextUtils.isEmpty(strEmail)) {
-                    Toast.makeText(LoginActivity.this, "이메일을 입력하지 않으셨습니다.", Toast.LENGTH_SHORT).show();
-                    mEtEmail.requestFocus();
-                    return;
-                }
-
-                // 비밀번호가 비어있는 경우
-                if (TextUtils.isEmpty(strPwd)) {
-                    Toast.makeText(LoginActivity.this, "비밀번호를 입력하지 않으셨습니다.", Toast.LENGTH_SHORT).show();
-                    mEtPwd.requestFocus();
-                    return;
-                }
-
-                // 이메일 형식이 올바르지 않은 경우
-                if (!(IsValidation.isValidEmail(strEmail))) {
-                    Toast.makeText(LoginActivity.this, "올바른 이메일 형식이 아닙니다", Toast.LENGTH_SHORT).show();
-                    mEtEmail.requestFocus();
-                    return;
-                }
-                mFirebaseAuth.signInWithEmailAndPassword(strEmail,strPwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            if(mFirebaseAuth.getCurrentUser().isEmailVerified()){
-                                //로그인 성공
-                                //성공시 메인 화면으로 이동 시켜주기 Intent 생성자 (현재 페이지, 이동할 페이지)
-                                startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                            }
-                            else{
-                                Toast.makeText(LoginActivity.this,"로그인 실패! 이메일 인증을 해주세요!",Toast.LENGTH_SHORT).show();
+                if (strEmail.equals("admin@a.com")) {
+                    mFirebaseAuth.signInWithEmailAndPassword(strEmail, strPwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            } else {
+                                Toast.makeText(LoginActivity.this, "로그인에 실패하였습니다. 다시 시도해주세요", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        else{
-                            Toast.makeText(LoginActivity.this,"로그인에 실패하였습니다. 다시 시도해주세요",Toast.LENGTH_SHORT).show();
-                        }
+                    });
+                } else {
+                    // 로그인 유효성 검사
+                    // 이메일이 비어있는 경우
+                    if (TextUtils.isEmpty(strEmail)) {
+                        Toast.makeText(LoginActivity.this, "이메일을 입력하지 않으셨습니다.", Toast.LENGTH_SHORT).show();
+                        mEtEmail.requestFocus();
+                        return;
                     }
-                });
-                // 이메일 인증 후 로그인 완료하고, 나갔다가 들어오면 처음 화면이 아니라 로그인한 후의 홈페이지로 들어오게끔 만들기코드
-                // 시작 activity에서
+
+                    // 비밀번호가 비어있는 경우
+                    if (TextUtils.isEmpty(strPwd)) {
+                        Toast.makeText(LoginActivity.this, "비밀번호를 입력하지 않으셨습니다.", Toast.LENGTH_SHORT).show();
+                        mEtPwd.requestFocus();
+                        return;
+                    }
+
+                    // 이메일 형식이 올바르지 않은 경우
+                    if (!(IsValidation.isValidEmail(strEmail))) {
+                        Toast.makeText(LoginActivity.this, "올바른 이메일 형식이 아닙니다", Toast.LENGTH_SHORT).show();
+                        mEtEmail.requestFocus();
+                        return;
+                    }
+                    mFirebaseAuth.signInWithEmailAndPassword(strEmail, strPwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                if (mFirebaseAuth.getCurrentUser().isEmailVerified()) {
+                                    //로그인 성공
+                                    //성공시 메인 화면으로 이동 시켜주기 Intent 생성자 (현재 페이지, 이동할 페이지)
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "로그인 실패! 이메일 인증을 해주세요!", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(LoginActivity.this, "로그인에 실패하였습니다. 다시 시도해주세요", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    // 이메일 인증 후 로그인 완료하고, 나갔다가 들어오면 처음 화면이 아니라 로그인한 후의 홈페이지로 들어오게끔 만들기코드
+                    // 시작 activity에서
 //                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 //                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 //
@@ -98,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 //                }
 
 
+                }
             }
         });
 

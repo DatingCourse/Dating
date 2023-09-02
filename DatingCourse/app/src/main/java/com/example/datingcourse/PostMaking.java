@@ -278,7 +278,6 @@ public class PostMaking extends AppCompatActivity {
             });
         }
         // 업데이트가 성공적으로 이루어진 후에는 결과를 설정하고 액티비티를 종료합니다.
-        Log.d("제발 해줘 제발", documentId);
         Intent resultIntent = new Intent();
         resultIntent.putExtra("documentId", documentId);
         setResult(Activity.RESULT_OK, resultIntent);

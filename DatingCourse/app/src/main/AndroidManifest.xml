@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".MyApp"
@@ -21,128 +22,138 @@
         tools:targetApi="31">
         <activity
             android:name=".MyCourse"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".PostMaking"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".RandomActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".RandomActivity2"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:exported="true"
-            android:theme="@style/Theme.DatingCourse2" />
+            android:theme="@style/Theme.DatingCourse2"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".MBTI"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".MBTI_map"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".GuChoose"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".BoardActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".info"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".infos"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".Cafe"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".Comments"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".RecycleActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
-        <activity android:name=".MyPostActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
+        <activity
+            android:name=".MyPostActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".CommentsAdapter"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
-        <activity android:name=".PostEditActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
+        <activity
+            android:name=".PostEditActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".UserAccount"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".RegisterActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
+        <activity
+            android:name=".PayActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
+        <activity
+            android:name="kr.co.bootpay.BootpayInnerActivity"
+            android:exported="false"
+            />
         <activity
             android:name=".ResultSearchKeyword"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".FragHome"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".FragMyPage"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".FragLocation"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".EditMyInfoActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".List_Layout"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".PlaceList"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
             android:label="PlaceList"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".MapChoiceActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".MapConnectActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".CourseListActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".CourseInfo"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".CourseMakingActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -151,8 +162,8 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan|adjustUnspecified"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustUnspecified" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

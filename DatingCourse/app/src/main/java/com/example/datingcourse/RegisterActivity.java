@@ -242,7 +242,11 @@ public class RegisterActivity extends AppCompatActivity {
                             account.setEmailId(firebaseUser.getEmail()); //유저 이메일을 정확하게 가져오는 것이 중요하기 때문에 데이터베이스에서 가져옴
                             account.setPassWord(strPwd);
                             HashMap<String,String> registerInfo = new HashMap<String,String>();
-
+                            if(firebaseUser.getEmail().equals("admin@a.com")){
+                                account.setRole("admin");
+                            }else{
+                                account.setRole("no");
+                            }
                             // registerInfo 라는 HashMap에 account에 저장한 값들 가져와서 저장
                             registerInfo.put("Name",account.getUserName());
                             registerInfo.put("NickName",account.getUserNickName());
@@ -250,6 +254,7 @@ public class RegisterActivity extends AppCompatActivity {
                             registerInfo.put("emailId",account.getEmailId());
                             registerInfo.put("password",account.getPassWord());
                             registerInfo.put("birthDate",account.getUserBirth());
+                            registerInfo.put("role",account.getRole());
                             //getUid를 key값으로 해서
                             //setValue: database에 삽입하는 행위
                             mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(registerInfo); //mDatabaseReference에 설정한 path의 하위 개념(child)으로 넣는 코드

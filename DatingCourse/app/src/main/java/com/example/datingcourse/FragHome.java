@@ -64,18 +64,19 @@ public class FragHome extends Fragment {
             @Override
             public void onClick(View v) {
                 // 다른 액티비티로 이동
-                int sigunguCode = 1;
-                int contentTypeId = 39;
-                String cat1 = "A05";
-                String cat2 = "A0502";
-                String cat3 = "A05020900";
-                Intent intent = new Intent(getActivity(), PlaceList.class);    // Cafe
-                intent.putExtra("contentTypeId", contentTypeId);
-                intent.putExtra("sigunguCode", sigunguCode);
-                intent.putExtra("cat1", cat1);
-                intent.putExtra("cat2", cat2);
-                intent.putExtra("cat3", cat3);
-                intent.putExtra("selectedRegion", "서울특별시 강남구");
+//                int sigunguCode = 1;
+//                int contentTypeId = 39;
+//                String cat1 = "A05";
+//                String cat2 = "A0502";
+//                String cat3 = "A05020900";
+//                Intent intent = new Intent(getActivity(), PlaceList.class);    // Cafe
+//                intent.putExtra("contentTypeId", contentTypeId);
+//                intent.putExtra("sigunguCode", sigunguCode);
+//                intent.putExtra("cat1", cat1);
+//                intent.putExtra("cat2", cat2);
+//                intent.putExtra("cat3", cat3);
+//                intent.putExtra("selectedRegion", "서울특별시 강남구");
+                Intent intent = new Intent(getActivity(), PayActivity.class);
                 startActivity(intent);
             }
         });

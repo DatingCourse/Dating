@@ -24,8 +24,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,6 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -279,24 +283,55 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
 
     private void onDeleteConfirmed(String documentId, int position) {
         if (position >= 0 && position < mCommentsItems.size() && position < documentIds.size()) {
-            db.collection("posts").document(documentId)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            mRecyclerAdapter.notifyItemRemoved(position);
-                            mRecyclerAdapter.notifyItemRangeChanged(position, mCommentsItems.size());
-                            loadComments();
-                            Toast.makeText(getActivity(), "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            // Get reference to the document and its sub-collection
+            DocumentReference docRef = db.collection("posts").document(documentId);
+            CollectionReference commentsRef = docRef.collection("comments");
+
+            // First delete all documents in the sub-collection
+            commentsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        WriteBatch batch = db.batch();
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            batch.delete(doc.getReference());
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "삭제에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
+                        // Commit the batch
+                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                // Then delete the document itself
+                                docRef.delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                mRecyclerAdapter.notifyItemRemoved(position);
+                                                mRecyclerAdapter.notifyItemRangeChanged(position, mCommentsItems.size());
+                                                loadComments();
+                                                Toast.makeText(getActivity(), "게시글과 관련된 모든 내용이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                                Toast.makeText(getActivity(), "삭제에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        });
+                    } else {
+
+                        Toast.makeText(getActivity(), "삭제에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         } else {
+
             Toast.makeText(getActivity(), "지정한 위치에 해당하는 댓글이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }

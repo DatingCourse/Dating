@@ -163,11 +163,11 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
 
         dataListener = this;
         int randomIndex = random.nextInt(4)+1;
-        InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+        InformationAPI api = new InformationAPI(39,1,"","","");
         api.new NetworkTask().execute();
-        InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+        InformationAPI api2 = new InformationAPI(38,1,"","","");
         api2.new NetworkTask().execute();
-        InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+        InformationAPI api3 = new InformationAPI(28,1,"","","");
         api3.new NetworkTask().execute();
 
         ImageButton btn_again = findViewById(R.id.btn_again);
@@ -176,11 +176,11 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
             public void onClick(View v) {
                 count=0;
                 int randomIndex = random.nextInt(4)+1;
-                InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+                InformationAPI api = new InformationAPI(39,1,"","","");
                 api.new NetworkTask().execute();
-                InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+                InformationAPI api2 = new InformationAPI(38,1,"","","");
                 api2.new NetworkTask().execute();
-                InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+                InformationAPI api3 = new InformationAPI(28,1,"","","");
                 api3.new NetworkTask().execute();
             }
         });
@@ -190,76 +190,109 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
     public void onDataReceived(List<String> titles, List<String> images, List<String> address, List<String> x, List<String> y, List<String> tel) {
         count++;
         if(count==1) {
-            ImageView place1 = findViewById(R.id.place1);
-            TextView textPlace1 = findViewById(R.id.textPlace1);
-            int randomIndex = random.nextInt(titles.size());
-            String imageUrl = images.get(randomIndex);
-            if (!isFinishing()) {
-                // Activity가 종료 중이 아닐 때만 이미지를 로드
-                Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place1);
-            }
-            textPlace1.setText(titles.get(randomIndex));
-            place1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CourseMakingActivity.this, infos.class);
-                    intent.putExtra("imgUrl", imageUrl);
-                    intent.putExtra("titleName", titles.get(randomIndex));
-                    intent.putExtra("addressName", address.get(randomIndex));
-                    intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
-                    intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
-                    intent.putExtra("tel", tel.get(randomIndex));
-                    startActivity(intent);
+            if(titles.size() > 0){
+                ImageView place1 = findViewById(R.id.place1);
+                TextView textPlace1 = findViewById(R.id.textPlace1);
+                int randomIndex = random.nextInt(titles.size());
+                String imageUrl = images.get(randomIndex);
+                if (!isFinishing()) {
+                    // Activity가 종료 중이 아닐 때만 이미지를 로드
+                    Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place1);
                 }
-            });
+                textPlace1.setText(titles.get(randomIndex));
+                place1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CourseMakingActivity.this, infos.class);
+                        intent.putExtra("imgUrl", imageUrl);
+                        intent.putExtra("titleName", titles.get(randomIndex));
+                        intent.putExtra("addressName", address.get(randomIndex));
+                        intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
+                        intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
+                        intent.putExtra("tel", tel.get(randomIndex));
+                        startActivity(intent);
+                    }
+                });
+            }else {
+                int randomIndex = random.nextInt(4)+1;
+                InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+                api.new NetworkTask().execute();
+                InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+                api2.new NetworkTask().execute();
+                InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+                api3.new NetworkTask().execute();
+            }
+
         }
         else if (count==2) {
-            ImageView place2 = findViewById(R.id.place2);
-            TextView textPlace2 = findViewById(R.id.textPlace2);
-            int randomIndex = random.nextInt(titles.size());
-            String imageUrl = images.get(randomIndex);
-            if (!isFinishing()) {
-                // Activity가 종료 중이 아닐 때만 이미지를 로드
-                Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place2);
-            }
-            textPlace2.setText(titles.get(randomIndex));
-            place2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CourseMakingActivity.this, infos.class);
-                    intent.putExtra("imgUrl", imageUrl);
-                    intent.putExtra("titleName", titles.get(randomIndex));
-                    intent.putExtra("addressName", address.get(randomIndex));
-                    intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
-                    intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
-                    intent.putExtra("tel", tel.get(randomIndex));
-                    startActivity(intent);
+            if(titles.size() > 0){
+                ImageView place2 = findViewById(R.id.place2);
+                TextView textPlace2 = findViewById(R.id.textPlace2);
+                int randomIndex = random.nextInt(titles.size());
+                String imageUrl = images.get(randomIndex);
+                if (!isFinishing()) {
+                    // Activity가 종료 중이 아닐 때만 이미지를 로드
+                    Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place2);
                 }
-            });
+                textPlace2.setText(titles.get(randomIndex));
+                place2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CourseMakingActivity.this, infos.class);
+                        intent.putExtra("imgUrl", imageUrl);
+                        intent.putExtra("titleName", titles.get(randomIndex));
+                        intent.putExtra("addressName", address.get(randomIndex));
+                        intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
+                        intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
+                        intent.putExtra("tel", tel.get(randomIndex));
+                        startActivity(intent);
+                    }
+                });
+            }else {
+                int randomIndex = random.nextInt(4)+1;
+                InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+                api.new NetworkTask().execute();
+                InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+                api2.new NetworkTask().execute();
+                InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+                api3.new NetworkTask().execute();
+            }
+
         }
         else if (count==3) {
-            ImageView place3 = findViewById(R.id.place3);
-            TextView textPlace3 = findViewById(R.id.textPlace3);
-            int randomIndex = random.nextInt(titles.size());
-            String imageUrl = images.get(randomIndex);
-            if (!isFinishing()) {
-                // Activity가 종료 중이 아닐 때만 이미지를 로드
-                Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place3);
-            }
-            textPlace3.setText(titles.get(randomIndex));
-            place3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CourseMakingActivity.this, infos.class);
-                    intent.putExtra("imgUrl", imageUrl);
-                    intent.putExtra("titleName", titles.get(randomIndex));
-                    intent.putExtra("addressName", address.get(randomIndex));
-                    intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
-                    intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
-                    intent.putExtra("tel", tel.get(randomIndex));
-                    startActivity(intent);
+            if(titles.size() > 0){
+                ImageView place3 = findViewById(R.id.place3);
+                TextView textPlace3 = findViewById(R.id.textPlace3);
+                int randomIndex = random.nextInt(titles.size());
+                String imageUrl = images.get(randomIndex);
+                if (!isFinishing()) {
+                    // Activity가 종료 중이 아닐 때만 이미지를 로드
+                    Glide.with(this).load(imageUrl).error(R.drawable.noimage).fallback(R.drawable.noimage).placeholder(R.drawable.loading).centerCrop().into(place3);
                 }
-            });
+                textPlace3.setText(titles.get(randomIndex));
+                place3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CourseMakingActivity.this, infos.class);
+                        intent.putExtra("imgUrl", imageUrl);
+                        intent.putExtra("titleName", titles.get(randomIndex));
+                        intent.putExtra("addressName", address.get(randomIndex));
+                        intent.putExtra("x", Double.parseDouble(x.get(randomIndex)));
+                        intent.putExtra("y", Double.parseDouble(y.get(randomIndex)));
+                        intent.putExtra("tel", tel.get(randomIndex));
+                        startActivity(intent);
+                    }
+                });
+            }else {
+                int randomIndex = random.nextInt(4)+1;
+                InformationAPI api = new InformationAPI(39,randomIndex,"","","");
+                api.new NetworkTask().execute();
+                InformationAPI api2 = new InformationAPI(38,randomIndex,"","","");
+                api2.new NetworkTask().execute();
+                InformationAPI api3 = new InformationAPI(28,randomIndex,"","","");
+                api3.new NetworkTask().execute();
+            }
+
         }
 
     }
