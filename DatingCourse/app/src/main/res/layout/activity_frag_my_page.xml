@@ -55,8 +55,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/nick"
                     app:layout_constraintTop_toTopOf="@id/nick"
                     android:layout_marginEnd="5dp"
-                    android:background="@drawable/mem"
                     android:visibility="gone"
+                    android:background="@drawable/mem"
                     />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,6 +122,25 @@
                 android:background="#FFFFFF">
 
                 <Button
+                    android:id="@+id/myInfo"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:gravity="center_vertical"
+                    android:text="프로필 수정"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    app:icon="@drawable/pencil_mypage"
+                    app:iconTint="#F4447C"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="#D8D4D6"
+                    app:strokeWidth="0.3dp" />
+
+                <Button
                     android:id="@+id/myWrite"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
@@ -136,7 +155,7 @@
                     app:iconTint="#F4447C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/myInfo"
                     app:strokeColor="#D8D4D6"
                     app:strokeWidth="0.3dp" />
 
@@ -161,17 +180,17 @@
                     app:strokeWidth="0.3dp" />
 
                 <Button
-                    android:id="@+id/myInfo"
+                    android:id="@+id/btn_coupon"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginTop="5dp"
                     android:backgroundTint="#FFFFFF"
                     android:gravity="center_vertical"
-                    android:text="프로필 수정"
+                    android:text="내 쿠폰함"
                     android:textColor="#000000"
                     android:textSize="20dp"
-                    app:icon="@drawable/pencil_mypage"
+                    app:icon="@drawable/coupon"
                     app:iconTint="#F4447C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -194,7 +213,7 @@
                     app:iconTint="#F4447C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/myInfo"
+                    app:layout_constraintTop_toBottomOf="@id/btn_coupon"
                     app:strokeColor="#D8D4D6"
                     app:strokeWidth="0.3dp" />
 

@@ -74,14 +74,7 @@ public class PayActivity extends AppCompatActivity {
                     if(snapshot.exists()){
                         memberShip = snapshot.getValue(Boolean.class);
                         Log.d("firebase_premium", "" + memberShip);
-
-                        // 여기에서 premium 값에 따라 UI 업데이트나 다른 작업을 수행합니다.
-                        if (!memberShip) {
-                            // 결제 창 로직을 여기에 넣습니다.
-                            showPaymentDialog();
-                        } else {
-                            Toast.makeText(PayActivity.this, "이미 프리미엄 회원입니다.", Toast.LENGTH_SHORT).show();
-                        }
+                        showPaymentDialog();
                     } else {
                         Log.w("TAG", "해당하는 멤버쉽 없음");
                     }
@@ -168,6 +161,7 @@ public class PayActivity extends AppCompatActivity {
 
     public void updatePremiumStatusInFirebase(boolean newStatus, int newPoint) {
         FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
+
         if(currentUser != null){
             String uid = currentUser.getUid();
 
@@ -187,17 +181,39 @@ public class PayActivity extends AppCompatActivity {
                 }
             });
 
-            pointRef.setValue(newPoint).addOnSuccessListener(new OnSuccessListener<Void>() {
+            pointRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onSuccess(Void aVoid) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        int currentPoint = dataSnapshot.getValue(Integer.class);
+                        int newPoint = currentPoint + 1500; // 원래 포인트에 1500을 더함
 
+                        // 새로운 포인트 값을 DB에 업데이트
+                        pointRef.setValue(newPoint).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // 업데이트 성공
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // 업데이트 실패
+                            }
+                        });
+                    } else {
+                        // 데이터 없음
+                    }
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // 에러 발생
                 }
             });
         }
+        // 업데이트가 성공적으로 이루어진 후에는 결과를 설정하고 액티비티를 종료합니다.
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 }
