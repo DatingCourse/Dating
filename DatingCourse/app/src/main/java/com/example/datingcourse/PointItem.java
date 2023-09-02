@@ -126,6 +126,33 @@ public class PointItem extends AppCompatActivity {
                             });
 
                             Toast.makeText(PointItem.this, "제품을 구매했습니다.", Toast.LENGTH_SHORT).show();
+
+                            final DatabaseReference adminCouponRef = mDatabaseRef.child("AdminCoupon").child(clickedProduct.getName1());
+
+                            adminCouponRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    int currentCount = 0;
+                                    int currentPoint = 0;
+
+                                    // 기존 값이 있으면 불러온다
+                                    if (dataSnapshot.hasChild("count")) {
+                                        currentCount = dataSnapshot.child("count").getValue(Integer.class);
+                                    }
+                                    if (dataSnapshot.hasChild("point")) {
+                                        currentPoint = dataSnapshot.child("point").getValue(Integer.class);
+                                    }
+
+                                    // 새로운 값을 설정한다
+                                    adminCouponRef.child("count").setValue(currentCount + 1);
+                                    adminCouponRef.child("point").setValue(currentPoint + clickedProduct.getPrice());
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    // Handle error
+                                }
+                            });
                         } else {
                             // 포인트가 부족한 경우
                             Toast.makeText(PointItem.this, "포인트가 부족합니다.", Toast.LENGTH_SHORT).show();
