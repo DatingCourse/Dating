@@ -31,7 +31,7 @@ public class MyCourse extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
-    private String currentNickName;
+
     private TextView userNick;
 
     @Override
@@ -39,6 +39,7 @@ public class MyCourse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_course);
         userNick = (TextView) findViewById(R.id.user_nick);
+
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
 
@@ -85,10 +86,12 @@ public class MyCourse extends AppCompatActivity {
                             Double x = courseSnapshot.child("x").getValue(Double.class);
                             Double y = courseSnapshot.child("y").getValue(Double.class);
                             String userUid = courseSnapshot.child("userUid").getValue(String.class);
-
+                            String courseId = courseSnapshot.child("courseId").getValue(String.class);
+                            Log.d("courseId 1 " ,"courseId 1 " + courseId);
                             // 가져온 값을 이용하여 Points 객체를 생성하고, boardList에 추가합니다.
                             Photo photo = new Photo(imgUrl, titleName, addressName, x, y, tel, userUid);
-                            BoardList.add(new Photo(imgUrl, titleName, addressName, x, y, tel, userUid));
+                            BoardList.add(new Photo(courseId,imgUrl, titleName, addressName, x, y, tel, userUid));
+                            photo.setCourseId(courseId);
 
                             HashMap<String, Object> photoMap = new HashMap<>();
                             photoMap.put("imageUrl", photo.getImgUrl());
@@ -98,7 +101,7 @@ public class MyCourse extends AppCompatActivity {
                             photoMap.put("y", photo.getY());
                             photoMap.put("tel", photo.getTel());
                             photoMap.put("userUid", photo.getUserUid());
-
+                            photoMap.put("courseId",courseId);
                             // 최근값을 리스트의 앞에 추가
                             childTempList.add(photoMap);
                         }
@@ -144,6 +147,7 @@ public class MyCourse extends AppCompatActivity {
                         Log.d("TAG", "y좌표 : " + childMap.get("y"));
                         Log.d("TAG", "전화번호: " + childMap.get("tel"));
                         Log.d("TAG", "Uid: " + childMap.get("userUid"));
+                        Log.d("TAG","코스 리스트 이름" + childMap.get("courseId"));
                     }
 
                     userIndex++;

@@ -12,19 +12,22 @@ public class Photo implements Serializable {
     private Double y;
     private String tel;
     private String userUid;
-
+    private String photoId;
+    private String courseId;
 
     //기본 생성자
     public Photo() {
     }
 
-    public Photo(String imgUrl, String titleName, String addressName, Double x, Double y, String tel) {
+    public Photo(String courseId,String imgUrl, String titleName, String addressName, Double x, Double y, String tel,String userUid) {
         this.imgUrl = imgUrl;
         this.titleName = titleName;
         this.addressName = addressName;
         this.x = x;
         this.y = y;
         this.tel = tel;
+        this.courseId = courseId;
+        this.userUid = userUid;
     }
 
     public Photo(String imgUrl, String titleName, String addressName, Double x, Double y, String tel, String userUid) {
@@ -35,6 +38,23 @@ public class Photo implements Serializable {
         this.y = y;
         this.tel = tel;
         this.userUid = userUid;
+
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 
     public String getUserUid() {

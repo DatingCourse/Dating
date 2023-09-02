@@ -311,7 +311,11 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
     }
 
     private void loadPhotosFromGlobal() {   // String nickStr
-        int i = 0;
+        mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름
+
+        // 새로운 코스 ID 생성
+        String courseId = mLoadDatabaseRef.child("UserCourse").push().getKey();
+
         for (int j =0; j<myApp.getPhotos().size();j++){
             Photo photo = myApp.getPhotos().get(j);
 
@@ -324,44 +328,32 @@ public class CourseMakingActivity extends AppCompatActivity implements Informati
             saveCourse.put("y",photo.getY());
             saveCourse.put("tel",photo.getTel());
             saveCourse.put("userUid",photo.getUserUid());
-            /*saveCourse.put("NickName",nickStr);*/
+            saveCourse.put("courseId",courseId);
+
+            photo.setCourseId(courseId);
 
             Log.d("CourseMakingActivity", "Photo Title: " + photo.getTitleName());
-            mLoadDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister"); //getReference안에 " " 앱이름, 프로젝트 이름
 
 
-            int finalI = i;
-            mLoadDatabaseRef.child("UserCourse").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int currentChild = (int) snapshot.getChildrenCount();
+            String photoId = mLoadDatabaseRef.child(courseId).push().getKey();
 
-                    int nextIndex = currentChild + 1;
-                    // 값을 새 노드에 저장합니다.
-                    mLoadDatabaseRef.child("UserCourse")
-                            .child(String.valueOf(nextIndex)) // 자식 노드의 이름을 1씩 증가시킴
-                            .child((finalI + 1) + "번째 코스")
-                            .setValue(saveCourse, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    if (error == null) {
-                                        // 데이터 저장 성공. BoardActivity로 이동
-                                        Intent intent = new Intent(CourseMakingActivity.this, BoardActivity.class);
-                                        startActivity(intent);
-                                    } else {
-                                        // 데이터 저장 실패. 오류 메시지를 출력
-                                        Log.e("TAG", "Data could not be saved. " + error.getMessage());
-                                    }
-                                }
-                            });
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-            i++;
+            // 값을 새 노드에 저장합니다.
+            mLoadDatabaseRef.child("UserCourse")
+                    .child(courseId)
+                    .child(photoId)
+                    .setValue(saveCourse, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            if (error == null) {
+                                // 데이터 저장 성공. BoardActivity로 이동
+                                Intent intent = new Intent(CourseMakingActivity.this, BoardActivity.class);
+                                startActivity(intent);
+                            } else {
+                                // 데이터 저장 실패. 오류 메시지를 출력
+                                Log.e("TAG", "Data could not be saved. " + error.getMessage());
+                            }
+                        }
+                    });
 
         }
     }

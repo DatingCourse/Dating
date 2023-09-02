@@ -73,8 +73,6 @@ public class PointItem extends AppCompatActivity {
         adapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // 클릭된 아이템에 대한 동작을 여기에 추가합니다.
-                // position 매개변수는 클릭된 아이템의 위치를 나타냅니다.
                 Product clickedProduct = productList.get(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(PointItem.this);
                 builder.setTitle("제품 구매 확인");
@@ -97,6 +95,7 @@ public class PointItem extends AppCompatActivity {
                             String uid = mFirebaseAuth.getCurrentUser().getUid();
                             DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
                             DatabaseReference pointValueRef = userRef.child("point");
+
                             pointValueRef.setValue(userPoint);
 
                             Toast.makeText(PointItem.this, "제품을 구매했습니다.", Toast.LENGTH_SHORT).show();
@@ -141,6 +140,7 @@ public class PointItem extends AppCompatActivity {
                             @Override
                             public void run() {
                                 point_my.setText(String.valueOf(dataSnapshot.getValue(Integer.class)));
+
                             }
                         });
                     } else {
