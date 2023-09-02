@@ -1,12 +1,19 @@
 package com.example.datingcourse;
+import android.os.Bundle;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.annotation.NonNull;
@@ -64,19 +71,18 @@ public class FragHome extends Fragment {
             @Override
             public void onClick(View v) {
                 // 다른 액티비티로 이동
-//                int sigunguCode = 1;
-//                int contentTypeId = 39;
-//                String cat1 = "A05";
-//                String cat2 = "A0502";
-//                String cat3 = "A05020900";
-//                Intent intent = new Intent(getActivity(), PlaceList.class);    // Cafe
-//                intent.putExtra("contentTypeId", contentTypeId);
-//                intent.putExtra("sigunguCode", sigunguCode);
-//                intent.putExtra("cat1", cat1);
-//                intent.putExtra("cat2", cat2);
-//                intent.putExtra("cat3", cat3);
-//                intent.putExtra("selectedRegion", "서울특별시 강남구");
-                Intent intent = new Intent(getActivity(), PayActivity.class);
+                int sigunguCode = 1;
+                int contentTypeId = 39;
+                String cat1 = "A05";
+                String cat2 = "A0502";
+                String cat3 = "A05020900";
+                Intent intent = new Intent(getActivity(), PlaceList.class);    // Cafe
+                intent.putExtra("contentTypeId", contentTypeId);
+                intent.putExtra("sigunguCode", sigunguCode);
+                intent.putExtra("cat1", cat1);
+                intent.putExtra("cat2", cat2);
+                intent.putExtra("cat3", cat3);
+                intent.putExtra("selectedRegion", "서울특별시 강남구");
                 startActivity(intent);
             }
         });
@@ -157,14 +163,92 @@ public class FragHome extends Fragment {
             }
         });
 
+        ImageView btn_chulseok = view.findViewById(R.id.btn_chulseok);
+        btn_chulseok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.popup_chulseok, null);
+                builder.setView(dialogView);
+
+                Button ccheck = dialogView.findViewById((R.id.check));
+                ccheck.setOnClickListener(new View.OnClickListener() {
+                    int cnt = 0;
+                    @Override
+                    public void onClick(View v) {
+                        ImageView stampImageView1 = dialogView.findViewById(R.id.stamp1);
+                        ImageView stampImageView2 = dialogView.findViewById(R.id.stamp2);
+                        ImageView stampImageView3 = dialogView.findViewById(R.id.stamp3);
+                        ImageView stampImageView4 = dialogView.findViewById(R.id.stamp4);
+                        ImageView stampImageView5 = dialogView.findViewById(R.id.stamp5);
+                        ImageView stampImageView6 = dialogView.findViewById(R.id.stamp6);
+                        ImageView stampImageView7 = dialogView.findViewById(R.id.stamp7);
+
+                        if(cnt==0){
+                            stampImageView1.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==1) {
+                            stampImageView2.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==2) {
+                            stampImageView3.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==3) {
+                            stampImageView4.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==4) {
+                            stampImageView5.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==5) {
+                            stampImageView6.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==6) {
+                            stampImageView7.setVisibility(View.VISIBLE);
+                            cnt++;
+                        }
+                        else if(cnt==7){
+                            cnt=0;
+                            stampImageView1.setVisibility(View.INVISIBLE);
+                            stampImageView2.setVisibility(View.INVISIBLE);
+                            stampImageView3.setVisibility(View.INVISIBLE);
+                            stampImageView4.setVisibility(View.INVISIBLE);
+                            stampImageView5.setVisibility(View.INVISIBLE);
+                            stampImageView6.setVisibility(View.INVISIBLE);
+                            stampImageView7.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("닫기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
         ImageButton mbti_i = view.findViewById(R.id.mbti_i);
         mbti_i.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                String mbti = "i";
-                Intent intent = new Intent(getActivity(),MBTI.class);
-                intent.putExtra("mbti", mbti);
+                Intent intent = new Intent(getActivity(), PointItem.class);
                 startActivity(intent);
+//                String mbti = "i";
+//                Intent intent = new Intent(getActivity(),MBTI.class);
+//                intent.putExtra("mbti", mbti);
+//                startActivity(intent);
             }
         });
 
@@ -201,8 +285,12 @@ public class FragHome extends Fragment {
         });
 
         return view;
-    }
-}
 
+
+
+
+    }
+
+}
 
 

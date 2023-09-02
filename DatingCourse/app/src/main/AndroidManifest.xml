@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".MyApp"
@@ -20,6 +20,12 @@
         android:theme="@style/Theme.DatingCourse"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ProductAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".PointItem"
+            android:exported="false" />
         <activity
             android:name=".MyCourse"
             android:exported="false"
@@ -99,8 +105,7 @@
             android:windowSoftInputMode="adjustPan|adjustUnspecified" />
         <activity
             android:name="kr.co.bootpay.BootpayInnerActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".ResultSearchKeyword"
             android:exported="false"

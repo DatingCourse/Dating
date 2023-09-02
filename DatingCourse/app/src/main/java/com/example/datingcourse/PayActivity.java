@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +44,7 @@ public class PayActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
     private DocumentReference postDocumentReference;
-    boolean premium;
+    boolean memberShip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,32 +65,25 @@ public class PayActivity extends AppCompatActivity {
         if(currentUser != null){
             String uid = currentUser.getUid();
 
-            String documentId = postDocumentReference.getId();  // 게시물 고유 ID를 받음
-
-
             DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
-            DatabaseReference specificValueRef = userRef.child("Premium");
-            specificValueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference memberShipValueRef = userRef.child("memberShip");
+            memberShipValueRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     //데이터 스냅샷이 한 번 호출되어 값을 가져옴
                     if(snapshot.exists()){
-                        premium = snapshot.getValue(Boolean.class);
-                        Log.d("firebase_premium", "" + premium);
+                        memberShip = snapshot.getValue(Boolean.class);
+                        Log.d("firebase_premium", "" + memberShip);
 
                         // 여기에서 premium 값에 따라 UI 업데이트나 다른 작업을 수행합니다.
-                        if (!premium) {
+                        if (!memberShip) {
                             // 결제 창 로직을 여기에 넣습니다.
                             showPaymentDialog();
                         } else {
                             Toast.makeText(PayActivity.this, "이미 프리미엄 회원입니다.", Toast.LENGTH_SHORT).show();
-                            Intent resultIntent = new Intent();
-                            resultIntent.putExtra("documentId", documentId);
-                            setResult(Activity.RESULT_OK, resultIntent);
-                            finish();
                         }
                     } else {
-                        Log.w("TAG", "해당하는 닉네임 없음");
+                        Log.w("TAG", "해당하는 멤버쉽 없음");
                     }
                 }
 
@@ -126,7 +121,7 @@ public class PayActivity extends AppCompatActivity {
 //                .setUserPhone("010-1234-5678") // 구매자 전화번호
                         .setName("프리미엄 요금제") // 결제할 상품명
                         .setOrderId("1234") // 결제 고유번호 (expire_month)
-                        .setPrice(4900) // 결제할 금액
+                        .setPrice(100) // 결제할 금액
                         .addItem("마우's 스", 1, "ITEM_CODE_MOUSE", 100) // 주문정보에 담길 상품정보, 통계를 위해 사용
                         .addItem("키보드", 1, "ITEM_CODE_KEYBOARD", 200, "패션", "여성상의", "블라우스") // 주문정보에 담길 상품정보, 통계를 위해 사용
                         .onConfirm(new ConfirmListener() { // 결제가 진행되기 바로 직전 호출되는 함수로, 주로 재고처리 등의 로직이 수행
@@ -142,6 +137,8 @@ public class PayActivity extends AppCompatActivity {
                             @Override
                             public void onDone(@Nullable String message) {
                                 Log.d("done", message);
+                                // 결제가 완료되면 Firebase Realtime Database의 premium 값을 true로 설정
+                                updatePremiumStatusInFirebase(true, 1500);
                             }
                         })
                         .onReady(new ReadyListener() { // 가상계좌 입금 계좌번호가 발급되면 호출되는 함수입니다.
@@ -167,5 +164,40 @@ public class PayActivity extends AppCompatActivity {
                         .request();
             }
         });
+    }
+
+    public void updatePremiumStatusInFirebase(boolean newStatus, int newPoint) {
+        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
+        if(currentUser != null){
+            String uid = currentUser.getUid();
+
+            DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
+            DatabaseReference memberShipRef = userRef.child("memberShip");
+            DatabaseReference pointRef = userRef.child("point");
+
+            memberShipRef.setValue(newStatus).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(PayActivity.this, "프리미엄 멤버쉽 결제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(PayActivity.this, "결제가 실패되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            pointRef.setValue(newPoint).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        }
     }
 }

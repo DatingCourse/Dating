@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,14 +39,18 @@ import java.util.List;
 
 public class FragMyPage extends Fragment {
     private Button btn_logOut,editInfo, btn_my_Write;
-    private TextView nick;
-
+    private TextView nick, point;
+    private ImageView member_yes;
     private ImageView profile;
 
     private String uid;
 
     private View view;
     private ProgressDialog progressDialog;
+    private FirebaseAuth mFirebaseAuth;
+    private DatabaseReference mDatabaseRef;
+
+    Boolean memberShip;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,9 +64,11 @@ public class FragMyPage extends Fragment {
 
         view = inflater.inflate(R.layout.activity_frag_my_page, container, false);
 
-        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("FirebaseRegister");
         uid = mFirebaseAuth.getCurrentUser().getUid(); // 로그인한 사용자의 UID 가져오기
+
+        fetchSingleValueFromUserRef(mFirebaseAuth,mDatabaseRef);
 
         btn_my_Write = view.findViewById(R.id.myWrite);
         btn_my_Write.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +98,19 @@ public class FragMyPage extends Fragment {
                 startActivity(intent);
             }
         });
+
+        Button btn_store = view.findViewById(R.id.btn_store);
+        btn_store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PointItem.class);
+                startActivity(intent);
+            }
+        });
+
         nick = view.findViewById(R.id.nick);
+        member_yes = view.findViewById(R.id.member_yes);
+        point = view.findViewById(R.id.point);
         fetchSingleValueFromUserRef(mFirebaseAuth, mDatabaseRef);
 
         editInfo = view.findViewById(R.id.myInfo);
@@ -118,6 +137,8 @@ public class FragMyPage extends Fragment {
 
             DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
             DatabaseReference specificValueRef = userRef.child("NickName");
+            DatabaseReference memberShipValueRef = userRef.child("memberShip");
+            DatabaseReference pointValueRef = userRef.child("point");
 
             specificValueRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -127,6 +148,65 @@ public class FragMyPage extends Fragment {
                             @Override
                             public void run() {
                                 nick.setText(dataSnapshot.getValue(String.class));
+                            }
+                        });
+                    } else {
+                        Log.w("TAG", "해당하는 닉네임 없음");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.w("TAG", "데이터 불러오는 과정에서 오류 발생");
+                }
+            });
+
+            memberShipValueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //데이터 스냅샷이 한 번 호출되어 값을 가져옴
+                    if(snapshot.exists()){
+                        memberShip = snapshot.getValue(Boolean.class);
+                        Log.d("firebase_premium", "" + memberShip);
+
+                        if (!memberShip) {
+                            member_yes.setVisibility(View.GONE);
+                        } else {
+                            member_yes.setVisibility(View.VISIBLE);
+                        }
+
+                        Button btn_membership = view.findViewById(R.id.btn_membership);
+                        btn_membership.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (!memberShip) {
+                                    Intent intent = new Intent(getActivity(), PayActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getActivity(), "이미 프리미엄 회원입니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        Log.w("TAG", "해당하는 멤버쉽 없음");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    //에러 발생시 호출됨
+                    Log.w("TAG", "데이터 불러오는 과정에서 오류 발생");
+                }
+            });
+
+            pointValueRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                point.setText(String.valueOf(dataSnapshot.getValue(Integer.class)));
                             }
                         });
                     } else {
