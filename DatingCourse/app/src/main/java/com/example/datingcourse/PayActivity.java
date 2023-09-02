@@ -43,7 +43,6 @@ public class PayActivity extends AppCompatActivity {
     private int stuck = 10;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-    private DocumentReference postDocumentReference;
     boolean memberShip;
 
     @Override

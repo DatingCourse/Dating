@@ -3,6 +3,7 @@ package com.example.datingcourse;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +102,28 @@ public class PointItem extends AppCompatActivity {
                             DatabaseReference pointValueRef = userRef.child("point");
 
                             pointValueRef.setValue(userPoint);
+
+                            // Firebase Storage 참조 가져오기
+                            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                            StorageReference imageRef = storageRef.child("coupons/" + clickedProduct.getName1() + ".jpg");
+
+                            // 이미지 다운로드 URL 가져오기
+                            imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String imageUrl = uri.toString();
+
+                                    // DB에 URL 저장
+                                    DatabaseReference couponRef = mDatabaseRef.child("UserCoupon").child(uid);
+                                    couponRef.push().setValue(imageUrl);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle any errors
+                                    Log.e("Image Download Error", e.getMessage());
+                                }
+                            });
 
                             Toast.makeText(PointItem.this, "제품을 구매했습니다.", Toast.LENGTH_SHORT).show();
                         } else {

@@ -108,6 +108,15 @@ public class FragMyPage extends Fragment {
             }
         });
 
+        Button btn_coupon = view.findViewById(R.id.btn_coupon);
+        btn_coupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyCouponActivity.class);
+                startActivity(intent);
+            }
+        });
+
         nick = view.findViewById(R.id.nick);
         member_yes = view.findViewById(R.id.member_yes);
         point = view.findViewById(R.id.point);
