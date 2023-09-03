@@ -67,8 +67,8 @@ public class PointItem extends AppCompatActivity {
         productList.add(new Product("죠스떡볶이","죠스떡볶이",4950, R.drawable.item_4));
         productList.add(new Product("던킨","도너츠 6개팩", 11000, R.drawable.item_5));
         productList.add(new Product("맥도날드","불고기 버거 세트", 4950, R.drawable.item_6));
-        productList.add(new Product("문화상품권","문화상품권[PIN]교환권 3000원권", 3300, R.drawable.item_7));
-        productList.add(new Product("조말론런던","[선물포장]핸드 크림 50ML", 4500, R.drawable.item_8));
+        productList.add(new Product("설빙","애플망고치즈설빙", 15000, R.drawable.item_7));
+        productList.add(new Product("교촌치킨","허니콤보+웨지감자+콜라1.25L", 13000, R.drawable.item_8));
         productList.add(new Product("GS25","모바일 상품권 5천원권", 5500, R.drawable.item_9));
         productList.add(new Product("CU","모바일 상품권 5천원권", 5500, R.drawable.item_10));
 

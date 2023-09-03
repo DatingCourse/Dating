@@ -1,6 +1,7 @@
 package com.example.datingcourse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,17 @@ public class MyCouponActivity extends AppCompatActivity {
                     .placeholder(R.drawable.loading)
                     .override(width, height)
                     .into(holder.imageView);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = imageUrlList.get(position);
+                    // Intent를 사용하여 ImageDisplayActivity로 URL을 전달합니다.
+                    Intent intent = new Intent(holder.itemView.getContext(), ImageDisplayActivity.class);
+                    intent.putExtra("IMAGE_URL", url);
+                    holder.itemView.getContext().startActivity(intent);
+                }
+            });
         }
 
         @Override
