@@ -252,6 +252,7 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
         super.onResume();
         // Refresh the community posts here
         loadComments();
+        fetchSingleValueFromUserRef(mFirebaseAuth, mDatabaseRef);  // 포인트 갱신
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -262,6 +263,7 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
         if (requestCode == REQUEST_EDIT_POST) {
             if (resultCode == Activity.RESULT_OK) {
                 loadComments();
+                fetchSingleValueFromUserRef(mFirebaseAuth, mDatabaseRef);  // 포인트 갱신
             }
         }
         fetchSingleValueFromUserRef(mFirebaseAuth, mDatabaseRef);  // 포인트 갱신
