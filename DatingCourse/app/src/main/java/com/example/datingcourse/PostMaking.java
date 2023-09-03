@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PostMaking extends AppCompatActivity {
+    private int point;
     private String uid;
     private String filename;
     private String nickName;
@@ -73,6 +74,10 @@ public class PostMaking extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_making);
+
+        Intent intent = getIntent();
+        point = intent.getIntExtra("point", point);
+        Log.d("postMaking", "" + point);
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 로그인한 사용자의 UID 가져오기
         filename = uid + ".jpg"; // 파일명을 사용자의 UID로 설정
@@ -119,6 +124,15 @@ public class PostMaking extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                point = point - 100;
+
+                // DB에 새로운 포인트 값을 업데이트
+                String uid = mFirebaseAuth.getCurrentUser().getUid();
+                DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
+                DatabaseReference pointValueRef = userRef.child("point");
+
+                pointValueRef.setValue(point);
+
                 // 게시물 내용
                 String titleText = et_title.getText().toString();
                 String commentText = et_comment.getText().toString();

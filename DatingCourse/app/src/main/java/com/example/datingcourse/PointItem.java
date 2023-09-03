@@ -194,11 +194,10 @@ public class PointItem extends AppCompatActivity {
                             @Override
                             public void run() {
                                 point_my.setText(String.valueOf(dataSnapshot.getValue(Integer.class)));
-
                             }
                         });
                     } else {
-                        Log.w("TAG", "해당하는 닉네임 없음");
+                        Log.w("TAG", "해당하는 포인트 없음");
                     }
                 }
 

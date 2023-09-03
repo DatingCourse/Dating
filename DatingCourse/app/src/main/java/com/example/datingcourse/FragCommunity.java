@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragCommunity extends Fragment implements OnLikeButtonClickListener {
+    boolean memberShip;
+    int point;
     private String nickName;
     private PostAdapter mRecyclerAdapter; //어댑터 클래스
     private MyPostAdapter myPostAdapter;
@@ -167,23 +169,6 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
             }
         });
 
-        fab_write.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PostMaking.class); // 글 쓰기
-                intent.putExtra("nickName", nickName);
-
-                // Add flags to clear the activity stack and start a new instance
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                startActivity(intent);
-
-                int REQUEST_EDIT_POST = 100;
-                startActivityForResult(intent, REQUEST_EDIT_POST);
-                loadComments();
-            }
-        });
-        loadComments();
         //여기 recycerView에 어탭더 적용시켜줌
         mRecyclerView.setAdapter(mRecyclerAdapter)  ;
         mRecyclerAdapter.setOnBtnClickListener(new OnPostActionListener() {
@@ -279,6 +264,7 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
                 loadComments();
             }
         }
+        fetchSingleValueFromUserRef(mFirebaseAuth, mDatabaseRef);  // 포인트 갱신
     }
 
     private void onDeleteConfirmed(String documentId, int position) {
@@ -381,6 +367,9 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
 
             DatabaseReference userRef = mDatabaseRef.child("UserAccount").child(uid);
             DatabaseReference specificValueRef = userRef.child("NickName");
+            DatabaseReference pointValueRef = userRef.child("point");
+            DatabaseReference memberShipValueRef = userRef.child("memberShip");
+
             specificValueRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -401,6 +390,97 @@ public class FragCommunity extends Fragment implements OnLikeButtonClickListener
                 }
             });
 
+            pointValueRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                point = dataSnapshot.getValue(Integer.class);
+                                Log.d("Point_point", ""+point);
+                            }
+                        });
+                    } else {
+                        Log.w("TAG", "해당하는 포인트 없음");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.w("TAG", "데이터 불러오는 과정에서 오류 발생");
+                }
+            });
+
+            memberShipValueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //데이터 스냅샷이 한 번 호출되어 값을 가져옴
+                    if(snapshot.exists()){
+                        memberShip = snapshot.getValue(Boolean.class);
+                        Log.d("firebase_premium", "" + memberShip);
+
+                        if(!memberShip) {
+                            if(point >= 100) {
+                                fab_write.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // 다이얼로그 띄우기
+                                        new AlertDialog.Builder(getContext())
+                                                .setTitle("포인트 차감")
+                                                .setMessage("100포인트가 차감됩니다.")
+                                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Intent intent = new Intent(getActivity(), PostMaking.class);
+                                                        intent.putExtra("nickName", nickName);
+                                                        intent.putExtra("point", point);
+                                                        startActivity(intent);
+                                                        loadComments();
+                                                    }
+                                                })
+                                                .setNegativeButton("취소", null)
+                                                .show();
+                                    }
+                                });
+                            } else {
+                                // 포인트가 부족한 경우
+                                fab_write.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Toast.makeText(getActivity(), "포인트가 부족합니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        } else {
+                            fab_write.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getActivity(), PostMaking.class); // 글 쓰기
+                                    intent.putExtra("nickName", nickName);
+
+                                    // Add flags to clear the activity stack and start a new instance
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                    startActivity(intent);
+
+                                    int REQUEST_EDIT_POST = 100;
+                                    startActivityForResult(intent, REQUEST_EDIT_POST);
+                                    loadComments();
+                                }
+                            });
+                            loadComments();
+                        }
+                    } else {
+                        Log.w("TAG", "해당하는 멤버쉽 없음");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    //에러 발생시 호출됨
+                    Log.w("TAG", "데이터 불러오는 과정에서 오류 발생");
+                }
+            });
         }
 
     }

@@ -212,12 +212,14 @@ public class FragMyPage extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                point.setText(String.valueOf(dataSnapshot.getValue(Integer.class)));
-                            }
-                        });
+                        if(getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Your code here
+                                }
+                            });
+                        }
                     } else {
                         Log.w("TAG", "해당하는 닉네임 없음");
                     }
