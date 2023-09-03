@@ -6,20 +6,29 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/nickNameTextView"
+        android:id="@+id/nameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Nickname"
+        android:text="name"
         android:textStyle="bold"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/pointTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Email"
+        android:text="point"
+        android:textStyle="italic"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/countTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0"
         android:textStyle="italic"
         android:textSize="16sp" />
 

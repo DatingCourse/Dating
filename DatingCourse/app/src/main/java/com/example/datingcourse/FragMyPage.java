@@ -94,7 +94,7 @@ public class FragMyPage extends Fragment {
         btn_myCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyCourse.class);
+                Intent intent = new Intent(getActivity(), PaymentManagement.class);
                 startActivity(intent);
             }
         });
